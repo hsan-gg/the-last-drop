@@ -18,7 +18,7 @@ const DAMAGE_FLASH_SECONDS := 0.3
 var _water_meter: Meter
 var _health_meter: Meter
 var _stamina_meter: Meter
-var _block_pip: ColorRect
+var _guard_meter: Meter
 var _stamina_flash := 0.0
 var _player_combat: PlayerCombat
 var _prompt_panel: PanelContainer
@@ -133,8 +133,13 @@ func _process(delta: float) -> void:
 	if _player_combat == null:
 		var player := get_tree().get_first_node_in_group("player") as Player
 		_player_combat = player.combat if player != null else null
-	var ready := _player_combat != null and _player_combat.block_ready()
-	_block_pip.color = Color("#5fe0ff") if ready else Color("#3a4a54")
+	if _player_combat != null:
+		if _player_combat.is_blocking():
+			_guard_meter.ratio = _player_combat.guard_hold_ratio()
+			_guard_meter.fill_color = Color("#5fe0ff")
+		else:
+			_guard_meter.ratio = _player_combat.block_cooldown_ratio()
+			_guard_meter.fill_color = Color("#5fe0ff") if _player_combat.block_ready() else Color("#e0a04a")
 	if _stamina_flash > 0.0:
 		_stamina_meter.fill_color = UiTheme.COLOR_RED
 	else:
@@ -242,10 +247,12 @@ func _build() -> void:
 	_health_meter = _add_meter_row(left, HEART_ICON)
 	_stamina_meter = _add_meter_row(left, BOLT_ICON)
 	_stamina_meter.fill_color = Color("#d8e04a")
-	_block_pip = ColorRect.new()
-	_block_pip.custom_minimum_size = Vector2(5, 5)
-	_block_pip.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	_stamina_meter.get_parent().add_child(_block_pip)
+	_guard_meter = Meter.new()
+	_guard_meter.custom_minimum_size = Vector2(22, 5)
+	_guard_meter.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_guard_meter.fill_color = Color("#5fe0ff")
+	_guard_meter.tooltip_text = "Guard"
+	_stamina_meter.get_parent().add_child(_guard_meter)
 	var level_row := HBoxContainer.new()
 	level_row.add_theme_constant_override("separation", 4)
 	level_row.mouse_filter = Control.MOUSE_FILTER_IGNORE

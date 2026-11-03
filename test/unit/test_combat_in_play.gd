@@ -273,3 +273,14 @@ func test_levels_raise_the_stamina_pool() -> void:
 	var base := _player.combat.max_stamina()
 	Progress.add_xp(500)
 	assert_gt(_player.combat.max_stamina(), base)
+
+
+func test_the_guard_bar_shows_while_blocking_and_cooling_down() -> void:
+	var meter := _player.get_node("GuardMeter") as GuardMeter
+	assert_false(meter.is_showing(), "hidden when the guard is idle and ready")
+	_player.combat.raise_guard()
+	assert_true(meter.is_showing())
+	assert_almost_eq(_player.combat.guard_hold_ratio(), 1.0, 0.05)
+	_player.combat.lower_guard()
+	assert_true(meter.is_showing(), "shows the cooldown refilling")
+	assert_lt(_player.combat.block_cooldown_ratio(), 0.1)

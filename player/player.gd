@@ -25,6 +25,9 @@ func _ready() -> void:
 	combat = PlayerCombat.new()
 	combat.name = "Combat"
 	add_child(combat)
+	var guard_meter := GuardMeter.new()
+	guard_meter.name = "GuardMeter"
+	add_child(guard_meter)
 	var visuals := GearVisuals.new()
 	visuals.name = "GearVisuals"
 	add_child(visuals)

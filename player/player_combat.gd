@@ -46,6 +46,7 @@ var _swung := false
 var _block_started := -10.0
 var _invulnerable_until := 0.0
 var _block_cooldown_until := 0.0
+var _block_cooldown_total := 1.0
 var _regen_after := 0.0
 var _last_reported_stamina := -1.0
 var _player: Player
@@ -87,6 +88,18 @@ func seconds_since_block_started() -> float:
 ## Seconds until the guard can be raised again (0 when it is ready).
 func block_cooldown_left() -> float:
 	return maxf(_block_cooldown_until - _clock, 0.0)
+
+
+## 0 just after the guard dropped, 1 when it can be raised again.
+func block_cooldown_ratio() -> float:
+	return 1.0 - clampf(block_cooldown_left() / maxf(_block_cooldown_total, 0.01), 0.0, 1.0)
+
+
+## While guarding: how much of the hold is left (1 just raised, 0 about to drop).
+func guard_hold_ratio() -> float:
+	if state != State.BLOCK:
+		return 0.0
+	return 1.0 - clampf(seconds_since_block_started() / BLOCK_MAX_HOLD_SECONDS, 0.0, 1.0)
 
 
 func block_ready() -> bool:
@@ -134,6 +147,7 @@ func lower_guard() -> void:
 		return
 	state = State.IDLE
 	_block_cooldown_until = _clock + BLOCK_COOLDOWN_SECONDS
+	_block_cooldown_total = BLOCK_COOLDOWN_SECONDS
 	_regen_after = _clock + REGEN_DELAY_SECONDS
 	if _swing != null:
 		_swing.guard(false, _player.facing)
@@ -169,6 +183,7 @@ func _hold_guard(delta: float, button_down: bool) -> void:
 func _break_guard() -> void:
 	state = State.IDLE
 	_block_cooldown_until = _clock + GUARD_BREAK_COOLDOWN_SECONDS
+	_block_cooldown_total = GUARD_BREAK_COOLDOWN_SECONDS
 	_regen_after = _clock + GUARD_BREAK_COOLDOWN_SECONDS
 	if _swing != null:
 		_swing.guard(false, _player.facing)
