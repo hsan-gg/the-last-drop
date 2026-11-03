@@ -42,6 +42,8 @@ await page.waitForFunction(() => typeof window.godotDrive === "function", null, 
 await sleep(1500);
 await page.mouse.click(480, 270);
 await press("Enter");
+await sleep(500);
+await press("Enter"); // confirm Medium
 let s = await until((x) => x.area === "outpost" && x.dialogue_open, "outpost with its arrival dialogue");
 check("a new run starts with three lives", s.player.lives === 3);
 check("the arrival conversation is open", s.dialogue_open);

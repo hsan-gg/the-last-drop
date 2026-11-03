@@ -36,6 +36,9 @@ await shot("web_1_title");
 
 await page.mouse.click(480, 270);
 await page.keyboard.press("Enter");
+await page.waitForTimeout(600);
+await shot("web_1b_difficulty");
+await page.keyboard.press("Enter");
 await page.waitForTimeout(2500);
 await shot("web_2_intro");
 

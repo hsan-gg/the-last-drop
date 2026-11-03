@@ -112,12 +112,17 @@ await sleep(1500);
 await shot("1_title");
 await page.mouse.click(480, 270);
 await press("Enter");
+await sleep(500);
+await shot("1a_difficulty");
+await press("Enter"); // confirm Medium
 await until((x) => x.scene === "Cutscene", "the opening cutscene");
 await sleep(800);
 await shot("1b_intro_sky");
 for (let i = 0; i < 4; i++) { await press("e"); await press("e"); }
 await shot("1c_intro_map");
 let s = await waitForArea("outpost", "outpost loaded");
+check("difficulty defaults to medium", s.difficulty === "medium");
+check("area music is playing", typeof s.music === "string" && s.music.length > 0);
 await drive("peace");
 check("starts in the outpost", s.area === "outpost");
 await shot("2_outpost_dialogue");

@@ -44,6 +44,8 @@ await page.waitForFunction(() => typeof window.godotDrive === "function", null, 
 await sleep(1500);
 await page.mouse.click(480, 270);
 await press("Enter");
+await sleep(500);
+await press("Enter"); // confirm Medium in the difficulty picker
 let s;
 for (let i = 0; i < 80 && !(s = await state()).area; i++) {
   if (s.scene === "Cutscene") await press("Escape");

@@ -23,6 +23,9 @@ func _ready() -> void:
 	layer = 45
 	_levels = Difficulty.all()
 	_build_shell(Vector2(440, 214), UiTheme.COLOR_ORANGE)
+	var solid := UiTheme.panel_style(UiTheme.COLOR_ORANGE)
+	solid.bg_color = Color(0.05, 0.08, 0.11, 1.0)  # opaque, so the title does not show through
+	(_box.get_parent() as PanelContainer).add_theme_stylebox_override("panel", solid)
 	_box.add_child(_label("CHOOSE YOUR DIFFICULTY", UiTheme.COLOR_ORANGE))
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 4)
@@ -62,11 +65,11 @@ func select(index: int) -> void:
 	for button_index in _buttons.size():
 		_buttons[button_index].add_theme_stylebox_override("normal", UiTheme.slot_style(button_index == _index))
 	_description.text = level["description"]
-	var lines: Array[String] = []
+	var cells := ""
 	for entry in SHOWN_KEYS:
 		var value: float = float(level[entry[1]])
-		lines.append("%s %s" % [entry[0], entry[2] % value])
-	_stats.text = "[color=%s]%s[/color]   %s" % [level["color"], level["name"], "   ".join(lines)]
+		cells += "[cell][color=#8aa0aa]%s[/color][/cell][cell][color=%s]%s[/color]   [/cell]" % [entry[0], level["color"], entry[2] % value]
+	_stats.text = "[table=4]%s[/table]" % cells
 
 
 func confirm(index: int = -1) -> void:

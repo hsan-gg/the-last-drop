@@ -74,6 +74,8 @@ func _state() -> Dictionary:
 	var state := {
 		"scene": scene.name,
 		"area": scene.get("area_id") if scene is GameArea else "",
+		"music": Music.current(),
+		"difficulty": Difficulty.current_id,
 		"flags": GameState.get("_flags"),
 		"counters": GameState.get("_counters"),
 		"health": Survival.health(),
