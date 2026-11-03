@@ -51,6 +51,25 @@ Every key except the menu and fixed shortcuts can be rebound in Menu > Controls.
 - **Map with fog of war;** quests as cards sorted by difficulty; options for audio, display, gameplay and accessibility (saved).
 - **Objective tracker:** hidden until you press T. It slides in with OBJECTIVE COMPLETE and NEW OBJECTIVE banners. The objective pointer is subtle (Options > Objective hints: Off, Subtle, Strong).
 
+## The world
+
+Seven regions, each its own world with its own tileset, light, weather, music,
+monsters and people: the Forgotten Outpost, the Battery Factory, the Great Dump,
+the Dead River, the Silent Fields, the Forgotten Industry and the Last Sanctuary.
+The story is written up in `docs/STORY.md` (kept up to date with every change).
+
+- **People:** eleven characters (`data/npcs.json`) with conversations that follow
+  the story; a gold "!" means they have something new to say.
+- **Runes (keys 1, 2, 3):** Ember (flamethrower; the Spoiled catch fire and it
+  spreads), Scatter (shotgun with knockback) and Tide (heals and pushes back),
+  powered by energy that refills over time and with kills.
+- **Monsters:** walkers, runners and brutes, then Blight Husks (spore clouds),
+  Smog Wraiths (fade in the smog), Rust Brutes (fire melts their armour), the
+  Slag Golem boss, and Moss Sentinels.
+- **A living world:** flowing water, swaying grass, bubbling toxins, drifting
+  ash, spores, smog, fireflies and a haze of pollution, different in each region.
+- **Rail carts:** once a region's lights are on, its cart runs to any other lit region.
+
 ## Difficulty
 
 Chosen on the title screen (Easy, **Medium** default, Hard, Hardcore) and fixed for the run

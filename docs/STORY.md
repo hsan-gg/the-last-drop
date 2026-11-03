@@ -136,6 +136,24 @@ bar), which refills over time and with kills.
 | **Scatter** | Nana Ru, Dump | Shotgun: a spread of pellets with heavy knockback. |
 | **Tide** | Osei, River | A wave of clean water: heals you and pushes everything back. |
 
-## 9. Changelog
+## 9. How it is wired (for writers)
+
+| Story beat | Where it lives |
+|---|---|
+| Who says what, and when | `data/npcs.json` (talks with `flags`, `items`, `counters`, `gives`) |
+| Arrivals, recordings, terminals, repairs | `data/dialogue.json` |
+| Gate cutscenes | `data/cutscenes.json` (`to_fields`, `to_industry`, `to_sanctuary`) |
+| Region looks, people and monsters | `data/areas.json` and `tools/generate_maps.py` |
+| What ends the game | `data/chapters.json` (`ending_requires` on the Sanctuary) |
+
+## 10. Changelog
 
 - 2026-11-03: Story bible created; NPCs, region worlds, runes and monsters defined.
+- 2026-11-04: Built in game: all 11 characters with conversations (`data/npcs.json`),
+  Tobi's five photographs (one in each of Factory, Dump, River, Fields, Industry),
+  the three runes (Ember from Halden after the factory power is back, Scatter from
+  Nana Ru after a perfect pile, Tide from Osei once the river is clean), the Silent
+  Fields (compost bin, soil terminal, Lena's harvest), the Forgotten Industry (solar
+  array, grid console, Vex, Unit-7, the Slag Golem), and the Last Sanctuary (atrium
+  core, the archive timeline, Ines's last recording; Tobi, Osei and Mira arrive if
+  the story brought them). Rail carts link every lit region.
