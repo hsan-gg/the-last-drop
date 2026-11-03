@@ -1,0 +1,208 @@
+extends GutTest
+## Plays the real scenes from the first water inspection to the final archive,
+## driving the same interactables the player would. Scene changes are never
+## triggered here, since they would replace the test runner.
+
+const OUTPOST := preload("res://world/outpost.tscn")
+const FACTORY := preload("res://world/factory.tscn")
+const OUTPOST_ITEMS: Array[String] = ["battery", "plastic_bottle", "chemical_can", "scrap_metal", "glass_shard", "pipe_section"]
+
+var _area: Node
+
+
+func before_each() -> void:
+	Inventory.clear()
+	GameState.reset()
+	Survival.set_process(false)
+	Survival.reset()
+
+
+func after_each() -> void:
+	Survival.reset()
+	Survival.set_process(true)
+
+
+func _enter(scene: PackedScene) -> void:
+	_area = add_child_autofree(scene.instantiate())
+	await wait_physics_frames(2)
+	for overlay in _area.find_children("*", "DialogueBox", true, false):
+		overlay.pauses_game = false
+	for overlay in _area.find_children("*", "SortingChallenge", true, false):
+		overlay.pauses_game = false
+
+
+func _find(type_name: String) -> Node:
+	return _area.find_children("*", type_name, true, false)[0]
+
+
+func _sorting() -> SortingChallenge:
+	return _find("SortingChallenge")
+
+
+func _dialogue() -> DialogueBox:
+	return _find("DialogueBox")
+
+
+## Sorts every item in `pile` correctly, clicking through each lesson.
+func _sort_pile_correctly(pile: ScrapPile) -> void:
+	pile.interact(null)
+	for item_id in pile.item_ids:
+		assert_eq(_sorting().phase(), SortingChallenge.Phase.CHOOSING)
+		_sorting().choose_bin(SortingRules.correct_bin(item_id))
+		_sorting().continue_flow()
+	assert_eq(_sorting().phase(), SortingChallenge.Phase.SUMMARY)
+	_sorting().continue_flow()
+	await wait_physics_frames(2)
+
+
+func test_both_areas_build_with_every_configured_entity() -> void:
+	await _enter(OUTPOST)
+	assert_not_null(_find("Player"))
+	for type_name in ["ScrapPile", "WaterSource", "RepairStation", "Recording", "AreaExit"]:
+		assert_gt(_area.find_children("*", type_name, true, false).size(), 0, type_name)
+	_area.queue_free()
+	await wait_physics_frames(2)
+
+	await _enter(FACTORY)
+	for type_name in ["ScrapPile", "RepairStation", "ArchiveTerminal"]:
+		assert_gt(_area.find_children("*", type_name, true, false).size(), 0, type_name)
+
+
+func test_the_player_spawns_on_open_ground() -> void:
+	await _enter(OUTPOST)
+	var player: Player = _find("Player")
+	var spawn := MapBuilder.cell_center(MapBuilder.markers(MapBuilder.load_layout("res://data/maps/outpost.txt"), "@")[0]["cell"])
+	assert_eq(player.global_position, spawn)
+
+
+func test_the_intro_plays_once_per_run() -> void:
+	watch_signals(EventBus)
+	await _enter(OUTPOST)
+	assert_signal_emitted_with_parameters(EventBus, "dialogue_requested", ["intro"])
+	var after_first_visit: int = get_signal_emit_count(EventBus, "dialogue_requested")
+	_area.queue_free()
+	await wait_physics_frames(2)
+
+	await _enter(OUTPOST)
+	assert_eq(get_signal_emit_count(EventBus, "dialogue_requested"), after_first_visit)
+
+
+func test_water_is_unsafe_until_the_treatment_unit_is_repaired() -> void:
+	await _enter(OUTPOST)
+	var water: WaterSource = _find("WaterSource")
+
+	water.interact(null)
+	assert_true(GameState.has_flag("water_tested"))
+	assert_false(GameState.has_flag("water_secure"))
+
+	Survival.damage(30.0)
+	Survival.tick(100.0)
+	var thirsty := Survival.water()
+	water.interact(null)
+	assert_eq(Survival.water(), thirsty, "untreated water must not be drinkable")
+	assert_false(GameState.has_flag("water_secure"))
+
+
+func test_a_wrong_sort_teaches_costs_health_and_retries_the_same_item() -> void:
+	await _enter(OUTPOST)
+	var pile: ScrapPile = _find("ScrapPile")
+	pile.interact(null)
+	assert_eq(_sorting().phase(), SortingChallenge.Phase.CHOOSING)
+
+	var health := Survival.health()
+	_sorting().choose_bin(SortingRules.BIN_GENERAL)
+	assert_eq(_sorting().phase(), SortingChallenge.Phase.FEEDBACK_WRONG)
+	assert_lt(Survival.health(), health)
+	assert_eq(GameState.get_counter("sort_mistakes"), 1)
+
+	_sorting().continue_flow()
+	assert_eq(_sorting().phase(), SortingChallenge.Phase.CHOOSING)
+	_sorting().choose_bin(SortingRules.BIN_HAZARDOUS)
+	assert_eq(_sorting().phase(), SortingChallenge.Phase.FEEDBACK_RIGHT, "the same battery should now be accepted")
+
+
+func test_a_wrong_sort_never_gives_the_player_the_item() -> void:
+	await _enter(OUTPOST)
+	_find("ScrapPile").interact(null)
+	_sorting().choose_bin(SortingRules.BIN_GENERAL)
+	assert_eq(Inventory.snapshot(), {})
+
+
+func test_full_outpost_loop_sort_repair_drink_record_unlock() -> void:
+	await _enter(OUTPOST)
+	var pile: ScrapPile = _find("ScrapPile")
+	var water: WaterSource = _find("WaterSource")
+	var gate: AreaExit = _find("AreaExit")
+	var recording: Recording = _find("Recording")
+	var treatment: RepairStation = _area.find_children("*", "RepairStation", true, false)[0]
+
+	assert_eq(ObjectivesTracker.current("outpost")["id"], "find_water")
+	water.interact(null)
+	assert_eq(ObjectivesTracker.current("outpost")["id"], "sort_outpost")
+
+	treatment.interact(null)
+	assert_false(GameState.has_flag("treatment_repaired"), "cannot repair with no materials")
+
+	await _sort_pile_correctly(pile)
+	assert_freed(pile, "sorted pile")
+	assert_true(GameState.has_flag("pile_sorted_outpost"))
+	assert_eq(Inventory.snapshot(), {"plastic_bottle": 1, "scrap_metal": 1, "pipe_section": 1}, "only recoverable items are kept")
+	assert_false(Inventory.has("battery"), "hazards are not recovered")
+	assert_eq(GameState.get_counter("sort_mistakes"), 0)
+
+	assert_false(gate.is_open(), "the gate stays shut before the recording")
+	treatment.interact(null)
+	assert_true(GameState.has_flag("treatment_repaired"))
+	assert_eq(Inventory.snapshot(), {}, "the repair consumed the materials")
+
+	Survival.tick(200.0)
+	var before := Survival.water()
+	water.interact(null)
+	assert_gt(Survival.water(), before, "clean water restores the water meter")
+	assert_true(GameState.has_flag("water_secure"))
+
+	recording.interact(null)
+	assert_true(GameState.has_flag("recording_found"))
+	assert_true(gate.is_open())
+	assert_eq(ObjectivesTracker.current("outpost")["id"], "go_factory")
+
+
+func test_revisiting_a_sorted_area_does_not_respawn_the_pile() -> void:
+	await _enter(OUTPOST)
+	await _sort_pile_correctly(_find("ScrapPile"))
+	_area.queue_free()
+	await wait_physics_frames(2)
+
+	await _enter(OUTPOST)
+	assert_eq(_area.find_children("*", "ScrapPile", true, false).size(), 0)
+
+
+func test_factory_loop_to_the_archive() -> void:
+	await _enter(FACTORY)
+	var pile: ScrapPile = _find("ScrapPile")
+	var generator: RepairStation = _find("RepairStation")
+	var terminal: ArchiveTerminal = _find("ArchiveTerminal")
+
+	terminal.interact(null)
+	assert_false(GameState.has_flag("archive_read"), "terminal needs power first")
+
+	generator.interact(null)
+	assert_false(GameState.has_flag("power_restored"), "no materials yet")
+
+	await _sort_pile_correctly(pile)
+	assert_eq(Inventory.snapshot(), {"copper_wire": 1, "scrap_metal": 1})
+	generator.interact(null)
+	assert_true(GameState.has_flag("power_restored"))
+
+	terminal.interact(null)
+	assert_true(GameState.has_flag("archive_read"))
+
+
+func test_a_collapse_returns_the_player_to_their_start() -> void:
+	await _enter(OUTPOST)
+	var player: Player = _find("Player")
+	var start := player.global_position
+	player.global_position = start + Vector2(120, 80)
+	Survival.damage(1000.0)
+	assert_eq(player.global_position, start)
+	assert_eq(Survival.health(), Survival.COLLAPSE_RECOVERY_HEALTH)

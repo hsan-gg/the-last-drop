@@ -1,0 +1,11 @@
+[
+	{ "id": "find_water", "area": "outpost", "text": "Find a water source", "done_flag": "water_tested" },
+	{ "id": "sort_outpost", "area": "outpost", "text": "Sort the scrap pile", "done_flag": "pile_sorted_outpost" },
+	{ "id": "repair_treatment", "area": "outpost", "text": "Repair the water treatment unit", "done_flag": "treatment_repaired" },
+	{ "id": "drink", "area": "outpost", "text": "Drink clean water", "done_flag": "water_secure" },
+	{ "id": "recording", "area": "outpost", "text": "Find the old recording", "done_flag": "recording_found" },
+	{ "id": "go_factory", "area": "outpost", "text": "Head north to the battery factory", "done_flag": "area_factory_reached" },
+	{ "id": "sort_factory", "area": "factory", "text": "Sort the factory waste safely", "done_flag": "pile_sorted_factory" },
+	{ "id": "repair_generator", "area": "factory", "text": "Restore power with the generator", "done_flag": "power_restored" },
+	{ "id": "read_archive", "area": "factory", "text": "Read the archive terminal", "done_flag": "archive_read" }
+]

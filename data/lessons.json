@@ -1,0 +1,202 @@
+[
+	{
+		"id": "battery_leak",
+		"title": "Batteries are hazardous waste",
+		"wrong": "Mixed into ordinary waste, batteries crack and leak toxic metals and acid. They can also start fires.",
+		"right": "Hazardous-waste collection keeps their metals and chemicals out of the soil and water.",
+		"principle": "Hazardous waste needs its own collection route.",
+		"real_life": "Drop used batteries at a collection point. Never put them in household trash."
+	},
+	{
+		"id": "chemical_leak",
+		"title": "Chemicals never go in the general bin",
+		"wrong": "Leaking chemicals soak through the pile and into the ground, poisoning the water below.",
+		"right": "Sealed and collected separately, the chemicals can be treated instead of spreading.",
+		"principle": "Contamination travels: soil, then groundwater, then rivers.",
+		"real_life": "Paints, solvents and cleaners belong at a household hazardous-waste site."
+	},
+	{
+		"id": "plastic_reuse",
+		"title": "Plastic can be recovered",
+		"wrong": "Thrown on the general pile, a perfectly good material is buried and lost for centuries.",
+		"right": "Recovered plastic can be reshaped into new parts, like the housing for a water filter.",
+		"principle": "Recovered materials replace the need for new ones.",
+		"real_life": "Rinse and sort plastic for recycling so it can become something useful again."
+	},
+	{
+		"id": "material_reuse",
+		"title": "Reuse starts with sorting",
+		"wrong": "Usable metal buried under rubbish is gone for good, and so is the chance to repair anything.",
+		"right": "Clean, sorted metal and pipe are exactly what a repair needs. Nothing new has to be made.",
+		"principle": "Choose materials by what they are fit for, and reuse before you discard.",
+		"real_life": "Repair and reuse first. Recycling keeps metals in circulation instead of in landfill."
+	},
+	{
+		"id": "glass_general",
+		"title": "Not everything can be recovered",
+		"wrong": "Broken glass in the wrong bin injures whoever sorts it next and spoils the good materials around it.",
+		"right": "Broken glass is inert but sharp. Bagged with general waste, it is safe for the people who handle it.",
+		"principle": "Match each kind of waste to the right route, and not everything is hazardous.",
+		"real_life": "Wrap broken glass before binning it. Local rules decide whether it is recycled."
+	},
+	{
+		"id": "ewaste_phone",
+		"title": "Old electronics are hazardous and valuable",
+		"wrong": "In the general pile, a phone leaks lead and cadmium, and its copper and gold are lost.",
+		"right": "E-waste collection recovers the metals and keeps the toxins out of soil.",
+		"principle": "Electronics are both a hazard and a mine of reusable metal.",
+		"real_life": "Take old phones to an e-waste drop-off or a take-back scheme."
+	},
+	{
+		"id": "tube_mercury",
+		"title": "Some bulbs contain mercury",
+		"wrong": "A cracked tube releases mercury vapour into the air you breathe.",
+		"right": "Whole tubes go to hazardous collection, where the mercury is captured.",
+		"principle": "Everyday items can hide hazardous contents.",
+		"real_life": "Do not break old bulbs. Use a collection point that accepts them."
+	},
+	{
+		"id": "food_compost",
+		"title": "Food scraps are a resource",
+		"wrong": "Food buried in a landfill rots without air and gives off methane.",
+		"right": "Composted, the same scraps become soil.",
+		"principle": "Organic waste is a resource when it stays out of landfill.",
+		"real_life": "Compost at home or use your local food-waste collection."
+	},
+	{
+		"id": "paper_recycle",
+		"title": "Dry paper can be recycled",
+		"wrong": "Soaked or soiled paper falls apart and cannot be reused.",
+		"right": "Clean, dry cardboard goes back into the paper stream.",
+		"principle": "Keeping recyclables clean keeps them recyclable.",
+		"real_life": "Flatten cardboard and keep it dry until collection."
+	},
+	{
+		"id": "glass_infinite",
+		"title": "Glass recycles again and again",
+		"wrong": "Glass in the general pile sits in the ground for thousands of years.",
+		"right": "Recycled glass melts into new glass with no loss of quality.",
+		"principle": "Some materials can be reused indefinitely.",
+		"real_life": "Rinse glass and sort it by your local rules."
+	},
+	{
+		"id": "textile_reuse",
+		"title": "Cloth has a second life",
+		"wrong": "Thrown away, textiles take up space and add to the pile.",
+		"right": "Scraps become gloves, patches and padding.",
+		"principle": "Reuse comes before recycling.",
+		"real_life": "Repair, donate or repurpose clothes before binning them."
+	},
+	{
+		"id": "metal_recycle",
+		"title": "Metal can be recycled many times",
+		"wrong": "Tin cans left in the pile rust away and are lost.",
+		"right": "Recycled metal needs far less energy than making new metal.",
+		"principle": "Recycling saves the energy already spent making a material.",
+		"real_life": "Rinse cans and put them in the metal recycling stream."
+	},
+	{
+		"id": "contamination_ruins",
+		"title": "Dirty recycling spoils the batch",
+		"wrong": "Grease and food on cardboard can spoil a whole recycling batch.",
+		"right": "Clean items recycle. Dirty parts go where food waste is accepted, or in the general bin.",
+		"principle": "Clean sorting keeps recycling worth doing.",
+		"real_life": "Rinse containers and tear clean paper from greasy parts."
+	},
+	{
+		"id": "clear_not_safe",
+		"title": "Clear water is not always safe",
+		"wrong": "You drink the clear sample. Clear water can still carry dissolved metals and chemicals.",
+		"right": "The test strip shows what your eyes cannot see.",
+		"principle": "Clear water is not necessarily safe water.",
+		"real_life": "If water quality is uncertain, use a tested or treated source."
+	},
+	{
+		"id": "filter_limits",
+		"title": "Each treatment stage does one job",
+		"wrong": "A sand filter catches particles but does not remove dissolved chemicals.",
+		"right": "A chain of stages, each matched to a problem, cleans the water step by step.",
+		"principle": "Match each treatment stage to a contaminant.",
+		"real_life": "Know what your water filter removes and what it does not."
+	},
+	{
+		"id": "boil_limits",
+		"title": "Boiling is not a cure for everything",
+		"wrong": "Boiling kills germs. It does not remove metals or chemicals.",
+		"right": "Treat germs and chemicals with the methods that suit each.",
+		"principle": "Match the treatment to the contaminant.",
+		"real_life": "If chemical pollution is suspected, boiling is not enough."
+	},
+	{
+		"id": "runoff",
+		"title": "Water carries pollution downhill",
+		"wrong": "Rain washed the dump's leaking liquid into the river.",
+		"right": "Sealed, sorted hazards cannot wash away.",
+		"principle": "Where waste goes, water follows.",
+		"real_life": "Keep chemicals, paint and oil out of drains and the ground."
+	},
+	{
+		"id": "brown_green",
+		"title": "Compost needs a balance",
+		"wrong": "Only wet scraps turn to slime and smell. Only dry leaves barely break down.",
+		"right": "A mix of dry material and wet scraps, kept damp, becomes soil.",
+		"principle": "Balance makes soil.",
+		"real_life": "Layer dry leaves or cardboard with kitchen scraps."
+	},
+	{
+		"id": "no_plastic",
+		"title": "Plastic does not belong in compost",
+		"wrong": "Plastic and metal do not rot. They stay in the soil as pollution.",
+		"right": "Only organic material goes in the compost bin.",
+		"principle": "Contamination ruins a whole batch.",
+		"real_life": "Check your compost for plastic stickers and labels before adding it."
+	},
+	{
+		"id": "soil_loss",
+		"title": "Soil is slow to build and quick to lose",
+		"wrong": "Bare, lifeless soil blows away and washes out with the rain.",
+		"right": "Covered, fed soil keeps its nutrients and its life.",
+		"principle": "Soil takes centuries to build and moments to lose.",
+		"real_life": "Keep soil covered with plants or mulch."
+	},
+	{
+		"id": "waste_to_food",
+		"title": "One system's waste feeds another",
+		"wrong": "The food scraps you sorted at the dump would have rotted for nothing.",
+		"right": "Here they became soil, and the soil grew food.",
+		"principle": "Waste is a resource in the wrong place.",
+		"real_life": "Close the loop: scraps to compost to food."
+	},
+	{
+		"id": "hazard_symbols",
+		"title": "Labels tell you the danger",
+		"wrong": "Guessing what a barrel holds can burn, poison or explode.",
+		"right": "Reading the hazard symbol tells you how to handle it.",
+		"principle": "Read the label before you touch it.",
+		"real_life": "Learn the common hazard symbols and never open unlabelled containers."
+	},
+	{
+		"id": "panel_reuse",
+		"title": "Old equipment is full of useful parts",
+		"wrong": "Scrapped as junk, a working solar panel is wasted.",
+		"right": "Reused, it powers a whole system again.",
+		"principle": "Old equipment is a store of useful parts.",
+		"real_life": "Repair or donate working equipment before recycling it."
+	},
+	{
+		"id": "efficiency_first",
+		"title": "The cheapest energy is the energy you do not use",
+		"wrong": "Wasteful devices overload a small grid and cause a blackout.",
+		"right": "Efficient devices let the same power go much further.",
+		"principle": "Efficiency makes renewable power stretch.",
+		"real_life": "Switch off what you do not use and pick efficient appliances."
+	},
+	{
+		"id": "battery_storage",
+		"title": "Batteries store power but become hazardous",
+		"wrong": "A worn-out battery thrown away leaks again and spoils the soil.",
+		"right": "Batteries store the sun's energy for the night, then go to hazardous collection.",
+		"principle": "Treat storage as part of the whole system.",
+		"real_life": "Return used batteries to a collection point."
+	}
+]

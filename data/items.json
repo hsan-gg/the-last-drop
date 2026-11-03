@@ -1,0 +1,44 @@
+[
+	{
+		"id": "battery",
+		"name": "Battery",
+		"category": "hazardous",
+		"lesson_id": "battery_leak"
+	},
+	{
+		"id": "chemical_can",
+		"name": "Chemical Can",
+		"category": "hazardous",
+		"lesson_id": "chemical_leak"
+	},
+	{
+		"id": "plastic_bottle",
+		"name": "Plastic Bottle",
+		"category": "recyclable",
+		"lesson_id": "plastic_reuse"
+	},
+	{
+		"id": "scrap_metal",
+		"name": "Scrap Metal",
+		"category": "reusable",
+		"lesson_id": "material_reuse"
+	},
+	{
+		"id": "pipe_section",
+		"name": "Pipe Section",
+		"category": "reusable",
+		"lesson_id": "material_reuse"
+	},
+	{
+		"id": "copper_wire",
+		"name": "Copper Wire",
+		"category": "reusable",
+		"lesson_id": "material_reuse"
+	},
+	{
+		"id": "glass_shard",
+		"name": "Glass Shard",
+		"category": "general",
+		"lesson_id": "glass_general"
+	}
+]

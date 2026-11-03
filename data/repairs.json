@@ -1,0 +1,23 @@
+[
+	{
+		"id": "treatment_unit",
+		"name": "Water Treatment Unit",
+		"requires": {
+			"scrap_metal": 1,
+			"pipe_section": 1,
+			"plastic_bottle": 1
+		},
+		"sets_flag": "treatment_repaired",
+		"dialogue": "treatment_repaired"
+	},
+	{
+		"id": "generator",
+		"name": "Generator",
+		"requires": {
+			"scrap_metal": 1,
+			"copper_wire": 1
+		},
+		"sets_flag": "power_restored",
+		"dialogue": "generator_repaired"
+	}
+]

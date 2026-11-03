@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://world/archive_terminal.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/terminal_off.png" id="2"]
+
+[sub_resource type="CircleShape2D" id="1"]
+radius = 24.0
+
+[node name="ArchiveTerminal" type="Area2D"]
+script = ExtResource("1")
+blocker_size = Vector2(18, 10)
+blocker_offset = Vector2(0, 8)
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("1")

@@ -1,0 +1,47 @@
+[
+	{
+		"id": "outpost",
+		"layout": "res://data/maps/outpost.txt",
+		"floor": ".",
+		"tint": "#ffe2c4",
+		"arrival_dialogue": "intro",
+		"entities": {
+			"$": {
+				"scene": "scrap_pile",
+				"props": {
+					"pile_id": "outpost",
+					"item_ids": ["battery", "plastic_bottle", "chemical_can", "scrap_metal", "glass_shard", "pipe_section"]
+				}
+			},
+			"W": { "scene": "water_source" },
+			"U": { "scene": "repair_station", "props": { "repair_id": "treatment_unit" } },
+			"V": { "scene": "recording" },
+			"^": {
+				"scene": "area_exit",
+				"props": {
+					"target_scene": "res://world/factory.tscn",
+					"required_flag": "recording_found",
+					"prompt": "Open the north gate"
+				}
+			}
+		}
+	},
+	{
+		"id": "factory",
+		"layout": "res://data/maps/factory.txt",
+		"floor": "M",
+		"tint": "#d6e4ff",
+		"arrival_dialogue": "factory_arrival",
+		"entities": {
+			"$": {
+				"scene": "scrap_pile",
+				"props": {
+					"pile_id": "factory",
+					"item_ids": ["battery", "copper_wire", "chemical_can", "battery", "scrap_metal"]
+				}
+			},
+			"G": { "scene": "repair_station", "props": { "repair_id": "generator" } },
+			"K": { "scene": "archive_terminal" }
+		}
+	}
+]

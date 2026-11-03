@@ -1,0 +1,266 @@
+[
+	{
+		"id": "intro",
+		"lines": [
+			"You wake up in the ruins of a settlement. Nobody has lived here for a long time.",
+			"Your throat is dry. Everything you need starts with clean water.",
+			"Look around. Anything you find might help."
+		]
+	},
+	{
+		"id": "water_contaminated",
+		"lines": [
+			"A pool of water. It is cloudy, and there is a sheen on the surface.",
+			"You can not trust it. Drinking it could make you sick.",
+			"The old treatment unit nearby might be fixable. You will need materials."
+		]
+	},
+	{
+		"id": "water_needs_treatment",
+		"lines": [
+			"Still untreated. Repair the treatment unit first."
+		]
+	},
+	{
+		"id": "water_clean",
+		"lines": [
+			"Clear, cold, and safe. The treatment unit works.",
+			"Fixing one system made another one usable."
+		]
+	},
+	{
+		"id": "treatment_repaired",
+		"lines": [
+			"The treatment unit hums to life. The filter holds.",
+			"Reused metal, a recovered pipe, and a plastic filter housing. Nothing new was made."
+		]
+	},
+	{
+		"id": "recording_1",
+		"lines": [
+			"A cracked recorder. You press play.",
+			"\"Day 412. We keep saying someone else will deal with the waste.\"",
+			"\"It was never one disaster. It was a thousand small choices to look away.\"",
+			"\"If you can hear this, follow the old pipeline north. There is a source of pure water. They call it the Last Drop.\""
+		]
+	},
+	{
+		"id": "exit_locked",
+		"lines": [
+			"The path north is closed off. You still have things to find here first."
+		]
+	},
+	{
+		"id": "factory_arrival",
+		"lines": [
+			"The old battery factory. Rusted shelves, cracked crates, a smell of chemicals.",
+			"Careful here. Some of this is dangerous."
+		]
+	},
+	{
+		"id": "generator_repaired",
+		"lines": [
+			"The generator coughs, then catches. Lights flicker on across the factory.",
+			"A terminal wakes up. It is linked to something far away."
+		]
+	},
+	{
+		"id": "terminal_locked",
+		"lines": [
+			"The terminal is dead. It needs power."
+		]
+	},
+	{
+		"id": "archive_truth",
+		"lines": [
+			"ARCHIVE LINK ESTABLISHED. THE LAST SANCTUARY.",
+			"You expected to find who destroyed the world. A villain. A machine. A single mistake.",
+			"There was none. The collapse took decades. Industry chose cheap over clean. Waste systems were neglected. Policies were postponed.",
+			"\"Humanity did not lose the world because it had no solutions. It lost the world because it repeatedly chose not to use them.\"",
+			"And the Last Drop is not a magic spring. It is a restoration facility, built to heal water, soil and ecosystems.",
+			"It needs maintenance, knowledge, and people working together. It is a place to start again."
+		]
+	},
+	{
+		"id": "ending_preserve",
+		"lines": [
+			"You keep the archive for your own community.",
+			"A small group is safe, for now. The rest of the world is left waiting."
+		]
+	},
+	{
+		"id": "ending_share",
+		"lines": [
+			"You release the archive and invite every community to the Last Drop.",
+			"It will be hard to coordinate, and the knowledge may be misused. But restoration can finally begin."
+		]
+	},
+	{
+		"id": "ending_tone_careful",
+		"lines": [
+			"You sorted carefully, and it showed. The systems you repaired still work."
+		]
+	},
+	{
+		"id": "ending_tone_learning",
+		"lines": [
+			"You made some mistakes along the way, and learned from each. The repairs held."
+		]
+	},
+	{
+		"id": "ending_tone_reckless",
+		"lines": [
+			"Too many things were thrown away carelessly. The world remembers, and the repairs will be harder."
+		]
+	},
+	{
+		"id": "dump_arrival",
+		"lines": [
+			"Towers rise out of the plastic like broken teeth.",
+			"Whatever people threw away, they never stopped throwing.",
+			"Sorting here is slow and tedious. It is also the only way to build anything."
+		]
+	},
+	{
+		"id": "recording_2",
+		"lines": [
+			"Another recorder, wedged in a pile of old phones. You press play.",
+			"\"Day 301. We had sorting plants. Good ones. Then someone realised it was cheaper to ship the waste away than to fix them.\"",
+			"\"Away has an address. It is always someone else's backyard.\"",
+			"\"The river is next. Follow the green stain, and do not drink it.\""
+		]
+	},
+	{
+		"id": "river_arrival",
+		"lines": [
+			"The river is the colour of old tea. The air tastes of metal.",
+			"A treatment plant waits on the far bank, its basins dry.",
+			"Clear water is not the same as safe water. Learn the difference."
+		]
+	},
+	{
+		"id": "recording_3",
+		"lines": [
+			"A recorder, dripping, on the riverbank.",
+			"\"Day 188. The plant needed new filters. The budget meeting went on for two years.\"",
+			"\"Everyone knew. Everyone agreed it was serious. Nobody voted for the cost.\"",
+			"\"Plants do not fail. People defer them.\""
+		]
+	},
+	{
+		"id": "fields_arrival",
+		"lines": [
+			"Nothing grows here. Not because it is dry, but because the soil forgot how.",
+			"Soil is alive. Without life it is just dust.",
+			"Maybe the dump has something to give it back."
+		]
+	},
+	{
+		"id": "recording_4",
+		"lines": [
+			"A recorder, wrapped in a seed packet.",
+			"\"Day 120. We stopped feeding the soil. We fed the crops instead. It worked, until it did not.\"",
+			"\"Waste was always just food for something else. We forgot that.\"",
+			"\"The factories will tell you the rest. Be careful what you open.\""
+		]
+	},
+	{
+		"id": "industry_arrival",
+		"lines": [
+			"The chimneys are cold. The signs still warn you.",
+			"Some of this is treasure. Some of it is poison. The labels will tell you which.",
+			"Do not guess."
+		]
+	},
+	{
+		"id": "recording_5",
+		"lines": [
+			"A recorder, hung on a fence beside a warning sign.",
+			"\"Day 60. We measured success by how much we made. Never by what it cost to make it.\"",
+			"\"The cheapest product always had a hidden bill. Someone else paid it. You are standing in it.\"",
+			"\"The Sanctuary is in the hills. The door still opens for anyone who brings power.\""
+		]
+	},
+	{
+		"id": "sanctuary_arrival",
+		"lines": [
+			"Moss grows on the glass. Someone kept the lights on, once.",
+			"Every region you crossed left something here. Piece it together."
+		]
+	},
+	{
+		"id": "archive_fragment_overconsumption",
+		"lines": [
+			"Fragment: Overconsumption.",
+			"Buy, use, discard. The loop was never closed."
+		]
+	},
+	{
+		"id": "archive_fragment_recycling",
+		"lines": [
+			"Fragment: Neglected recycling.",
+			"Plants closed. Collection stopped. Landfills filled."
+		]
+	},
+	{
+		"id": "archive_fragment_delay",
+		"lines": [
+			"Fragment: Delayed action.",
+			"Policy was postponed again, for good reasons each time."
+		]
+	},
+	{
+		"id": "archive_fragment_hidden_costs",
+		"lines": [
+			"Fragment: Hidden costs.",
+			"Cheap goods. Poisoned rivers. Different people paying."
+		]
+	},
+	{
+		"id": "archive_fragment_inaction",
+		"lines": [
+			"Fragment: Collective inaction.",
+			"Everyone waited for someone else to move first."
+		]
+	},
+	{
+		"id": "sanctuary_first_twist",
+		"lines": [
+			"There was no single catastrophe.",
+			"Humanity did not lose the world because it had no solutions.",
+			"It lost the world because it repeatedly chose not to use them."
+		]
+	},
+	{
+		"id": "sanctuary_truth",
+		"lines": [
+			"You look for a spring. There isn't one.",
+			"The Last Drop is a restoration facility: research, equipment, water systems, seed banks.",
+			"It will not rebuild the world by itself. It needs people, power and patience."
+		]
+	},
+	{
+		"id": "recording_final",
+		"lines": [
+			"The last recorder, on the console.",
+			"\"Day 1. If you are listening, you found it. You powered it. That means you already know how.\"",
+			"\"It does not fix anything on its own. It is a tool. It needs hands.\"",
+			"\"The world was not destroyed in a single day. It will not be rebuilt in one either.\"",
+			"\"What you do with this place is up to you.\""
+		]
+	},
+	{
+		"id": "choice_preserve",
+		"lines": [
+			"You seal the archive and keep it safe.",
+			"Your community will be protected. The wider world will have to wait."
+		]
+	},
+	{
+		"id": "choice_share",
+		"lines": [
+			"You open the channels and send everything out.",
+			"Some will answer. Some may misuse it. Nothing is certain, but the door is open."
+		]
+	}
+]

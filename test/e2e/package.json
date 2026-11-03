@@ -1,0 +1,9 @@
+{
+  "name": "the-last-drop-e2e",
+  "private": true,
+  "type": "module",
+  "description": "Browser smoke test for the exported web build",
+  "dependencies": {
+    "playwright-core": "1.64.1"
+  }
+}

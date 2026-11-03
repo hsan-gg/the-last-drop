@@ -1,0 +1,138 @@
+[
+	{
+		"id": "outpost",
+		"number": 0,
+		"title": "The Forgotten Outpost",
+		"region": "outpost",
+		"status": "built",
+		"areas": [
+			"outpost"
+		],
+		"lessons": [
+			"battery_leak",
+			"chemical_leak"
+		],
+		"arrival": "intro",
+		"recording": "recording_1",
+		"unlock_flag": null
+	},
+	{
+		"id": "factory",
+		"number": 1,
+		"title": "The Battery Factory",
+		"region": "outpost",
+		"status": "built",
+		"areas": [
+			"factory"
+		],
+		"lessons": [
+			"battery_leak",
+			"chemical_leak"
+		],
+		"arrival": "factory_arrival",
+		"recording": "archive_truth",
+		"unlock_flag": "recording_found"
+	},
+	{
+		"id": "dump",
+		"number": 2,
+		"title": "The Great Dump",
+		"region": "great_dump",
+		"status": "planned",
+		"areas": [
+			"dump"
+		],
+		"lessons": [
+			"ewaste_phone",
+			"tube_mercury",
+			"food_compost",
+			"paper_recycle",
+			"glass_infinite",
+			"textile_reuse",
+			"metal_recycle",
+			"contamination_ruins"
+		],
+		"arrival": "dump_arrival",
+		"recording": "recording_2",
+		"unlock_flag": "archive_read"
+	},
+	{
+		"id": "river",
+		"number": 3,
+		"title": "The Dead River",
+		"region": "dead_river",
+		"status": "planned",
+		"areas": [
+			"river"
+		],
+		"lessons": [
+			"clear_not_safe",
+			"filter_limits",
+			"boil_limits",
+			"runoff"
+		],
+		"arrival": "river_arrival",
+		"recording": "recording_3",
+		"unlock_flag": "recording_2_found"
+	},
+	{
+		"id": "fields",
+		"number": 4,
+		"title": "The Silent Fields",
+		"region": "silent_fields",
+		"status": "planned",
+		"areas": [
+			"fields"
+		],
+		"lessons": [
+			"brown_green",
+			"no_plastic",
+			"soil_loss",
+			"waste_to_food"
+		],
+		"arrival": "fields_arrival",
+		"recording": "recording_4",
+		"unlock_flag": "recording_3_found"
+	},
+	{
+		"id": "industry",
+		"number": 5,
+		"title": "The Forgotten Industry",
+		"region": "forgotten_industry",
+		"status": "planned",
+		"areas": [
+			"industry"
+		],
+		"lessons": [
+			"hazard_symbols",
+			"panel_reuse",
+			"efficiency_first",
+			"battery_storage"
+		],
+		"arrival": "industry_arrival",
+		"recording": "recording_5",
+		"unlock_flag": "recording_4_found"
+	},
+	{
+		"id": "sanctuary",
+		"number": 6,
+		"title": "The Last Sanctuary",
+		"region": "last_sanctuary",
+		"status": "planned",
+		"areas": [
+			"sanctuary"
+		],
+		"lessons": [],
+		"arrival": "sanctuary_arrival",
+		"recording": "recording_final",
+		"unlock_flag": "recording_5_found",
+		"reveals": [
+			"sanctuary_first_twist",
+			"sanctuary_truth"
+		],
+		"choices": [
+			"choice_preserve",
+			"choice_share"
+		]
+	}
+]
