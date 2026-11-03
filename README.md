@@ -15,7 +15,7 @@ Open `game/` in Godot and press F5, or run the web build (see Export).
 |---|---|
 | WASD / arrows | Move |
 | E / Space | Interact, continue dialogue |
-| 1 / 2 / 3 or click | Choose a bin while sorting |
+| 1 / 2 / 3 / 4 or click | Choose a bin while sorting (4 is compost, shown only when a pile has organic waste) |
 | M | Mute |
 
 ## The loop
@@ -25,14 +25,17 @@ Open `game/` in Godot and press F5, or run the web build (see Export).
    you recovered, drink clean water, find the recording, open the north gate.
 2. **Battery factory:** sort hazardous waste safely, restore the generator,
    read the archive. It reveals the truth about the collapse.
-3. **Ending:** preserve the knowledge or share it. The epilogue reflects how
-   carefully you sorted.
+3. **The Great Dump:** sort three heaps (with a compost bin), rebuild the shelter roof from
+   recovered cardboard, cloth and metal, find recording 2 and read the municipal records.
+4. **Ending:** preserve the knowledge or share it. The epilogue reflects how
+   carefully you sorted. The ending triggers at the last chapter marked `built` in
+   `data/chapters.json`, so it moves on as chapters are added.
 
 ## Project layout
 
 | Folder | Contents |
 |---|---|
-| `autoload/` | `EventBus` (signals), `ItemDB`, `Content` (lessons, dialogue, repairs, objectives, areas), `GameState` (flags, counters), `Inventory`, `Survival`, `SceneManager`, `AudioManager` |
+| `autoload/` | `EventBus` (signals), `ItemDB`, `Content` (lessons, dialogue, repairs, objectives, areas), `Chapters` (campaign order, ending trigger), `GameState` (flags, counters), `Inventory`, `Survival`, `SceneManager`, `AudioManager`, `Polish` (vignette, hurt feedback), `Juicee` (game-feel addon) |
 | `systems/` | Pure logic, no scene dependencies: `SortingRules`, `SortingSession`, `RepairRules`, `ObjectivesTracker`, `EndingRules`, `DataLoader` |
 | `world/` | `GameArea` (builds a level from data), `MapBuilder`, and the interactable objects |
 | `interaction/` | `Interactable` and `Interactor` |
@@ -65,7 +68,7 @@ bash scripts/test.sh     # GUT unit + integration, headless
 bash scripts/e2e.sh      # exports the web build and smoke-tests it in Chromium
 ```
 
-`scripts/test.sh` also fails if any script fails to compile, which GUT alone only warns about.
+`bash scripts/test.sh` also fails if any script fails to compile, which GUT alone only warns about.
 The unit and integration suites cover the rules, the data, the maps (including a reachability check from spawn to every interactable), collision, and a full scripted playthrough of both areas.
 
 The e2e script needs `npm install` once in `test/e2e`, a Chromium (set `CHROMIUM_PATH` if not at `/usr/bin/chromium`), and the Godot web export templates.
@@ -98,5 +101,5 @@ uses it unchanged. See `CREDITS.md` for the font licence.
 ## Known limits
 
 - There is no save/load; a run is a single sitting of about 10 to 15 minutes.
-- Two areas of the five regions in the concept are playable.
+- Three areas are playable (outpost, battery factory, Great Dump). The river, fields, industry and sanctuary chapters have script data in `data/` but no maps or mechanics yet (see `docs/GAME_SCRIPT.md`).
 - Keyboard-first. Mouse works in menus and the sorting minigame; there is no touch layout.
