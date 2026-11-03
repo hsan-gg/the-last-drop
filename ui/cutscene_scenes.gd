@@ -6,7 +6,7 @@ extends RefCounted
 ## few parallax layers that drift, plus small living details (smoke, embers,
 ## crows, glints) so a still moment never looks still.
 
-const SCENES: Array[String] = ["ruins", "outpost", "factory", "dump", "river", "spring"]
+const SCENES: Array[String] = ["ruins", "outpost", "factory", "dump", "river", "spring", "fields", "industry", "sanctuary"]
 const BAND := 6.0
 
 
@@ -51,6 +51,24 @@ static func draw(canvas: CanvasItem, kind: String, size: Vector2, t: float) -> v
 			_sky(canvas, size, Color("#10243c"), Color("#04101c"), 1.0)
 			_stars(canvas, size, t)
 			_spring(canvas, size, t)
+		"fields":
+			_sky(canvas, size, Color("#e8c890"), Color("#a07850"), 0.62)
+			_sun(canvas, Vector2(size.x * 0.2, size.y * 0.3), 18.0, Color("#fff0c0"), t)
+			_ground(canvas, size, Color("#8a6a44"), 0.62)
+			_crop_rows(canvas, size, t)
+			_windmill(canvas, Vector2(size.x * 0.75, size.y * 0.62), t)
+			_debris(canvas, size, t, Color("#f0e0b0"))
+		"industry":
+			_sky(canvas, size, Color("#e07a3a"), Color("#3a2018"), 0.7)
+			_skyline(canvas, size, t, Color("#5a3428"), 0.5, 4.0, 40.0, 0.6)
+			_factory(canvas, size, t)
+			_ground(canvas, size, Color("#1e1414"), 0.78)
+			_glow_eyes(canvas, Vector2(size.x * 0.82, size.y * 0.66), t)
+		"sanctuary":
+			_sky(canvas, size, Color("#a0d8e8"), Color("#e8f4e0"), 0.55)
+			_hills(canvas, size, t)
+			_hall(canvas, size, t)
+			_fireflies(canvas, size, t)
 
 
 # ------------------------------------------------------------------ helpers
@@ -251,3 +269,59 @@ static func _spring(canvas: CanvasItem, size: Vector2, t: float) -> void:
 	canvas.draw_rect(Rect2(0, size.y * 0.86, size.x, size.y), Color("#0a2438"))
 	for wave in 8:
 		canvas.draw_rect(Rect2(fposmod(wave * 70.0 + t * 12.0, size.x + 40.0) - 20.0, size.y * 0.88 + (wave % 3) * 6.0, 26, 1), Color("#5ac0e0", 0.6))
+
+
+static func _crop_rows(canvas: CanvasItem, size: Vector2, t: float) -> void:
+	for row in 6:
+		var y := size.y * 0.66 + row * 9.0
+		for stalk in 40:
+			var x := stalk * 12.0 + (row % 2) * 6.0
+			var sway := sin(t * 1.5 + stalk * 0.4 + row) * 1.5
+			var height := 6.0 + row * 1.5
+			canvas.draw_line(Vector2(x, y), Vector2(x + sway, y - height), Color("#b89850").darkened(row * 0.04), 1.0)
+
+
+static func _windmill(canvas: CanvasItem, at: Vector2, t: float) -> void:
+	canvas.draw_colored_polygon(PackedVector2Array([at + Vector2(-6, 0), at + Vector2(-3, -50), at + Vector2(3, -50), at + Vector2(6, 0)]), Color("#6a5040"))
+	var hub := at + Vector2(0, -50)
+	for blade in 4:
+		var angle := t * 0.6 + blade * TAU / 4.0
+		canvas.draw_line(hub, hub + Vector2.from_angle(angle) * 26.0, Color("#d8c8a8"), 3.0)
+	canvas.draw_circle(hub, 3.0, Color("#4a3a30"))
+
+
+static func _glow_eyes(canvas: CanvasItem, at: Vector2, t: float) -> void:
+	var glow := 0.5 + 0.5 * sin(t * 2.0)
+	canvas.draw_circle(at, 22.0, Color(1.0, 0.5, 0.2, 0.15 * glow))
+	canvas.draw_rect(Rect2(at + Vector2(-8, -3), Vector2(5, 3)), Color(1.0, 0.6, 0.2, 0.6 + 0.4 * glow))
+	canvas.draw_rect(Rect2(at + Vector2(4, -3), Vector2(5, 3)), Color(1.0, 0.6, 0.2, 0.6 + 0.4 * glow))
+
+
+static func _hills(canvas: CanvasItem, size: Vector2, t: float) -> void:
+	for layer in 3:
+		var color := Color("#7ab07a").darkened(layer * 0.12)
+		var points := PackedVector2Array()
+		for step in 25:
+			var x := step * size.x / 24.0
+			points.append(Vector2(x, size.y * (0.45 + layer * 0.12) + sin(step * 0.6 + layer * 2.0 + t * 0.05) * 10.0))
+		points.append(Vector2(size.x, size.y))
+		points.append(Vector2(0, size.y))
+		canvas.draw_colored_polygon(points, color)
+
+
+static func _hall(canvas: CanvasItem, size: Vector2, t: float) -> void:
+	var base := Vector2(size.x * 0.5, size.y * 0.62)
+	canvas.draw_rect(Rect2(base + Vector2(-70, -40), Vector2(140, 40)), Color("#e8ece4"))
+	canvas.draw_rect(Rect2(base + Vector2(-70, -44), Vector2(140, 4)), Color("#c8ccc4"))
+	for window in 6:
+		var lit := fposmod(t * 0.8 - window * 0.25, 3.0) < 2.5
+		canvas.draw_rect(Rect2(base + Vector2(-60 + window * 22, -32), Vector2(12, 16)), Color("#ffe8a0") if lit else Color("#9ac8d0"))
+	canvas.draw_rect(Rect2(base + Vector2(-70, -40), Vector2(140, 6)), Color("#6ab070", 0.7))
+
+
+static func _fireflies(canvas: CanvasItem, size: Vector2, t: float) -> void:
+	for fly in 18:
+		var at := Vector2(fposmod(_hash(fly) * size.x + sin(t * 0.7 + fly) * 20.0, size.x), size.y * (0.4 + 0.5 * _hash(fly + 30)) + cos(t + fly) * 6.0)
+		var glow := 0.5 + 0.5 * sin(t * 3.0 + fly * 1.7)
+		canvas.draw_circle(at, 2.5, Color(0.9, 1.0, 0.5, 0.25 * glow))
+		canvas.draw_rect(Rect2(at, Vector2(1, 1)), Color(1.0, 1.0, 0.7, glow))

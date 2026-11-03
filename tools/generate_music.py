@@ -479,6 +479,60 @@ def finale():
     return t.finish(room=3.0, wet=0.5)
 
 
+def fields():
+    """A hoedown gone quiet: boom-chick guitar and a lonely fiddle in D mixolydian."""
+    t = Track(104, 4, 16, seed=10, swing=0.07)
+    plan = ["D", "C", "G", "D", "D", "C", "Am", "D", "G", "D", "C", "G", "Bm", "C", "Am7", "D"]
+    tune = compose_melody(t.rng, plan, "D", [0, 2, 4, 5, 7, 9, 10], 69, 86, RHYTHMS_LIVELY)
+    for bar, name in enumerate(plan):
+        notes, low = tones(name, 3)
+        for beat in (0, 2):
+            t.note("guitar", bar * 4 + beat, low if beat == 0 else low + 7, 1.0, 0.6, -0.25)
+        for beat in (1, 3):
+            for i, n in enumerate(notes):
+                t.note("guitar", bar * 4 + beat + i * 0.01, n + 12, 0.6, 0.28, -0.1)
+        for step in range(8):
+            t.hit(shaker(0.22 if step % 2 else 0.32, seed=bar * 8 + step), bar * 4 + step * 0.5, pan=0.4)
+    for beat, midi, beats in tune:
+        t.put(beat * t.beat, strings(midi, beats * t.beat, 0.42, attack=0.04), pan=0.25, send=0.35)
+    return t.finish(room=2.0, wet=0.35)
+
+
+def industry():
+    """The plant: a C minor pulse of taiko and bass, e-piano stabs, distant brass."""
+    t = Track(116, 4, 16, seed=11)
+    plan = ["Cm", "Cm", "Ab", "Bb", "Cm", "Fm", "G7", "G7", "Ab", "Bb", "Cm", "Gm", "Ab", "Fm", "G7", "G7"]
+    tune = compose_melody(t.rng, plan, "C", MINOR, 60, 75, RHYTHMS_GENTLE)
+    for bar, name in enumerate(plan):
+        notes, low = tones(name, 2)
+        for step in range(8):
+            t.note("bass", bar * 4 + step * 0.5, low + (12 if step in (3, 7) else 0), 0.4, 0.5 if step % 2 == 0 else 0.4)
+        t.hit(taiko(0.6, seed=bar), bar * 4)
+        t.hit(taiko(0.4, seed=bar + 50), bar * 4 + 2)
+        for step in range(16):
+            t.hit(tick(0.12 if step % 4 else 0.22), bar * 4 + step * 0.25, pan=0.5 if step % 2 else -0.5, send=0.05)
+        for beat in (0.5, 2.5):
+            for i, n in enumerate(tones(name, 4)[0]):
+                t.note("epiano", bar * 4 + beat + i * 0.01, n, 0.4, 0.22, -0.3)
+        if bar >= 8:
+            block_chord(t, bar, name, "strings", 4, octave=3, vel=0.15)
+    play_melody(t, tune, "brass", vel=0.26, pan=0.3)
+    return t.finish(room=2.4, wet=0.33)
+
+
+def sanctuary():
+    """Home at last: the title theme returns on strings, piano and flute in D major."""
+    t = Track(72, 4, 16, seed=1)
+    plan = ["D", "A/C#", "Bm", "G", "D", "A", "G", "A", "Em7", "A", "F#m", "Bm", "G", "A", "D", "D"]
+    tune = compose_melody(t.rng, plan, "D", MAJOR, 69, 88, RHYTHMS_GENTLE)
+    for bar, name in enumerate(plan):
+        block_chord(t, bar, name, "strings", 4, octave=3, vel=0.22)
+        arpeggio(t, bar, name, "harp", [0, 1, 2, 3, 2, 1, 2, 3], 0.5, octave=4, vel=0.26, pan=-0.3)
+        t.note("piano", bar * 4, tones(name, 2)[1], 4.0, 0.4)
+    play_melody(t, tune, "flute", vel=0.42, pan=0.2)
+    return t.finish(room=3.2, wet=0.5)
+
+
 def combat():
     """Danger: taiko and toms drive staccato strings and brass stabs in D minor."""
     t = Track(140, 4, 16, seed=8)
@@ -514,6 +568,7 @@ def gameover():
 
 
 TRACKS = {"title": title, "outpost": outpost, "factory": factory, "dump": dump, "river": river,
+          "fields": fields, "industry": industry, "sanctuary": sanctuary,
           "story": story, "finale": finale, "combat": combat, "gameover": gameover}
 
 

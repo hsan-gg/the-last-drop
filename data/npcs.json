@@ -381,5 +381,330 @@
 				"repeat": true
 			}
 		]
+	},
+	{
+		"id": "lena",
+		"name": "Lena",
+		"sprite": "lena",
+		"color": "#f0d070",
+		"area": "fields",
+		"wander": 14,
+		"talks": [
+			{
+				"id": "intro",
+				"lines": [
+					"If you're here to tell me the soil will come back, save your breath.",
+					"I'm Lena. This was my family's farm for four generations. Now it grows dust and Husks.",
+					"My brother Jory still plants things. Every morning. Every morning they die."
+				]
+			},
+			{
+				"id": "compost",
+				"lines": [
+					"You built a compost bin? Like the ones we had before the trucks stopped?",
+					"...Jory, come here. Look what they did."
+				],
+				"flags": [
+					"compost_built"
+				]
+			},
+			{
+				"id": "harvest",
+				"lines": [
+					"A tomato. A real one. I'd forgotten the smell of the leaves.",
+					"Thank you. I mean it. Take the rail line east when you're ready; the power is there."
+				],
+				"flags": [
+					"harvest_done"
+				],
+				"gives": {
+					"xp": 80,
+					"items": {
+						"energy_bar": 2
+					}
+				}
+			},
+			{
+				"id": "chatter",
+				"lines": [
+					"Husks rise from the poisoned rows. Fire is the only thing they're scared of.",
+					"Never put plastic in compost. You'd be amazed what people tried.",
+					"Jory doesn't talk. He doesn't need to. Watch his hands."
+				],
+				"repeat": true
+			}
+		]
+	},
+	{
+		"id": "jory",
+		"name": "Jory",
+		"sprite": "jory",
+		"color": "#a0d070",
+		"area": "fields",
+		"wander": 30,
+		"talks": [
+			{
+				"id": "intro",
+				"lines": [
+					"Jory looks at you, then at the ground, then digs his hand into a hidden heap behind the barn.",
+					"It's warm. It's compost. He's been making it for years, in secret, because Lena stopped believing.",
+					"He presses a handful of old seeds into your palm and nods at the broken bin by the house."
+				],
+				"gives": {
+					"items": {
+						"food_scraps": 1
+					}
+				}
+			},
+			{
+				"id": "soil",
+				"lines": [
+					"Jory kneels by the garden bed and pushes his fingers into the dark soil.",
+					"He doesn't say anything. He doesn't have to. He's grinning."
+				],
+				"flags": [
+					"soil_restored"
+				],
+				"gives": {
+					"xp": 60
+				}
+			},
+			{
+				"id": "chatter",
+				"lines": [
+					"Jory shows you a worm. He's very proud of the worm.",
+					"Jory points at the sky, then at the windmill, then shrugs. It turns anyway.",
+					"Jory taps a sign he painted: GREENS + BROWNS + AIR + TIME."
+				],
+				"repeat": true
+			}
+		]
+	},
+	{
+		"id": "vex",
+		"name": "Foreman Vex",
+		"sprite": "vex",
+		"color": "#f0a040",
+		"area": "industry",
+		"wander": 12,
+		"talks": [
+			{
+				"id": "intro",
+				"lines": [
+					"Stop right there. This plant is mine. These generators are mine.",
+					"My people live on what I keep running. Not on what some wandering kid wants.",
+					"You hear that rumble? That's my Golem. Fifty tonnes of slag and scrap. Turn around."
+				]
+			},
+			{
+				"id": "golem",
+				"lines": [
+					"You... beat it. Nobody beats it.",
+					"Fine. FINE. I built that thing out of everything we couldn't get rid of. Maybe that was the problem.",
+					"The grid's yours. Just... share the power down the line. My people need light too."
+				],
+				"flags": [
+					"boss_golem_defeated"
+				],
+				"gives": {
+					"xp": 120,
+					"items": {
+						"copper_wire": 1
+					}
+				}
+			},
+			{
+				"id": "grid",
+				"lines": [
+					"Forty percent of the old power and everything runs. All those years I burned fuel for nothing.",
+					"I thought keeping it was the same as protecting it. It isn't."
+				],
+				"flags": [
+					"grid_online"
+				]
+			},
+			{
+				"id": "chatter",
+				"lines": [
+					"Read the labels, kid. Flammable, corrosive, toxic. The barrels don't lie.",
+					"The Wraiths come out of the smog. Hit them when you can see them.",
+					"Unit-7 sweeps that floor every day. It's the cleanest floor in a dead world."
+				],
+				"repeat": true
+			}
+		]
+	},
+	{
+		"id": "unit7",
+		"name": "Unit-7",
+		"sprite": "unit7",
+		"color": "#80e0ff",
+		"area": "industry",
+		"wander": 40,
+		"talks": [
+			{
+				"id": "intro",
+				"lines": [
+					"UNIT-7 MAINTENANCE. FLOOR CLEANLINESS: 98 PERCENT. STAFF PRESENT: 0.",
+					"QUERY: ARE YOU STAFF?",
+					"...ASSIGNING YOU THE ROLE OF STAFF. WELCOME TO YOUR SHIFT."
+				]
+			},
+			{
+				"id": "grid",
+				"lines": [
+					"POWER RESTORED. EFFICIENCY RATING: EXCELLENT. COMMENDATION LOGGED.",
+					"UNIT-7 REQUESTS TRANSFER TO THE SANCTUARY. FLOORS THERE ARE PROBABLY VERY DIRTY."
+				],
+				"flags": [
+					"grid_online"
+				],
+				"gives": {
+					"items": {
+						"bandage": 2
+					}
+				}
+			},
+			{
+				"id": "chatter",
+				"lines": [
+					"SWEEPING. SWEEPING. SWEEPING.",
+					"DID YOU KNOW: A SWITCHED-OFF MACHINE USES ZERO POWER. UNIT-7 FINDS THIS BEAUTIFUL.",
+					"ACID ON FLOOR. DO NOT LICK."
+				],
+				"repeat": true
+			}
+		]
+	},
+	{
+		"id": "warden",
+		"name": "Warden Moss",
+		"sprite": "warden",
+		"color": "#80ffc0",
+		"area": "sanctuary",
+		"wander": 0,
+		"talks": [
+			{
+				"id": "intro",
+				"lines": [
+					"INTRUDER DETECTED. SANCTUARY POWER: 3 PERCENT. SENTINELS ACTIVE.",
+					"IF YOU ARE A FRIEND, BRING POWER TO THE ATRIUM CORE.",
+					"IF YOU ARE NOT A FRIEND, THE SENTINELS WILL EXPLAIN."
+				]
+			},
+			{
+				"id": "powered",
+				"lines": [
+					"POWER RESTORED. WELCOME, CARETAKER. SENTINELS STANDING DOWN.",
+					"THE ARCHIVE AWAITS SIX FRAGMENTS. ONE FROM EACH PLACE YOU CROSSED.",
+					"DR. VARGA LEFT INSTRUCTIONS FOR WHOEVER CAME. SHE WAS VERY SPECIFIC."
+				],
+				"flags": [
+					"sanctuary_powered"
+				],
+				"gives": {
+					"xp": 100
+				}
+			},
+			{
+				"id": "chatter",
+				"lines": [
+					"SEED BANK TEMPERATURE: NOMINAL. 41,000 VARIETIES. WAITING.",
+					"DR. VARGA SANG TO THE SEEDS. THE ARCHIVE DOES NOT KNOW WHY.",
+					"ALL SYSTEMS NEED CARETAKERS. EVEN THIS ONE."
+				],
+				"repeat": true
+			}
+		]
+	},
+	{
+		"id": "tobi_s",
+		"name": "Old Tobi",
+		"sprite": "tobi",
+		"color": "#e0b070",
+		"area": "sanctuary",
+		"wander": 10,
+		"appears_after": [
+			"tobi_remembered"
+		],
+		"talks": [
+			{
+				"id": "arrive",
+				"lines": [
+					"Took me a while. Bad knees, long road. But I'm here.",
+					"She was right about everything, kid. Annoyingly right. Always.",
+					"I'll keep the water running here. It's the job I walked away from. I'd like it back."
+				],
+				"gives": {
+					"xp": 100
+				}
+			},
+			{
+				"id": "chatter",
+				"lines": [
+					"She used to sing to the seeds. Terrible voice. I miss it.",
+					"Don't look at me like that. Old men are allowed to cry in gardens."
+				],
+				"repeat": true
+			}
+		]
+	},
+	{
+		"id": "osei_s",
+		"name": "Ferryman Osei",
+		"sprite": "osei",
+		"color": "#80c0e0",
+		"area": "sanctuary",
+		"wander": 14,
+		"appears_after": [
+			"region_lit_industry"
+		],
+		"talks": [
+			{
+				"id": "arrive",
+				"lines": [
+					"The river carried me up as far as it could. Then I walked.",
+					"A place like this needs someone who knows water. I know a little."
+				]
+			},
+			{
+				"id": "chatter",
+				"lines": [
+					"Clean channels, living soil. She built it to be shared.",
+					"Keep listening. That's all anyone has to do."
+				],
+				"repeat": true
+			}
+		]
+	},
+	{
+		"id": "mira_s",
+		"name": "Mira",
+		"sprite": "mira",
+		"color": "#f08aa8",
+		"area": "sanctuary",
+		"wander": 30,
+		"appears_after": [
+			"request_done_radio",
+			"grid_online"
+		],
+		"talks": [
+			{
+				"id": "arrive",
+				"lines": [
+					"I followed the power line! Tobi tried to stop me. He failed.",
+					"There's a transmitter on the roof! With it, the whole world could hear this place.",
+					"...if you want them to. It's your call."
+				]
+			},
+			{
+				"id": "chatter",
+				"lines": [
+					"I'm going to fix every radio in the valley.",
+					"Bottle caps don't work here. I asked."
+				],
+				"repeat": true
+			}
+		]
 	}
 ]

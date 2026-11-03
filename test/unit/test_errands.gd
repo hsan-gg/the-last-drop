@@ -47,7 +47,7 @@ func test_every_errand_part_is_found_in_a_different_area_from_where_it_is_needed
 	for id in ["radio", "garden", "fountain"]:
 		var request := Content.request(id)
 		var found_in := ""
-		for area_id in ["outpost", "factory", "dump", "river"]:
+		for area_id in ["outpost", "factory", "dump", "river", "fields", "industry", "sanctuary"]:
 			for definition: Dictionary in Content.area(area_id)["entities"].values():
 				if definition["scene"] == "item_pickup" and definition["props"]["item_id"] == request["needs"]:
 					found_in = area_id

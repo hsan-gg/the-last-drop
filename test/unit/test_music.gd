@@ -13,7 +13,7 @@ func test_every_mood_has_a_track() -> void:
 
 
 func test_every_area_has_its_own_track() -> void:
-	for area_id in ["outpost", "factory", "dump", "river"]:
+	for area_id in ["outpost", "factory", "dump", "river", "fields", "industry", "sanctuary"]:
 		assert_true(ResourceLoader.exists(Music.PATH_FORMAT % area_id), area_id)
 
 

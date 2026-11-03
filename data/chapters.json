@@ -80,19 +80,14 @@
 		],
 		"arrival": "river_arrival",
 		"recording": "recording_3",
-		"unlock_flag": "dump_records_read",
-		"ending_requires": [
-			"river_clean",
-			"river_water_secure",
-			"recording_3_found"
-		]
+		"unlock_flag": "dump_records_read"
 	},
 	{
 		"id": "fields",
 		"number": 4,
 		"title": "The Silent Fields",
 		"region": "silent_fields",
-		"status": "planned",
+		"status": "built",
 		"areas": [
 			"fields"
 		],
@@ -104,14 +99,14 @@
 		],
 		"arrival": "fields_arrival",
 		"recording": "recording_4",
-		"unlock_flag": "recording_3_found"
+		"unlock_flag": "river_clean"
 	},
 	{
 		"id": "industry",
 		"number": 5,
 		"title": "The Forgotten Industry",
 		"region": "forgotten_industry",
-		"status": "planned",
+		"status": "built",
 		"areas": [
 			"industry"
 		],
@@ -123,21 +118,24 @@
 		],
 		"arrival": "industry_arrival",
 		"recording": "recording_5",
-		"unlock_flag": "recording_4_found"
+		"unlock_flag": "harvest_done"
 	},
 	{
 		"id": "sanctuary",
 		"number": 6,
 		"title": "The Last Sanctuary",
 		"region": "last_sanctuary",
-		"status": "planned",
+		"status": "built",
 		"areas": [
 			"sanctuary"
 		],
-		"lessons": [],
+		"lessons": [
+			"systems_thinking",
+			"shared_responsibility"
+		],
 		"arrival": "sanctuary_arrival",
-		"recording": "recording_final",
-		"unlock_flag": "recording_5_found",
+		"recording": "recording_6",
+		"unlock_flag": "grid_online",
 		"reveals": [
 			"sanctuary_first_twist",
 			"sanctuary_truth"
@@ -145,6 +143,10 @@
 		"choices": [
 			"choice_preserve",
 			"choice_share"
+		],
+		"ending_requires": [
+			"archive_complete",
+			"recording_6_found"
 		]
 	}
 ]

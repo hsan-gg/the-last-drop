@@ -21,7 +21,7 @@ func test_every_beat_has_a_visual_and_some_words() -> void:
 		var beats := Cutscenes.beats(cutscene_id)
 		assert_gt(beats.size(), 0, cutscene_id)
 		for beat: Dictionary in beats:
-			assert_true(beat["visual"] in ["sky", "map", "black", "ruins", "outpost", "factory", "dump", "river", "spring"], "%s: bad visual" % cutscene_id)
+			assert_true(beat["visual"] in ["sky", "map", "black"] or CutsceneScenes.has_scene(beat["visual"]), "%s: bad visual" % cutscene_id)
 			assert_false(String(beat["text"]).is_empty(), "%s: empty text" % cutscene_id)
 
 

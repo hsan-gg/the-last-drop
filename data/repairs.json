@@ -42,5 +42,36 @@
 		},
 		"sets_flag": "filter_installed",
 		"dialogue": "filter_installed"
+	},
+	{
+		"id": "compost_bin",
+		"name": "Compost Bin",
+		"requires": {
+			"pipe_section": 1,
+			"scrap_metal": 1,
+			"textile_scrap": 1
+		},
+		"sets_flag": "compost_built",
+		"dialogue": "compost_built"
+	},
+	{
+		"id": "solar_array",
+		"name": "Solar Array",
+		"requires": {
+			"copper_wire": 2,
+			"scrap_metal": 2
+		},
+		"sets_flag": "grid_built",
+		"dialogue": "grid_built"
+	},
+	{
+		"id": "atrium_power",
+		"name": "Atrium Power Core",
+		"requires": {
+			"copper_wire": 1,
+			"pipe_section": 1
+		},
+		"sets_flag": "sanctuary_powered",
+		"dialogue": "atrium_powered"
 	}
 ]

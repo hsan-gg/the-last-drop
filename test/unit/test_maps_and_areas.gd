@@ -2,7 +2,7 @@ extends GutTest
 ## Validates the ASCII maps and data/areas.json together, so a layout or config
 ## typo fails here instead of as a broken level.
 
-const AREA_IDS: Array[String] = ["outpost", "factory", "dump", "river"]
+const AREA_IDS: Array[String] = ["outpost", "factory", "dump", "river", "fields", "industry", "sanctuary"]
 const NON_BLOCKING_MARKER := "@"
 
 

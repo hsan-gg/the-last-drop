@@ -108,7 +108,7 @@ func test_a_right_field_check_costs_nothing() -> void:
 
 
 func test_the_clear_quests_count_the_zombies_in_each_area() -> void:
-	for area_id in ["outpost", "factory", "dump", "river"]:
+	for area_id in ["outpost", "factory", "dump", "river", "fields", "industry", "sanctuary"]:
 		assert_gt(Content.enemy_count(area_id), 0, area_id)
 
 
@@ -150,7 +150,7 @@ func test_piles_vary_between_runs_but_not_within_one() -> void:
 
 
 func test_every_configured_pile_has_a_pool_big_enough() -> void:
-	for area_id in ["outpost", "factory", "dump", "river"]:
+	for area_id in ["outpost", "factory", "dump", "river", "fields", "industry", "sanctuary"]:
 		for definition: Dictionary in Content.area(area_id)["entities"].values():
 			if definition["scene"] != "scrap_pile":
 				continue

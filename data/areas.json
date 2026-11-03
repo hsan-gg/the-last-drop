@@ -927,6 +927,16 @@
 					"item_id": "memory_shard_river",
 					"pickup_id": "shard_river"
 				}
+			},
+			"^": {
+				"scene": "area_exit",
+				"props": {
+					"target_scene": "res://world/fields.tscn",
+					"required_flag": "river_clean",
+					"prompt": "Follow the river upstream",
+					"cutscene": "to_fields",
+					"requires_lit": "river"
+				}
 			}
 		},
 		"lit_tint": "#c8e0e4",
@@ -937,6 +947,502 @@
 		"haze": {
 			"color": "#6a7a60",
 			"alpha": 0.1
+		}
+	},
+	{
+		"id": "fields",
+		"layout": "res://data/maps/fields.txt",
+		"floor": ".",
+		"tileset": "fields",
+		"tint": "#a08a6e",
+		"lit_tint": "#f4e2c0",
+		"arrival_dialogue": "fields_arrival",
+		"ambience": [
+			"dust",
+			"seeds",
+			"spores"
+		],
+		"haze": {
+			"color": "#a08050",
+			"alpha": 0.1
+		},
+		"ambience_colors": {
+			"grass": "#a8904c",
+			"toxic": "#c08ae0",
+			"water": "#b0b8a0"
+		},
+		"entities": {
+			"1": {
+				"scene": "scrap_pile",
+				"props": {
+					"pile_id": "fields_plots",
+					"guaranteed": [
+						"textile_scrap",
+						"food_scraps"
+					],
+					"pool": [
+						"cardboard",
+						"greasy_pizza_box",
+						"plastic_bottle",
+						"battery",
+						"tin_can",
+						"glass_jar",
+						"paint_tin"
+					],
+					"count": 7,
+					"min_hazardous": 1
+				}
+			},
+			"2": {
+				"scene": "scrap_pile",
+				"props": {
+					"pile_id": "fields_barn",
+					"guaranteed": [
+						"pipe_section",
+						"scrap_metal"
+					],
+					"pool": [
+						"food_scraps",
+						"cardboard",
+						"chemical_can",
+						"glass_shard",
+						"tin_can",
+						"phone"
+					],
+					"count": 7,
+					"min_hazardous": 1
+				}
+			},
+			"U": {
+				"scene": "repair_station",
+				"props": {
+					"repair_id": "compost_bin"
+				}
+			},
+			"K": {
+				"scene": "archive_terminal",
+				"props": {
+					"chapter_id": "fields",
+					"required_flag": "compost_built",
+					"read_flag": "soil_restored",
+					"final_dialogue": "fields_soil",
+					"continue_dialogue": "fields_soil",
+					"puzzle_id": "compost_layers",
+					"ready_prompt": "Check the soil"
+				}
+			},
+			"W": {
+				"scene": "harvest_plot",
+				"props": {}
+			},
+			"V": {
+				"scene": "recording",
+				"props": {
+					"dialogue_id": "recording_4",
+					"found_flag": "recording_4_found"
+				}
+			},
+			"J": {
+				"scene": "area_exit",
+				"props": {
+					"target_scene": "res://world/river.tscn",
+					"prompt": "Back down to the river",
+					"arrive_marker": "^"
+				}
+			},
+			"^": {
+				"scene": "area_exit",
+				"props": {
+					"target_scene": "res://world/industry.tscn",
+					"required_flag": "harvest_done",
+					"prompt": "Follow the old rail line",
+					"cutscene": "to_industry",
+					"requires_lit": "fields"
+				}
+			},
+			"a": {
+				"scene": "npc",
+				"props": {
+					"npc_id": "lena"
+				}
+			},
+			"i": {
+				"scene": "npc",
+				"props": {
+					"npc_id": "jory"
+				}
+			},
+			"8": {
+				"scene": "item_pickup",
+				"props": {
+					"item_id": "memory_shard_fields",
+					"pickup_id": "shard_fields"
+				}
+			},
+			"c": {
+				"scene": "chest",
+				"props": {
+					"gear": [
+						"scrap_plate"
+					],
+					"items": {
+						"bandage": 2
+					}
+				}
+			},
+			"N": {
+				"scene": "region_generator",
+				"props": {
+					"region_id": "fields"
+				}
+			},
+			"L": {
+				"scene": "lamp"
+			},
+			"Y": {
+				"scene": "enemy",
+				"props": {
+					"enemy_id": "husk"
+				}
+			},
+			"Q": {
+				"scene": "enemy",
+				"props": {
+					"enemy_id": "runner"
+				}
+			},
+			"f": {
+				"scene": "decor",
+				"props": {
+					"sprite_name": "fire",
+					"blocker_size": [
+						8,
+						6
+					],
+					"light_color": "#ff9a4a",
+					"light_radius": 48.0
+				}
+			}
+		}
+	},
+	{
+		"id": "industry",
+		"layout": "res://data/maps/industry.txt",
+		"floor": ".",
+		"tileset": "industry",
+		"tint": "#8a7468",
+		"lit_tint": "#e8dccc",
+		"arrival_dialogue": "industry_arrival",
+		"ambience": [
+			"smog",
+			"embers",
+			"rain"
+		],
+		"haze": {
+			"color": "#c0703a",
+			"alpha": 0.16
+		},
+		"ambience_colors": {
+			"water": "#8a6aa0",
+			"toxic": "#8aff60",
+			"grass": "#a0603a"
+		},
+		"entities": {
+			"1": {
+				"scene": "scrap_pile",
+				"props": {
+					"pile_id": "industry_yard",
+					"guaranteed": [
+						"copper_wire",
+						"scrap_metal"
+					],
+					"pool": [
+						"chemical_can",
+						"battery",
+						"paint_tin",
+						"fluorescent_tube",
+						"phone",
+						"tin_can",
+						"glass_shard"
+					],
+					"count": 7,
+					"min_hazardous": 3
+				}
+			},
+			"2": {
+				"scene": "scrap_pile",
+				"props": {
+					"pile_id": "industry_store",
+					"guaranteed": [
+						"copper_wire",
+						"scrap_metal",
+						"pipe_section"
+					],
+					"pool": [
+						"battery",
+						"chemical_can",
+						"cardboard",
+						"glass_jar",
+						"paint_tin",
+						"phone"
+					],
+					"count": 7,
+					"min_hazardous": 2
+				}
+			},
+			"U": {
+				"scene": "repair_station",
+				"props": {
+					"repair_id": "solar_array"
+				}
+			},
+			"K": {
+				"scene": "archive_terminal",
+				"props": {
+					"chapter_id": "industry",
+					"required_flag": "grid_built",
+					"read_flag": "grid_online",
+					"final_dialogue": "industry_grid",
+					"continue_dialogue": "industry_grid",
+					"puzzle_id": "power_grid",
+					"ready_prompt": "Balance the grid"
+				}
+			},
+			"V": {
+				"scene": "recording",
+				"props": {
+					"dialogue_id": "recording_5",
+					"found_flag": "recording_5_found"
+				}
+			},
+			"J": {
+				"scene": "area_exit",
+				"props": {
+					"target_scene": "res://world/fields.tscn",
+					"prompt": "Back to the fields",
+					"arrive_marker": "^"
+				}
+			},
+			"^": {
+				"scene": "area_exit",
+				"props": {
+					"target_scene": "res://world/sanctuary.tscn",
+					"required_flag": "grid_online",
+					"prompt": "Follow the power line into the hills",
+					"cutscene": "to_sanctuary",
+					"requires_lit": "industry"
+				}
+			},
+			"a": {
+				"scene": "npc",
+				"props": {
+					"npc_id": "vex"
+				}
+			},
+			"i": {
+				"scene": "npc",
+				"props": {
+					"npc_id": "unit7"
+				}
+			},
+			"9": {
+				"scene": "item_pickup",
+				"props": {
+					"item_id": "memory_shard_industry",
+					"pickup_id": "shard_industry"
+				}
+			},
+			"c": {
+				"scene": "chest",
+				"props": {
+					"gear": [
+						"welding_mask"
+					],
+					"items": {
+						"purified_water": 2
+					}
+				}
+			},
+			"N": {
+				"scene": "region_generator",
+				"props": {
+					"region_id": "industry"
+				}
+			},
+			"L": {
+				"scene": "lamp"
+			},
+			"Y": {
+				"scene": "enemy",
+				"props": {
+					"enemy_id": "wraith"
+				}
+			},
+			"Q": {
+				"scene": "enemy",
+				"props": {
+					"enemy_id": "runner"
+				}
+			},
+			"R": {
+				"scene": "enemy",
+				"props": {
+					"enemy_id": "rust_brute"
+				}
+			},
+			"G": {
+				"scene": "enemy",
+				"props": {
+					"enemy_id": "golem"
+				}
+			},
+			"f": {
+				"scene": "decor",
+				"props": {
+					"sprite_name": "fire",
+					"blocker_size": [
+						8,
+						6
+					],
+					"light_color": "#ff9a4a",
+					"light_radius": 48.0
+				}
+			},
+			"l": {
+				"scene": "chest",
+				"props": {
+					"gear": [
+						"tire_vest"
+					],
+					"items": {
+						"bandage": 2
+					}
+				}
+			}
+		}
+	},
+	{
+		"id": "sanctuary",
+		"layout": "res://data/maps/sanctuary.txt",
+		"floor": ".",
+		"tileset": "sanctuary",
+		"tint": "#7a9a90",
+		"lit_tint": "#f0fff4",
+		"arrival_dialogue": "sanctuary_arrival",
+		"ambience": [
+			"fireflies",
+			"mist",
+			"seeds"
+		],
+		"ambience_colors": {
+			"water": "#e0ffff",
+			"grass": "#7ac070"
+		},
+		"entities": {
+			"U": {
+				"scene": "repair_station",
+				"props": {
+					"repair_id": "atrium_power"
+				}
+			},
+			"K": {
+				"scene": "archive_terminal",
+				"props": {
+					"chapter_id": "sanctuary",
+					"required_flag": "sanctuary_powered",
+					"read_flag": "archive_complete",
+					"final_dialogue": "sanctuary_truth",
+					"continue_dialogue": "sanctuary_truth",
+					"puzzle_id": "timeline",
+					"ready_prompt": "Rebuild the archive"
+				}
+			},
+			"V": {
+				"scene": "recording",
+				"props": {
+					"dialogue_id": "recording_6",
+					"found_flag": "recording_6_found"
+				}
+			},
+			"J": {
+				"scene": "area_exit",
+				"props": {
+					"target_scene": "res://world/industry.tscn",
+					"prompt": "Back down to the plant",
+					"arrive_marker": "^"
+				}
+			},
+			"w": {
+				"scene": "npc",
+				"props": {
+					"npc_id": "warden"
+				}
+			},
+			"a": {
+				"scene": "npc",
+				"props": {
+					"npc_id": "tobi_s"
+				}
+			},
+			"o": {
+				"scene": "npc",
+				"props": {
+					"npc_id": "osei_s"
+				}
+			},
+			"i": {
+				"scene": "npc",
+				"props": {
+					"npc_id": "mira_s"
+				}
+			},
+			"c": {
+				"scene": "chest",
+				"props": {
+					"gear": [
+						"solar_saber"
+					],
+					"items": {
+						"purified_water": 3,
+						"bandage": 3
+					}
+				}
+			},
+			"N": {
+				"scene": "region_generator",
+				"props": {
+					"region_id": "sanctuary"
+				}
+			},
+			"L": {
+				"scene": "lamp"
+			},
+			"Y": {
+				"scene": "enemy",
+				"props": {
+					"enemy_id": "sentinel"
+				}
+			},
+			"1": {
+				"scene": "scrap_pile",
+				"props": {
+					"pile_id": "sanctuary_store",
+					"guaranteed": [
+						"copper_wire",
+						"pipe_section"
+					],
+					"pool": [
+						"glass_jar",
+						"cardboard",
+						"battery",
+						"fluorescent_tube",
+						"food_scraps",
+						"tin_can"
+					],
+					"count": 6,
+					"min_hazardous": 1
+				}
+			}
 		}
 	}
 ]

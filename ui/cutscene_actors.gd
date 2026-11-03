@@ -27,6 +27,17 @@ const CASTS := {
 	"river": [
 		{"who": "player", "from": Vector2(0.2, 0.52), "to": Vector2(0.44, 0.52), "seconds": 3.2, "walk": "walk_right", "rest": "idle_down"},
 	],
+	"fields": [
+		{"who": "player", "from": Vector2(-0.05, 0.9), "to": Vector2(0.3, 0.9), "seconds": 4.0, "walk": "walk_right", "rest": "idle_right"},
+		{"who": "husk", "from": Vector2(0.6, 0.9), "to": Vector2(0.5, 0.9), "seconds": 6.0, "delay": 2.0, "walk": "walk_left", "rest": "idle_left"},
+	],
+	"industry": [
+		{"who": "player", "from": Vector2(-0.05, 0.9), "to": Vector2(0.25, 0.9), "seconds": 3.5, "walk": "walk_right", "rest": "idle_right"},
+		{"who": "wraith", "from": Vector2(0.7, 0.88), "to": Vector2(0.5, 0.88), "seconds": 3.0, "delay": 1.5, "walk": "walk_left", "rest": "idle_left"},
+	],
+	"sanctuary": [
+		{"who": "player", "from": Vector2(0.5, 1.05), "to": Vector2(0.5, 0.86), "seconds": 3.0, "walk": "walk_up", "rest": "idle_up"},
+	],
 	"spring": [
 		{"who": "player", "from": Vector2(0.5, 1.02), "to": Vector2(0.5, 0.82), "seconds": 2.6, "walk": "walk_up", "rest": "idle_up"},
 	],
@@ -88,11 +99,15 @@ func _sprite_for(who: String) -> AnimatedSprite2D:
 	if who == "player":
 		var player := PlayerSprite.new()
 		return player
-	var frames := Enemy._frames_for(who)
+	var definition := Content.enemy(who)
+	var look: String = definition.get("sprite", who)
+	var frames := Enemy._frames_for(look)
 	if frames == null:
 		return null
 	var zombie := AnimatedSprite2D.new()
 	zombie.sprite_frames = frames
-	var data := Enemy._data_for(who)
+	if definition.has("tint"):
+		zombie.self_modulate = Color(definition["tint"])
+	var data := Enemy._data_for(look)
 	zombie.offset = Vector2(0, -float(data["canvas"][1]) / 2.0)
 	return zombie

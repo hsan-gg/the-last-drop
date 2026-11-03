@@ -298,5 +298,101 @@
 		],
 		"answer": 0,
 		"explanation": "Treat storage as part of the whole system."
+	},
+	{
+		"id": "q_soil_loss",
+		"lesson_id": "soil_loss",
+		"question": "How do you keep soil from washing away?",
+		"options": [
+			"Leave it bare to dry",
+			"Cover it with mulch and plants",
+			"Add more sand"
+		],
+		"answer": 1,
+		"explanation": "Living cover and compost hold soil, water and nutrients in place."
+	},
+	{
+		"id": "q_waste_to_food",
+		"lesson_id": "waste_to_food",
+		"question": "What can food scraps become?",
+		"options": [
+			"Nothing, they are waste",
+			"Compost that grows new food",
+			"Plastic"
+		],
+		"answer": 1,
+		"explanation": "Composted scraps become soil, closing the loop from waste to food."
+	},
+	{
+		"id": "q_hazard_symbols",
+		"lesson_id": "hazard_symbols",
+		"question": "An unlabelled drum leaks. What do you do first?",
+		"options": [
+			"Open it to look",
+			"Keep back and look for hazard symbols",
+			"Kick it over"
+		],
+		"answer": 1,
+		"explanation": "Read the label before you touch it. Unknown containers are treated as hazardous."
+	},
+	{
+		"id": "q_panel_reuse",
+		"lesson_id": "panel_reuse",
+		"question": "A working motor from a scrapped machine. Best choice?",
+		"options": [
+			"Landfill it",
+			"Reuse it",
+			"Bury it"
+		],
+		"answer": 1,
+		"explanation": "Reuse keeps its metals and the energy that made it in use."
+	},
+	{
+		"id": "q_efficiency_first",
+		"lesson_id": "efficiency_first",
+		"question": "Your grid keeps browning out. Cheapest fix?",
+		"options": [
+			"Build another power plant",
+			"Use efficient devices and switch off waste",
+			"Run everything at once"
+		],
+		"answer": 1,
+		"explanation": "Saved energy is the cheapest energy."
+	},
+	{
+		"id": "q_battery_storage",
+		"lesson_id": "battery_storage",
+		"question": "An old power bank stops holding charge. Where does it go?",
+		"options": [
+			"General bin",
+			"Battery collection point",
+			"Compost"
+		],
+		"answer": 1,
+		"explanation": "Batteries are hazardous at the end of their life; collect them safely."
+	},
+	{
+		"id": "q_systems_thinking",
+		"lesson_id": "systems_thinking",
+		"question": "Clean water, living soil and power. Why fix all three?",
+		"options": [
+			"They are unrelated",
+			"Each one depends on the others",
+			"Only water matters"
+		],
+		"answer": 1,
+		"explanation": "Water grows food, food scraps feed soil, power runs the pumps. One system."
+	},
+	{
+		"id": "q_shared_responsibility",
+		"lesson_id": "shared_responsibility",
+		"question": "Who should start fixing things?",
+		"options": [
+			"Somebody else, later",
+			"Everyone, starting now with what they can",
+			"Only governments"
+		],
+		"answer": 1,
+		"explanation": "Shared responsibility means each person starts where they are."
 	}
 ]

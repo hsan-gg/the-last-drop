@@ -118,7 +118,7 @@ func test_a_region_that_is_already_lit_loads_lit() -> void:
 
 
 func test_every_region_has_a_generator_and_lamps() -> void:
-	for area_id in ["outpost", "factory", "dump", "river"]:
+	for area_id in ["outpost", "factory", "dump", "river", "fields", "industry", "sanctuary"]:
 		var entities: Dictionary = Content.area(area_id)["entities"]
 		assert_eq(entities["N"]["scene"], "region_generator", area_id)
 		assert_eq(entities["N"]["props"]["region_id"], area_id)

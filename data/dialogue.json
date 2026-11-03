@@ -347,5 +347,72 @@
 			"Clear, cold, and tested. The strip stays pale.",
 			"One river, one plant, and a lot of work still ahead."
 		]
+	},
+	{
+		"id": "recording_6",
+		"lines": [
+			"Day 1. If you're listening, you found it. You powered it. So you already know how.",
+			"There is no spring. There never was. The Last Drop is this: seeds, filters, plans and the people to use them.",
+			"It doesn't fix anything on its own. It's a tool. It needs hands.",
+			"The world wasn't destroyed in a single day. It won't be rebuilt in one either.",
+			"What you do with this place is up to you. I'm sorry I can't be there. - Ines"
+		]
+	},
+	{
+		"id": "compost_built",
+		"lines": [
+			"The bin stands again: air pipe, frame and a cloth cover to keep the rain off.",
+			"Now it needs the right layers. The soil terminal by the house will tell you if you got it right."
+		]
+	},
+	{
+		"id": "grid_built",
+		"lines": [
+			"The solar array tilts toward the smog and hums. Weak, but alive.",
+			"Now the grid needs balancing at the console, or it will brown out."
+		]
+	},
+	{
+		"id": "atrium_powered",
+		"lines": [
+			"The power core wakes. Lights run down the atrium one by one.",
+			"The Moss Sentinels lower their arms and go still. The archive console glows."
+		]
+	},
+	{
+		"id": "fields_soil",
+		"lines": [
+			"The soil probe reads: ALIVE. Worms, fungi, moisture.",
+			"Food scraps from the Dump became soil here. One system's waste is another's input.",
+			"Lena's garden bed is ready. Go and see."
+		]
+	},
+	{
+		"id": "industry_grid",
+		"lines": [
+			"Grid balanced. 40 percent of the old plant's power runs everything that matters.",
+			"Efficiency first, then clean power, then storage. The power line north is live.",
+			"The Sanctuary gate in the hills will open now."
+		]
+	},
+	{
+		"id": "harvest_dead",
+		"lines": [
+			"A raised bed of grey dust. Seeds would just lie in it.",
+			"The soil needs to come alive first."
+		]
+	},
+	{
+		"id": "harvest_first",
+		"lines": [
+			"You pull up the first tomato anyone has grown here in years. It's small and lopsided and perfect.",
+			"Lena laughs out loud, then covers her mouth, surprised at herself."
+		]
+	},
+	{
+		"id": "harvest_again",
+		"lines": [
+			"The beans are climbing. Jory has started a second bed."
+		]
 	}
 ]

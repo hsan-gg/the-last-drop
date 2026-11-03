@@ -132,5 +132,47 @@
 			"text": "The world wasn't destroyed in a single day. And it won't be rebuilt in one either.",
 			"focus": []
 		}
+	],
+	"to_fields": [
+		{
+			"visual": "fields",
+			"title": "UPSTREAM",
+			"text": "Osei poles you upriver on his raft. The water clears a little more with every bend.",
+			"focus": []
+		},
+		{
+			"visual": "fields",
+			"title": "THE SILENT FIELDS",
+			"text": "Fields that fed three cities, gone grey. A windmill turns for no one. Something moves between the dead rows.",
+			"focus": []
+		}
+	],
+	"to_industry": [
+		{
+			"visual": "industry",
+			"title": "THE RAIL LINE",
+			"text": "An old rail line runs east toward chimneys that have not smoked in years. The sky turns orange.",
+			"focus": []
+		},
+		{
+			"visual": "industry",
+			"title": "THE FORGOTTEN INDUSTRY",
+			"text": "Warning signs in three languages. Somewhere deep in the plant, something huge and burning wakes up.",
+			"focus": []
+		}
+	],
+	"to_sanctuary": [
+		{
+			"visual": "spring",
+			"title": "THE POWER LINE",
+			"text": "The cables hum again. You follow them up into green hills you didn't know were still green.",
+			"focus": []
+		},
+		{
+			"visual": "sanctuary",
+			"title": "THE LAST SANCTUARY",
+			"text": "Glass and white stone, carved into the hillside. Moss on everything. A door that opens for anyone who brings power.",
+			"focus": []
+		}
 	]
 }

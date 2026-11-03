@@ -540,5 +540,221 @@
 		"reward": {
 			"xp": 60
 		}
+	},
+	{
+		"id": "husk_hunter",
+		"area": "fields",
+		"title": "Husk Hunter",
+		"text": "Burn 4 Blight Husks before they burst.",
+		"difficulty": "medium",
+		"category": "combat",
+		"goal": {
+			"type": "counter",
+			"key": "husk_burned",
+			"target": 4
+		},
+		"reward": {
+			"xp": 90
+		}
+	},
+	{
+		"id": "clear_fields",
+		"area": "fields",
+		"title": "Clear the Fields",
+		"text": "Defeat every Husk in the Silent Fields.",
+		"difficulty": "medium",
+		"category": "combat",
+		"goal": {
+			"type": "clear",
+			"area": "fields"
+		},
+		"reward": {
+			"xp": 100
+		}
+	},
+	{
+		"id": "lights_fields",
+		"area": "fields",
+		"title": "Bring the Lights Back",
+		"text": "Clear the Husks and start the generator.",
+		"difficulty": "hard",
+		"category": "explore",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"region_lit_fields"
+			]
+		},
+		"reward": {
+			"xp": 120
+		}
+	},
+	{
+		"id": "golem_slayer",
+		"area": "industry",
+		"title": "Golem Slayer",
+		"text": "Defeat the Slag Golem.",
+		"difficulty": "hard",
+		"category": "combat",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"boss_golem_defeated"
+			]
+		},
+		"reward": {
+			"xp": 200,
+			"gear": "recycled_edge"
+		}
+	},
+	{
+		"id": "clear_industry",
+		"area": "industry",
+		"title": "Clear the Plant",
+		"text": "Defeat everything in the Forgotten Industry.",
+		"difficulty": "hard",
+		"category": "combat",
+		"goal": {
+			"type": "clear",
+			"area": "industry"
+		},
+		"reward": {
+			"xp": 150
+		}
+	},
+	{
+		"id": "lights_industry",
+		"area": "industry",
+		"title": "Bring the Lights Back",
+		"text": "Clear the plant and start the generator.",
+		"difficulty": "hard",
+		"category": "explore",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"region_lit_industry"
+			]
+		},
+		"reward": {
+			"xp": 140
+		}
+	},
+	{
+		"id": "homecoming",
+		"area": "sanctuary",
+		"title": "Homecoming",
+		"text": "Bring Tobi's memories home: return all five photographs.",
+		"difficulty": "hard",
+		"category": "explore",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"tobi_remembered"
+			]
+		},
+		"reward": {
+			"xp": 250
+		}
+	},
+	{
+		"id": "lights_sanctuary",
+		"area": "sanctuary",
+		"title": "Every Light On",
+		"text": "Start the Sanctuary's generator.",
+		"difficulty": "medium",
+		"category": "explore",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"region_lit_sanctuary"
+			]
+		},
+		"reward": {
+			"xp": 120
+		}
+	},
+	{
+		"id": "green_fingers",
+		"area": "fields",
+		"title": "Green Fingers",
+		"text": "Let Jory show you his secret compost heap.",
+		"difficulty": "easy",
+		"category": "explore",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"talked_jory_intro"
+			]
+		},
+		"reward": {
+			"xp": 30
+		}
+	},
+	{
+		"id": "read_the_labels",
+		"area": "industry",
+		"title": "Read the Labels",
+		"text": "Sort the hazardous yard heap.",
+		"difficulty": "easy",
+		"category": "sort",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"pile_sorted_industry_yard"
+			]
+		},
+		"reward": {
+			"xp": 40
+		}
+	},
+	{
+		"id": "staff_member",
+		"area": "industry",
+		"title": "Staff Member",
+		"text": "Get hired by Unit-7.",
+		"difficulty": "easy",
+		"category": "explore",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"talked_unit7_intro"
+			]
+		},
+		"reward": {
+			"xp": 25
+		}
+	},
+	{
+		"id": "wraith_hunter",
+		"area": "industry",
+		"title": "Wraith Hunter",
+		"text": "Defeat 3 Smog Wraiths.",
+		"difficulty": "medium",
+		"category": "combat",
+		"goal": {
+			"type": "counter",
+			"key": "wraith_kills",
+			"target": 3
+		},
+		"reward": {
+			"xp": 90
+		}
+	},
+	{
+		"id": "caretaker",
+		"area": "sanctuary",
+		"title": "Caretaker",
+		"text": "Speak with Warden Moss.",
+		"difficulty": "easy",
+		"category": "explore",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"talked_warden_intro"
+			]
+		},
+		"reward": {
+			"xp": 30
+		}
 	}
 ]

@@ -19,7 +19,7 @@ func test_every_objective_has_a_target_that_names_a_real_entity_scene() -> void:
 		assert_true(objective.has("target"), "%s has no target" % objective["id"])
 		var scene: String = objective["target"]["scene"]
 		var found := false
-		for area_id in ["outpost", "factory", "dump", "river"]:
+		for area_id in ["outpost", "factory", "dump", "river", "fields", "industry", "sanctuary"]:
 			for definition: Dictionary in Content.area(area_id)["entities"].values():
 				found = found or definition["scene"] == scene
 		assert_true(found, "%s targets unknown scene %s" % [objective["id"], scene])

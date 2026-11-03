@@ -198,5 +198,21 @@
 		"right": "Batteries store the sun's energy for the night, then go to hazardous collection.",
 		"principle": "Treat storage as part of the whole system.",
 		"real_life": "Return used batteries to a collection point."
+	},
+	{
+		"id": "systems_thinking",
+		"title": "Everything is connected",
+		"wrong": "Each region tried to fix its own problem and pushed the cost onto the next.",
+		"right": "Water, soil, energy and waste are one system: fix one and the others follow.",
+		"principle": "Look for the loop, not the fix.",
+		"real_life": "Ask where something comes from and where it goes before you buy it."
+	},
+	{
+		"id": "shared_responsibility",
+		"title": "No one is coming",
+		"wrong": "Everyone waited for someone else to act first: the council, the company, the neighbours.",
+		"right": "Small actions by many people closed the loops the big plans never did.",
+		"principle": "Responsibility shared is responsibility taken.",
+		"real_life": "Start with what you can change at home, then help someone else start."
 	}
 ]

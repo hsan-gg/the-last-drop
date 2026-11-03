@@ -296,6 +296,7 @@ def build_river():
 
     grid.put(4, 26, "@")
     grid.put(6, 28, "J")  # back to the dump
+    grid.put(40, 1, "^")  # upstream to the fields
     grid.put(11, 22, "1")
     grid.put(31, 24, "2")
     grid.put(8, 19, "m")
@@ -320,6 +321,139 @@ def build_river():
     return grid
 
 
+def build_fields():
+    """The Silent Fields: dead crop plots in rows, an irrigation ditch with two
+    crossings, greenhouse frames, Lena's farmhouse yard with the compost bin and
+    the soil terminal, and a blighted corner where the Husks rise."""
+    grid = Grid(48, 30, ".")
+    rng = random.Random(41)
+    grid.box(0, 0, 47, 29, "#")
+    grid.box(1, 1, 46, 28, "#")
+    grid.fill(2, 12, 45, 13, "~")  # the irrigation ditch
+    grid.fill(10, 12, 12, 13, ":")  # crossings
+    grid.fill(33, 12, 35, 13, ":")
+    for x0, y0 in ((4, 4), (16, 4), (4, 17), (16, 17)):  # crop plots
+        for row in range(0, 6, 2):
+            grid.fill(x0, y0 + row, x0 + 8, y0 + row, "=")
+    for x0, y0, x1, y1 in ((27, 3, 33, 8), (38, 17, 44, 23)):  # greenhouse frames
+        grid.box(x0, y0, x1, y1, "F")
+        grid.fill(x0, y0 + 2, x0, y0 + 3, ".")
+    grid.box(36, 3, 45, 9, "#")  # the farmhouse yard
+    grid.fill(36, 6, 36, 7, ".")
+    grid.fill(28, 22, 33, 26, "T")  # the blighted corner
+    grid.fill(30, 24, 31, 24, ".")
+    grid.put(4, 26, "@")
+    grid.put(6, 28, "J")
+    grid.put(44, 1, "^")
+    grid.put(9, 23, "1")
+    grid.put(22, 10, "2")
+    grid.put(39, 5, "U")
+    grid.put(43, 5, "K")
+    grid.put(41, 8, "W")
+    grid.put(25, 20, "V")
+    reserved = set()
+    for marker in "@J^12UKWV":
+        for x, y in grid.find(marker):
+            reserved |= rect_cells(x, y, x, y, 2)
+    for x0, y0, x1, y1 in ((36, 3, 45, 9), (10, 12, 12, 13), (33, 12, 35, 13), (27, 3, 33, 8), (38, 17, 44, 23), (28, 22, 33, 26)):
+        reserved |= rect_cells(x0, y0, x1, y1, 1)
+    scatter(grid, rng, reserved, [(",", 0.12), ("C", 0.025), ("r", 0.04), ("t", 0.015), ("b", 0.02)])
+    for ch, x, y in (("Y", 20, 8), ("Y", 8, 20), ("Y", 30, 20), ("Y", 40, 14), ("Q", 26, 15), ("Q", 14, 25), ("Y", 34, 26)):
+        place_decor(grid, ch, x, y)
+    for ch, x, y in (("a", 38, 11), ("i", 24, 9), ("8", 42, 21), ("c", 4, 3), ("N", 22, 26), ("L", 10, 15), ("L", 30, 15), ("L", 40, 15), ("L", 20, 24), ("f", 22, 16)):
+        place_decor(grid, ch, x, y)
+    return grid
+
+
+def build_industry():
+    """The Forgotten Industry: a smoky plant of walkways and grating between
+    sheds, sludge channels and acid pools. The grid hall holds the solar array
+    and the control console; the Slag Golem waits in the furnace yard."""
+    grid = Grid(50, 32, ".")
+    rng = random.Random(53)
+    grid.box(0, 0, 49, 31, "#")
+    grid.box(1, 1, 48, 30, "#")
+    grid.fill(2, 15, 47, 16, "=")  # the main walkway
+    grid.fill(24, 2, 25, 29, "=")
+    grid.fill(2, 9, 20, 9, "~")  # sludge channels
+    grid.fill(30, 22, 47, 22, "~")
+    grid.fill(12, 9, 13, 9, ":")
+    grid.fill(38, 22, 39, 22, ":")
+    grid.box(30, 3, 45, 12, "#")  # the grid hall
+    grid.fill(31, 4, 44, 11, "M")
+    grid.fill(30, 7, 30, 8, "=")
+    grid.box(4, 20, 18, 28, "F")  # the furnace yard, fenced
+    grid.fill(11, 20, 12, 20, ".")
+    for x0, y0, x1, y1 in ((6, 3, 9, 6), (14, 3, 17, 6)):
+        grid.fill(x0, y0, x1, y1, "S")
+    for x, y in ((36, 26), (41, 26), (44, 18), (20, 12)):
+        grid.fill(x, y, x + 1, y + 1, "T")
+    grid.put(3, 13, "@")
+    grid.put(1, 14, "J")
+    grid.put(47, 1, "^")
+    grid.put(8, 12, "1")
+    grid.put(28, 27, "2")
+    grid.put(34, 6, "U")
+    grid.put(41, 6, "K")
+    grid.put(44, 10, "V")
+    grid.put(11, 24, "G")
+    reserved = set()
+    for marker in "@J^12UKVG":
+        for x, y in grid.find(marker):
+            reserved |= rect_cells(x, y, x, y, 2)
+    for x0, y0, x1, y1 in ((2, 15, 47, 16), (24, 2, 25, 29), (30, 3, 45, 12), (4, 20, 18, 28), (12, 9, 13, 9), (38, 22, 39, 22)):
+        reserved |= rect_cells(x0, y0, x1, y1, 1)
+    scatter(grid, rng, reserved, [(":", 0.08), ("B", 0.03), ("t", 0.025), ("C", 0.025), ("b", 0.04), ("H", 0.02)])
+    for ch, x, y in (("Y", 20, 5), ("Y", 36, 18), ("Y", 44, 27), ("Q", 14, 13), ("Q", 30, 26), ("R", 22, 24), ("R", 40, 14)):
+        place_decor(grid, ch, x, y)
+    for ch, x, y in (("a", 28, 12), ("i", 10, 17), ("9", 46, 28), ("c", 3, 3), ("l", 16, 26), ("N", 27, 20), ("L", 8, 17), ("L", 20, 17), ("L", 34, 17), ("L", 44, 17), ("f", 21, 27)):
+        place_decor(grid, ch, x, y)
+    return grid
+
+
+def build_sanctuary():
+    """The Last Sanctuary: lawns and water channels around a white stone
+    research hall. The atrium holds the power core, the archive and Ines's
+    last recording; friends you helped wait in the garden."""
+    grid = Grid(44, 30, ".")
+    rng = random.Random(61)
+    grid.box(0, 0, 43, 29, "#")
+    grid.box(1, 1, 42, 28, "#")
+    grid.fill(2, 18, 41, 18, "~")  # the channel
+    grid.fill(20, 18, 23, 18, ":")
+    grid.fill(21, 19, 22, 26, ":")  # the avenue to the hall
+    grid.fill(21, 11, 22, 17, ":")
+    grid.box(8, 3, 35, 11, "#")  # the research hall
+    grid.fill(9, 4, 34, 10, "M")
+    grid.fill(21, 11, 22, 11, ":")
+    for x in (12, 18, 26, 31):  # columns in the atrium
+        grid.put(x, 5, "P")
+        grid.put(x, 9, "P")
+    for x0, y0 in ((4, 21), (30, 21), (4, 13), (34, 13)):  # garden beds
+        grid.fill(x0, y0, x0 + 6, y0 + 2, "=")
+    grid.fill(14, 14, 16, 15, "~")
+    grid.fill(27, 14, 29, 15, "~")
+    grid.put(21, 26, "@")
+    grid.put(21, 28, "J")
+    grid.put(13, 7, "U")
+    grid.put(22, 6, "K")
+    grid.put(31, 7, "V")
+    grid.put(16, 7, "w")
+    grid.put(28, 7, "1")  # the storeroom heap
+    reserved = set()
+    for marker in "@JUKVw1":
+        for x, y in grid.find(marker):
+            reserved |= rect_cells(x, y, x, y, 2)
+    for x0, y0, x1, y1 in ((8, 3, 35, 11), (20, 18, 23, 18), (21, 11, 22, 26)):
+        reserved |= rect_cells(x0, y0, x1, y1, 1)
+    scatter(grid, rng, reserved, [(",", 0.12), ("t", 0.03), ("b", 0.04), ("C", 0.015)])
+    for ch, x, y in (("Y", 8, 24), ("Y", 34, 25), ("Y", 12, 15), ("Y", 32, 15), ("Y", 27, 8)):
+        place_decor(grid, ch, x, y)
+    for ch, x, y in (("a", 14, 24), ("o", 28, 24), ("i", 18, 22), ("c", 40, 3), ("N", 39, 26), ("L", 10, 20), ("L", 33, 20), ("L", 19, 13), ("L", 25, 13)):
+        place_decor(grid, ch, x, y)
+    return grid
+
+
 # Errands between areas: a part found in one area (A, O, Z) is wanted in
 # another (E, I, X), so the gates back get used.
 CROSS_AREA = {
@@ -338,7 +472,8 @@ def add_cross_area(name, grid):
 def main():
     MAPS.mkdir(parents=True, exist_ok=True)
     names = set(sys.argv[1:])
-    builders = (("outpost", build_outpost), ("factory", build_factory), ("dump", build_dump), ("river", build_river))
+    builders = (("outpost", build_outpost), ("factory", build_factory), ("dump", build_dump), ("river", build_river),
+                ("fields", build_fields), ("industry", build_industry), ("sanctuary", build_sanctuary))
     for name, builder in builders:
         if names and name not in names:
             continue

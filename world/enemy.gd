@@ -250,8 +250,9 @@ func _die() -> void:
 	if not spawn_key.is_empty():
 		GameState.set_flag(_slain_flag())
 	GameState.add_to_counter("kills")
-	if enemy_id == "brute":
-		GameState.add_to_counter("brute_kills")
+	GameState.add_to_counter("%s_kills" % enemy_id)
+	if enemy_id == "husk" and is_burning():
+		GameState.add_to_counter("husk_burned")
 	Progress.add_xp(int(_def["xp"]))
 	FloatingText.spawn(get_parent(), "+%d XP" % int(_def["xp"]), global_position + Vector2(0, -10), Color("#9be04a"))
 	_roll_drops()

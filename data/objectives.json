@@ -279,5 +279,200 @@
 		"target": {
 			"scene": "region_generator"
 		}
+	},
+	{
+		"id": "sort_fields_plots",
+		"area": "fields",
+		"text": "Sort the rubbish in the crop plots",
+		"done_flag": "pile_sorted_fields_plots",
+		"target": {
+			"scene": "scrap_pile",
+			"props": {
+				"pile_id": "fields_plots"
+			}
+		}
+	},
+	{
+		"id": "sort_fields_barn",
+		"area": "fields",
+		"text": "Sort the barn heap",
+		"done_flag": "pile_sorted_fields_barn",
+		"target": {
+			"scene": "scrap_pile",
+			"props": {
+				"pile_id": "fields_barn"
+			}
+		}
+	},
+	{
+		"id": "build_compost",
+		"area": "fields",
+		"text": "Build the compost bin",
+		"done_flag": "compost_built",
+		"target": {
+			"scene": "repair_station"
+		}
+	},
+	{
+		"id": "wake_soil",
+		"area": "fields",
+		"text": "Wake the soil at the terminal",
+		"done_flag": "soil_restored",
+		"target": {
+			"scene": "archive_terminal"
+		}
+	},
+	{
+		"id": "harvest",
+		"area": "fields",
+		"text": "Harvest Lena's garden",
+		"done_flag": "harvest_done",
+		"target": {
+			"scene": "harvest_plot"
+		}
+	},
+	{
+		"id": "find_recording_4",
+		"area": "fields",
+		"text": "Find the fourth recording",
+		"done_flag": "recording_4_found",
+		"target": {
+			"scene": "recording"
+		}
+	},
+	{
+		"id": "light_fields",
+		"area": "fields",
+		"text": "Clear the Husks, then start the generator",
+		"done_flag": "region_lit_fields",
+		"target": {
+			"scene": "region_generator"
+		}
+	},
+	{
+		"id": "go_industry",
+		"area": "fields",
+		"text": "Follow the rail line to the plant",
+		"done_flag": "area_industry_reached",
+		"target": {
+			"scene": "area_exit"
+		}
+	},
+	{
+		"id": "sort_industry_yard",
+		"area": "industry",
+		"text": "Sort the hazardous yard heap",
+		"done_flag": "pile_sorted_industry_yard",
+		"target": {
+			"scene": "scrap_pile",
+			"props": {
+				"pile_id": "industry_yard"
+			}
+		}
+	},
+	{
+		"id": "sort_industry_store",
+		"area": "industry",
+		"text": "Sort the storeroom heap",
+		"done_flag": "pile_sorted_industry_store",
+		"target": {
+			"scene": "scrap_pile",
+			"props": {
+				"pile_id": "industry_store"
+			}
+		}
+	},
+	{
+		"id": "build_array",
+		"area": "industry",
+		"text": "Rebuild the solar array",
+		"done_flag": "grid_built",
+		"target": {
+			"scene": "repair_station"
+		}
+	},
+	{
+		"id": "balance_grid",
+		"area": "industry",
+		"text": "Balance the grid at the console",
+		"done_flag": "grid_online",
+		"target": {
+			"scene": "archive_terminal"
+		}
+	},
+	{
+		"id": "defeat_golem",
+		"area": "industry",
+		"text": "Defeat the Slag Golem",
+		"done_flag": "boss_golem_defeated",
+		"target": {
+			"scene": "enemy"
+		}
+	},
+	{
+		"id": "find_recording_5",
+		"area": "industry",
+		"text": "Find the fifth recording",
+		"done_flag": "recording_5_found",
+		"target": {
+			"scene": "recording"
+		}
+	},
+	{
+		"id": "light_industry",
+		"area": "industry",
+		"text": "Clear the plant, then start the generator",
+		"done_flag": "region_lit_industry",
+		"target": {
+			"scene": "region_generator"
+		}
+	},
+	{
+		"id": "go_sanctuary",
+		"area": "industry",
+		"text": "Follow the power line to the Sanctuary",
+		"done_flag": "area_sanctuary_reached",
+		"target": {
+			"scene": "area_exit"
+		}
+	},
+	{
+		"id": "sort_sanctuary_store",
+		"area": "sanctuary",
+		"text": "Sort the storeroom heap",
+		"done_flag": "pile_sorted_sanctuary_store",
+		"target": {
+			"scene": "scrap_pile",
+			"props": {
+				"pile_id": "sanctuary_store"
+			}
+		}
+	},
+	{
+		"id": "power_atrium",
+		"area": "sanctuary",
+		"text": "Power the atrium core",
+		"done_flag": "sanctuary_powered",
+		"target": {
+			"scene": "repair_station"
+		}
+	},
+	{
+		"id": "rebuild_archive",
+		"area": "sanctuary",
+		"text": "Rebuild the archive",
+		"done_flag": "archive_complete",
+		"target": {
+			"scene": "archive_terminal"
+		}
+	},
+	{
+		"id": "find_recording_6",
+		"area": "sanctuary",
+		"text": "Hear Ines's last recording",
+		"done_flag": "recording_6_found",
+		"target": {
+			"scene": "recording"
+		}
 	}
 ]

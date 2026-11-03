@@ -87,7 +87,7 @@ func test_every_area_has_an_easy_a_medium_and_a_hard_quest() -> void:
 	var seen := {}
 	for quest: Dictionary in Content.quests():
 		seen["%s/%s" % [quest["area"], quest["difficulty"]]] = true
-	for area_id in ["outpost", "factory", "dump", "river"]:
+	for area_id in ["outpost", "factory", "dump", "river", "fields", "industry", "sanctuary"]:
 		for difficulty in ["easy", "medium", "hard"]:
 			assert_true(seen.has("%s/%s" % [area_id, difficulty]), "%s has no %s quest" % [area_id, difficulty])
 
