@@ -21,6 +21,7 @@ PALETTE_SIZE = 56
 GENERATED = [
     *sorted((SPRITES / "items").glob("*.png")),
     *sorted((SPRITES / "bins").glob("*.png")),
+    *sorted((SPRITES / "decor").glob("*.png")),
     *(SPRITES / f"{name}.png" for name in (
         "treatment_unit_broken", "treatment_unit_fixed", "generator_broken", "generator_fixed",
         "shelter_broken", "shelter_fixed", "terminal_off", "terminal_on", "recorder", "gate",

@@ -11,6 +11,7 @@ const ENTITY_SCENES := {
 	"area_exit": preload("res://world/area_exit.tscn"),
 	"archive_terminal": preload("res://world/archive_terminal.tscn"),
 	"item_pickup": preload("res://world/item_pickup.tscn"),
+	"decor": preload("res://world/decor.tscn"),
 }
 const COLLAPSE_LINES: Array[String] = [
 	"You collapse from the strain, and come to at the edge of camp.",
@@ -72,7 +73,7 @@ func _place_entities(layout: PackedStringArray, definitions: Dictionary, marker_
 		entity.position = position
 		var properties: Dictionary = definition.get("props", {})
 		for key: String in properties:
-			entity.set(key, _typed(properties[key]))
+			entity.set(key, _typed(properties[key], entity.get(key)))
 		_entities.add_child(entity)
 		AreaLighting.decorate(entity, definition.get("scene", ""))
 
@@ -120,8 +121,11 @@ func _on_player_collapsed() -> void:
 	EventBus.text_requested.emit(COLLAPSE_LINES)
 
 
-## JSON arrays arrive untyped; exported properties here are Array[String].
-func _typed(value: Variant) -> Variant:
+## JSON has no Vector2 and its arrays are untyped, so convert to whatever type
+## the exported property already holds.
+func _typed(value: Variant, current: Variant) -> Variant:
+	if value is Array and current is Vector2:
+		return Vector2(value[0], value[1])
 	if value is Array:
 		var strings: Array[String] = []
 		strings.assign(value)

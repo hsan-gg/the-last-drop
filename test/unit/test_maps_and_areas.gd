@@ -73,7 +73,11 @@ func test_each_area_has_exactly_one_spawn() -> void:
 func test_every_configured_entity_is_placed_exactly_once() -> void:
 	for area_id in AREA_IDS:
 		var layout := _layout(area_id)
-		for marker: String in Content.area(area_id)["entities"]:
+		var entities: Dictionary = Content.area(area_id)["entities"]
+		for marker: String in entities:
+			if entities[marker]["scene"] == "decor":
+				assert_gt(MapBuilder.markers(layout, marker).size(), 0, "%s decor %s is never placed" % [area_id, marker])
+				continue
 			assert_eq(MapBuilder.markers(layout, marker).size(), 1, "%s marker %s" % [area_id, marker])
 
 

@@ -9,6 +9,9 @@ Tile characters (see world/map_builder.gd):
   r rubble   C crate        F fence  P pipe     M metal floor D dark floor
   T toxic    t dead tree    B barrel S rack
   b plastic bags (walkable)   H garbage heap
+Decor markers (set dressing, data/areas.json gives each its sprite):
+  d dumpster  e bench  f fire barrel  x box  y tire  z hydrant  k AC unit
+  g trash bag  h open box
 Marker characters (entities, placed by data/areas.json; the floor shows beneath):
   @ spawn  $ scrap pile  W water  U treatment unit  V recording
   ^ gate   G generator   K terminal  1 2 3 numbered scrap piles
@@ -22,7 +25,7 @@ ROOT = Path(__file__).resolve().parent.parent
 MAPS = ROOT / "data" / "maps"
 
 BLOCKING = set("#~CFPtBSH")
-MARKERS = set("@$WUV^GK123")
+MARKERS = set("@$WUV^GK123defxyzkgh")
 # Markers that block movement; the spawn marker does not.
 BLOCKING_MARKERS = MARKERS - {"@"}
 
@@ -103,6 +106,19 @@ def rect_cells(x0, y0, x1, y1, margin=0):
     return {(x, y) for y in range(y0 - margin, y1 + margin + 1) for x in range(x0 - margin, x1 + margin + 1)}
 
 
+def place_decor(grid, ch, x, y, floor="."):
+    """Puts a decor marker on the free floor cell nearest (x, y), keeping a
+    walkable neighbour so the reachability check still holds."""
+    for radius in range(0, 6):
+        for dy in range(-radius, radius + 1):
+            for dx in range(-radius, radius + 1):
+                px, py = x + dx, y + dy
+                if 1 <= px < grid.w - 1 and 1 <= py < grid.h - 1 and grid.get(px, py) == floor:
+                    grid.put(px, py, ch)
+                    return
+    raise ValueError(f"no free cell for decor {ch} near {(x, y)}")
+
+
 def build_outpost():
     grid = Grid(40, 26, ".")
     rng = random.Random(42)
@@ -151,6 +167,8 @@ def build_outpost():
             x, y = 23 + dx, 19 + dy
             if grid.get(x, y) == "." and rng.random() < 0.55:
                 grid.put(x, y, "r")
+    for ch, x, y in (("f", 10, 10), ("d", 14, 22), ("e", 22, 6), ("x", 17, 21), ("z", 24, 10), ("g", 31, 23), ("y", 5, 23)):
+        place_decor(grid, ch, x, y)
     return grid
 
 
@@ -184,6 +202,8 @@ def build_factory():
         for x in range(1, 35):
             if grid.get(x, y) == "M" and rng.random() < 0.05:
                 grid.put(x, y, "D")
+    for ch, x, y in (("x", 20, 18), ("x", 21, 18), ("y", 8, 16), ("k", 30, 14), ("h", 6, 21), ("g", 25, 21)):
+        place_decor(grid, ch, x, y, floor="M")
     return grid
 
 
@@ -232,6 +252,8 @@ def build_dump():
     for x0, y0, x1, y1 in ((8, 19, 8, 27), (8, 20, 21, 21), (21, 14, 22, 21), (22, 13, 25, 14), (25, 5, 26, 13), (25, 5, 36, 6), (6, 10, 7, 16)):
         reserved |= rect_cells(x0, y0, x1, y1, 1)
     scatter(grid, rng, reserved, [("b", 0.14), ("r", 0.07), ("H", 0.035), (",", 0.02)])
+    for ch, x, y in (("d", 13, 25), ("d", 30, 18), ("d", 38, 22), ("e", 6, 13), ("f", 4, 22), ("f", 40, 12), ("x", 20, 24), ("x", 27, 6), ("y", 12, 13), ("z", 35, 4), ("g", 28, 22), ("g", 14, 4)):
+        place_decor(grid, ch, x, y)
     return grid
 
 

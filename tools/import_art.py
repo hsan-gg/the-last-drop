@@ -16,6 +16,21 @@ from pngio import read_png, write_png  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 PACK = ROOT / "art_src" / "lazystone" / "PostApocalypse_AssetPack_v1.1.2"
+CRAFTPIX = ROOT / "art_src" / "craftpix_zombie" / "craftpix-net-794432-free-urban-zombie-survival-pixel-art-minigame-kit"
+# Props cut from the CraftPix city sheet: name -> (x, y, width, height) in pixels.
+DECOR = {
+    "dumpster": (193, 162, 46, 28),
+    "bench": (240, 135, 32, 23),
+    "ac_unit": (160, 139, 16, 15),
+    "trash_bag_a": (274, 146, 12, 12),
+    "trash_bag_b": (290, 145, 13, 13),
+    "fence": (242, 162, 44, 28),
+    "box_open": (176, 160, 16, 16),
+    "box_closed": (176, 178, 16, 13),
+    "hydrant": (195, 192, 10, 16),
+    "tire": (209, 194, 14, 14),
+    "fire": (274, 194, 12, 13),
+}
 TILE = 16
 
 
@@ -94,6 +109,15 @@ def build_props():
     print("props written")
 
 
+def build_decor():
+    if not CRAFTPIX.exists():
+        return
+    sheet = read_png(CRAFTPIX / "City_Tileset" / "PSD" / "Tile.png")
+    for name, (x, y, w, h) in DECOR.items():
+        write_png(ROOT / "assets" / "sprites" / "decor" / f"{name}.png", sheet[y:y + h, x:x + w].copy())
+    print("decor:", len(DECOR), "props")
+
+
 def player_frame(sheet_path, index, width):
     sheet = load(sheet_path)
     frame = sheet[:, index * width:(index + 1) * width]
@@ -122,6 +146,7 @@ def build_all():
     build_tileset()
     build_player()
     build_props()
+    build_decor()
 
 
 if __name__ == "__main__":

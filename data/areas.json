@@ -39,6 +39,78 @@
 					"required_flag": "recording_found",
 					"prompt": "Open the north gate"
 				}
+			},
+			"f": {
+				"scene": "decor",
+				"props": {
+					"sprite_name": "fire",
+					"blocker_size": [
+						8,
+						6
+					],
+					"light_color": "#ff9a4a",
+					"light_radius": 48.0
+				}
+			},
+			"d": {
+				"scene": "decor",
+				"props": {
+					"sprite_name": "dumpster",
+					"blocker_size": [
+						44,
+						12
+					]
+				}
+			},
+			"e": {
+				"scene": "decor",
+				"props": {
+					"sprite_name": "bench",
+					"blocker_size": [
+						30,
+						10
+					]
+				}
+			},
+			"x": {
+				"scene": "decor",
+				"props": {
+					"sprite_name": "box_closed",
+					"blocker_size": [
+						14,
+						8
+					]
+				}
+			},
+			"z": {
+				"scene": "decor",
+				"props": {
+					"sprite_name": "hydrant",
+					"blocker_size": [
+						8,
+						6
+					]
+				}
+			},
+			"g": {
+				"scene": "decor",
+				"props": {
+					"sprite_name": "trash_bag_a",
+					"blocker_size": [
+						10,
+						8
+					]
+				}
+			},
+			"y": {
+				"scene": "decor",
+				"props": {
+					"sprite_name": "tire",
+					"blocker_size": [
+						12,
+						8
+					]
+				}
 			}
 		}
 	},
@@ -84,6 +156,56 @@
 					"target_scene": "res://world/dump.tscn",
 					"required_flag": "archive_read",
 					"prompt": "Take the gate to the Great Dump"
+				}
+			},
+			"x": {
+				"scene": "decor",
+				"props": {
+					"sprite_name": "box_closed",
+					"blocker_size": [
+						14,
+						8
+					]
+				}
+			},
+			"y": {
+				"scene": "decor",
+				"props": {
+					"sprite_name": "tire",
+					"blocker_size": [
+						12,
+						8
+					]
+				}
+			},
+			"k": {
+				"scene": "decor",
+				"props": {
+					"sprite_name": "ac_unit",
+					"blocker_size": [
+						14,
+						8
+					]
+				}
+			},
+			"h": {
+				"scene": "decor",
+				"props": {
+					"sprite_name": "box_open",
+					"blocker_size": [
+						14,
+						8
+					]
+				}
+			},
+			"g": {
+				"scene": "decor",
+				"props": {
+					"sprite_name": "trash_bag_a",
+					"blocker_size": [
+						10,
+						8
+					]
 				}
 			}
 		}
@@ -157,6 +279,78 @@
 					"read_flag": "dump_records_read",
 					"final_dialogue": "dump_records",
 					"continue_dialogue": "dump_records"
+				}
+			},
+			"d": {
+				"scene": "decor",
+				"props": {
+					"sprite_name": "dumpster",
+					"blocker_size": [
+						44,
+						12
+					]
+				}
+			},
+			"e": {
+				"scene": "decor",
+				"props": {
+					"sprite_name": "bench",
+					"blocker_size": [
+						30,
+						10
+					]
+				}
+			},
+			"f": {
+				"scene": "decor",
+				"props": {
+					"sprite_name": "fire",
+					"blocker_size": [
+						8,
+						6
+					],
+					"light_color": "#ff9a4a",
+					"light_radius": 48.0
+				}
+			},
+			"x": {
+				"scene": "decor",
+				"props": {
+					"sprite_name": "box_closed",
+					"blocker_size": [
+						14,
+						8
+					]
+				}
+			},
+			"y": {
+				"scene": "decor",
+				"props": {
+					"sprite_name": "tire",
+					"blocker_size": [
+						12,
+						8
+					]
+				}
+			},
+			"z": {
+				"scene": "decor",
+				"props": {
+					"sprite_name": "hydrant",
+					"blocker_size": [
+						8,
+						6
+					]
+				}
+			},
+			"g": {
+				"scene": "decor",
+				"props": {
+					"sprite_name": "trash_bag_a",
+					"blocker_size": [
+						10,
+						8
+					]
 				}
 			}
 		}

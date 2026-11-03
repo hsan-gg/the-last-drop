@@ -2,6 +2,7 @@
 tools, so they need nothing beyond numpy. Not a general PNG library."""
 import struct
 import zlib
+from pathlib import Path
 
 import numpy as np
 
@@ -80,6 +81,7 @@ def write_png(path, pixels):
         block = kind + body
         return struct.pack(">I", len(body)) + block + struct.pack(">I", zlib.crc32(block) & 0xFFFFFFFF)
 
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
     with open(path, "wb") as handle:
         handle.write(
             b"\x89PNG\r\n\x1a\n"
