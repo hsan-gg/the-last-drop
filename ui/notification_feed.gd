@@ -3,19 +3,21 @@ extends Control
 ## Small, friendly messages in the bottom-left corner, in the spirit of Stardew
 ## Valley's HUD messages: an icon, a short headline and one readable line.
 ##
-## They come one at a time: each slides in, stays a moment, slides out, and only
-## then does the next one come. Things that happen together are told in a
-## sensible order: what you finished, then the XP it paid, then a level up (on
-## its own calm card, with nothing else on screen), then what to do next. XP
-## from one moment is added up into a single line. Nothing plays while you talk.
+## At most two are on screen, stacked; each slides in, stays a moment and slides
+## out on its own, and the next waits for a free slot. Things that happen
+## together are told in a sensible order: what you finished, then the XP it
+## paid, then what to do next. XP from one moment is added up into one line,
+## and keeps adding to a visible XP card. A level up does not queue: it shows at
+## once on its own calm card at the top. Nothing plays while you talk.
 
-const SHOW_SECONDS := 2.6
+const SHOW_SECONDS := 2.4
 const XP_SHOW_SECONDS := 1.8
-const GATHER_SECONDS := 0.3
-const GAP_SECONDS := 0.2
-const MAX_ENTRIES := 1
+const GATHER_SECONDS := 0.15
+## A second card may join the first this soon after it, so two can stack.
+const STAGGER_SECONDS := 0.3
+const MAX_ENTRIES := 2
 ## Lower comes first.
-const PRIORITY := {"objective_done": 0, "quest": 1, "xp": 2, "loot": 3, "reward": 4, "objective_new": 5, "info": 6}
+const PRIORITY := {"objective_done": 0, "quest": 1, "xp": 2, "loot": 3, "objective_new": 5, "info": 6}
 const WIDTH := 212.0
 const SLIDE := 24.0
 const XP_SOUND_GAP := 0.6
@@ -36,10 +38,11 @@ var reward_card: RewardCard
 var _stack: VBoxContainer
 var _queue: Array[Dictionary] = []
 var _sequence := 0
-var _busy := false
+var _showing: Array[Control] = []
+var _next_slot_at := 0.0
+var _xp_card: Control
 var _talking := false
 var _gather_until := 0.0
-var _current: Control
 var _last_xp_sound := -10.0
 
 
@@ -53,7 +56,7 @@ func _ready() -> void:
 	_stack.anchor_bottom = 1.0
 	_stack.offset_left = 6.0
 	_stack.offset_right = 6.0 + WIDTH
-	_stack.offset_top = -90.0
+	_stack.offset_top = -120.0
 	_stack.offset_bottom = -8.0
 	_stack.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_stack)
@@ -61,7 +64,9 @@ func _ready() -> void:
 	EventBus.dialogue_finished.connect(_set_talking.bind(false).unbind(1))
 	EventBus.dialogue_interrupted.connect(_set_talking.bind(false))
 	EventBus.reward_requested.connect(func(kind: String, title: String, line: String) -> void:
-		Notices.run(_enqueue.bind({"kind": "reward", "reward_kind": kind, "headline": title, "line": line})))
+		Notices.run(func() -> void:
+			if reward_card != null:
+				reward_card.present(kind, title, line)))
 
 
 ## Queues a message (after any open conversation).
@@ -77,7 +82,13 @@ func add_xp(amount: int) -> void:
 
 ## Messages waiting plus the one on screen.
 func count() -> int:
-	return _queue.size() + (1 if _busy else 0)
+	return _queue.size() + _showing.size()
+
+
+## Cards on screen right now.
+func showing() -> int:
+	_showing = _showing.filter(func(card: Control) -> bool: return is_instance_valid(card))
+	return _showing.size()
 
 
 ## Every message waiting, in the order it will be shown (for tests and tools).
@@ -90,6 +101,11 @@ func pending_kinds() -> Array[String]:
 
 
 func _enqueue(entry: Dictionary) -> void:
+	if entry["kind"] == "xp" and is_instance_valid(_xp_card) and not _xp_card.get_meta("leaving", false):
+		var total := int(_xp_card.get_meta("amount")) + int(entry["amount"])
+		_xp_card.set_meta("amount", total)
+		(_xp_card.get_meta("line") as Label).text = "+%d XP" % total
+		return
 	if entry["kind"] == "xp":
 		for waiting in _queue:
 			if waiting["kind"] == "xp":
@@ -98,7 +114,7 @@ func _enqueue(entry: Dictionary) -> void:
 	_sequence += 1
 	entry["order"] = _sequence
 	_queue.append(entry)
-	if not _busy:
+	if showing() == 0:
 		_gather_until = maxf(_gather_until, _now() + GATHER_SECONDS)
 
 
@@ -110,48 +126,41 @@ func _sort() -> void:
 
 
 func _process(_delta: float) -> void:
-	if _busy or _talking or _queue.is_empty() or _now() < _gather_until:
+	if _talking or _queue.is_empty() or _now() < _gather_until or _now() < _next_slot_at:
+		return
+	if showing() >= MAX_ENTRIES:
 		return
 	_sort()
 	_show(_queue.pop_front())
+	_next_slot_at = _now() + STAGGER_SECONDS
 
 
 func _show(entry: Dictionary) -> void:
-	_busy = true
-	if entry["kind"] == "reward":
-		if reward_card != null:
-			reward_card.present(entry["reward_kind"], entry["headline"], entry["line"], _finished)
-		else:
-			_finished()
-		return
 	var kind: String = entry["kind"]
 	var spec: Dictionary = KINDS.get(kind, KINDS["info"])
 	var line: String = "+%d XP" % int(entry["amount"]) if kind == "xp" else entry["line"]
 	var headline: String = "" if kind == "xp" else entry["headline"]
-	_current = _make_entry(spec, headline, line)
-	_stack.add_child(_current)
-	var seconds := XP_SHOW_SECONDS if kind == "xp" else SHOW_SECONDS
+	var card := _make_entry(spec, headline, line)
+	_stack.add_child(card)
+	_showing.append(card)
+	if kind == "xp":
+		card.set_meta("amount", int(entry["amount"]))
+		_xp_card = card
 	if kind != "xp" or _now() - _last_xp_sound > XP_SOUND_GAP:
 		_last_xp_sound = _now()
 		EventBus.sfx_requested.emit(spec["sound"])
-	var body := _current.get_child(0) as Control
-	_current.modulate.a = 0.0
+	var body := card.get_child(0) as Control
+	card.modulate.a = 0.0
 	body.position.x = -SLIDE
-	var tween := create_tween()
+	var tween := card.create_tween()
 	tween.set_parallel()
-	tween.tween_property(_current, "modulate:a", 1.0, 0.25)
-	tween.tween_property(body, "position:x", 0.0, 0.35).set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_OUT)
-	tween.chain().tween_interval(seconds)
-	tween.chain().tween_property(_current, "modulate:a", 0.0, 0.35)
-	tween.parallel().tween_property(body, "position:x", -SLIDE * 0.5, 0.35).set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_IN)
-	tween.chain().tween_callback(_current.queue_free)
-	tween.chain().tween_interval(GAP_SECONDS)
-	tween.chain().tween_callback(_finished)
-
-
-func _finished() -> void:
-	_busy = false
-	_current = null
+	tween.tween_property(card, "modulate:a", 1.0, 0.15)
+	tween.tween_property(body, "position:x", 0.0, 0.22).set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_OUT)
+	tween.chain().tween_interval(XP_SHOW_SECONDS if kind == "xp" else SHOW_SECONDS)
+	tween.chain().tween_callback(func() -> void: card.set_meta("leaving", true))
+	tween.chain().tween_property(card, "modulate:a", 0.0, 0.22)
+	tween.parallel().tween_property(body, "position:x", -SLIDE * 0.5, 0.22).set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_IN)
+	tween.chain().tween_callback(card.queue_free)
 
 
 func _set_talking(talking: bool) -> void:
