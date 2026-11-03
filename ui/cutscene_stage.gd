@@ -23,6 +23,9 @@ const REGIONS: Array[Dictionary] = [
 	{"id": "sanctuary", "name": "Sanctuary", "at": Vector2(436, 44)},
 ]
 
+## Scenes are composed above the caption box, so the action is never hidden behind it.
+const SCENE_HEIGHT := 196.0
+
 var mode := "black"
 var focus: Array = []
 ## 0 to 1: how much of the route has been drawn.
@@ -30,6 +33,10 @@ var route_progress := 0.0:
 	set(value):
 		route_progress = value
 		queue_redraw()
+
+## Camera: zoom into the picture about its centre, and slide it sideways.
+var zoom := 1.0
+var pan := 0.0
 
 var _backdrop: TitleBackdrop
 var _time := 0.0
@@ -49,6 +56,7 @@ func show_beat(beat: Dictionary) -> void:
 	if mode == "sky":
 		_backdrop = TitleBackdrop.new()
 		add_child(_backdrop)
+	_time = 0.0
 	queue_redraw()
 
 
@@ -63,7 +71,7 @@ func lit_count() -> int:
 
 func _process(delta: float) -> void:
 	_time += delta
-	if mode == "map":
+	if mode == "map" or CutsceneScenes.has_scene(mode):
 		queue_redraw()
 
 
@@ -74,6 +82,14 @@ func _draw() -> void:
 		return
 	if mode == "sky":
 		return
+	if CutsceneScenes.has_scene(mode):
+		draw_set_transform(Vector2(pan, 0.0) - stage * 0.5 * (zoom - 1.0), 0.0, Vector2(zoom, zoom))
+		CutsceneScenes.draw(self, mode, Vector2(stage.x, SCENE_HEIGHT), _time)
+		draw_rect(Rect2(0, SCENE_HEIGHT, stage.x, stage.y), Color("#0c0a10"))
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+		if not focus.is_empty():
+			_draw_inset(stage)
+		return
 	draw_rect(Rect2(Vector2.ZERO, stage), PAPER)
 	for x in range(0, int(stage.x), 20):
 		draw_line(Vector2(x, 0), Vector2(x, stage.y), GRID, 1.0)
@@ -82,6 +98,19 @@ func _draw() -> void:
 	_draw_route()
 	for region in REGIONS:
 		_draw_region(region)
+
+
+## The journey so far, as a small framed map in the corner of a scene.
+func _draw_inset(stage: Vector2) -> void:
+	const SCALE := 0.3
+	var origin := Vector2(stage.x - 480.0 * SCALE - 10.0, 28.0)
+	draw_rect(Rect2(origin - Vector2(3, 3), Vector2(480.0 * SCALE + 6.0, 270.0 * SCALE + 6.0)), Color(0.05, 0.07, 0.09, 0.95))
+	draw_rect(Rect2(origin - Vector2(3, 3), Vector2(480.0 * SCALE + 6.0, 270.0 * SCALE + 6.0)), ROUTE_LIT, false, 1.0)
+	draw_set_transform(origin, 0.0, Vector2(SCALE, SCALE))
+	_draw_route()
+	for region in REGIONS:
+		_draw_region(region)
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 
 func _draw_route() -> void:

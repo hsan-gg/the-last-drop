@@ -24,5 +24,6 @@ server=$!
 sleep 1
 script=preview.mjs
 [[ "$area" == res://test/e2e/ui_preview.tscn ]] && script=ui_shots.mjs
+[[ "$area" == res://test/e2e/cutscene_preview.tscn ]] && script=cutscene_shots.mjs
 (cd test/e2e && GAME_URL="http://127.0.0.1:$port/index.html" AREA="${area##*/}" OUT_DIR="$game_dir/test/e2e/out" node "$script")
 echo "screenshots written to test/e2e/out"

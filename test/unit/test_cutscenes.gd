@@ -21,7 +21,7 @@ func test_every_beat_has_a_visual_and_some_words() -> void:
 		var beats := Cutscenes.beats(cutscene_id)
 		assert_gt(beats.size(), 0, cutscene_id)
 		for beat: Dictionary in beats:
-			assert_true(beat["visual"] in ["sky", "map", "black"], "%s: bad visual" % cutscene_id)
+			assert_true(beat["visual"] in ["sky", "map", "black", "ruins", "outpost", "factory", "dump", "river", "spring"], "%s: bad visual" % cutscene_id)
 			assert_false(String(beat["text"]).is_empty(), "%s: empty text" % cutscene_id)
 
 
@@ -37,7 +37,7 @@ func test_map_beats_only_light_known_regions() -> void:
 func test_the_intro_walks_through_the_playable_regions_in_order() -> void:
 	var lit_counts: Array[int] = []
 	for beat: Dictionary in Cutscenes.beats("intro"):
-		if beat["visual"] == "map" and not beat["focus"].is_empty():
+		if not beat["focus"].is_empty():
 			lit_counts.append(beat["focus"].size())
 	assert_eq(lit_counts, [1, 2, 3, 4, 7] as Array[int])
 
@@ -106,3 +106,32 @@ func test_dialogue_has_a_named_speaker_for_recordings_and_terminals() -> void:
 func test_every_speaker_icon_exists() -> void:
 	for speaker in DialogueBox.SPEAKERS:
 		assert_true(ResourceLoader.exists(DialogueBox.ICON_PATH_FORMAT % speaker["icon"]), speaker["icon"])
+
+
+func test_longer_beats_are_held_longer() -> void:
+	assert_gt(CutscenePlayer.hold_seconds("A much longer line of words that takes time to read."), CutscenePlayer.hold_seconds("Short."))
+	assert_gte(CutscenePlayer.hold_seconds(""), CutscenePlayer.MIN_HOLD_SECONDS)
+
+
+func test_the_cutscene_moves_on_by_itself_except_at_the_end() -> void:
+	var player: CutscenePlayer = preload("res://ui/cutscene.tscn").instantiate()
+	Cutscenes.pending_id = "to_dump"
+	add_child_autofree(player)
+	await wait_physics_frames(2)
+	assert_eq(player.index(), 0)
+	await wait_seconds(CutscenePlayer.hold_seconds(Cutscenes.beats("to_dump")[0]["text"]) + 2.5)
+	assert_eq(player.index(), 1, "the next beat arrives without a key press")
+	await wait_seconds(8.0)
+	assert_eq(player.index(), 1, "the last beat waits for the player")
+	assert_false(player.is_done())
+
+
+func test_every_scene_draws_without_error() -> void:
+	var canvas := Control.new()
+	add_child_autofree(canvas)
+	for kind in CutsceneScenes.SCENES:
+		var stage := CutsceneStage.new()
+		canvas.add_child(stage)
+		stage.show_beat({"visual": kind, "focus": ["outpost", "factory"]})
+		await wait_frames(2)
+		assert_eq(stage.mode, kind)

@@ -7,7 +7,7 @@
 			"focus": []
 		},
 		{
-			"visual": "sky",
+			"visual": "ruins",
 			"title": "",
 			"text": "Cities sank under their own waste. Rivers turned the colour of old tea. Clean water became a rumour.",
 			"focus": []
@@ -19,7 +19,7 @@
 			"focus": []
 		},
 		{
-			"visual": "map",
+			"visual": "outpost",
 			"title": "THE FORGOTTEN OUTPOST",
 			"text": "You wake here, alone and thirsty, with a cracked recorder that says: follow the old pipeline north.",
 			"focus": [
@@ -27,7 +27,7 @@
 			]
 		},
 		{
-			"visual": "map",
+			"visual": "factory",
 			"title": "THE BATTERY FACTORY",
 			"text": "A battery factory where hazardous waste was left to leak. Dangerous, but it holds the first answers.",
 			"focus": [
@@ -36,7 +36,7 @@
 			]
 		},
 		{
-			"visual": "map",
+			"visual": "dump",
 			"title": "THE GREAT DUMP",
 			"text": "A megacity's rubbish, piled into mountains. Everything you need is buried in it, and so is something hungry.",
 			"focus": [
@@ -46,7 +46,7 @@
 			]
 		},
 		{
-			"visual": "map",
+			"visual": "river",
 			"title": "THE DEAD RIVER",
 			"text": "Poisoned by what the heaps leaked. Clean it, and you clean the way forward.",
 			"focus": [
@@ -79,7 +79,7 @@
 	],
 	"to_factory": [
 		{
-			"visual": "black",
+			"visual": "factory",
 			"title": "NORTH OF THE OUTPOST",
 			"text": "The pipeline runs north, straight through a fence marked with a faded battery. The recorder crackles: 'I worked here once. They said it was safe.'",
 			"focus": []
@@ -87,13 +87,13 @@
 	],
 	"to_dump": [
 		{
-			"visual": "black",
+			"visual": "dump",
 			"title": "THE ARCHIVE",
 			"text": "The archive was damaged, but one file survived: a municipal route. Waste, shipped away to the Great Dump, year after year.",
 			"focus": []
 		},
 		{
-			"visual": "black",
+			"visual": "dump",
 			"title": "INES",
 			"text": "'Away has an address,' the voice said. 'It is always someone else's backyard.' You follow it.",
 			"focus": []
@@ -101,13 +101,13 @@
 	],
 	"to_river": [
 		{
-			"visual": "black",
+			"visual": "river",
 			"title": "THE DRAIN",
 			"text": "The dump drains downhill through a rusted pipe. Whatever the heaps leaked is on its way to the river.",
 			"focus": []
 		},
 		{
-			"visual": "black",
+			"visual": "river",
 			"title": "DOWNSTREAM",
 			"text": "You smell it before you see it: metal, and something sweet. Clear water is not always safe water.",
 			"focus": []
@@ -121,7 +121,7 @@
 			"focus": []
 		},
 		{
-			"visual": "sky",
+			"visual": "spring",
 			"title": "THE TRUTH",
 			"text": "The Last Drop was never a spring. It was a place, a plan, and people willing to use what already existed.",
 			"focus": []
