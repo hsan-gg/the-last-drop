@@ -68,7 +68,7 @@ func refresh() -> void:
 func text_for(area: String) -> String:
 	var lines: Array[String] = []
 	var goal := ObjectivesTracker.current(area)
-	lines.append("[color=#f2b45a]OBJECTIVE[/color]")
+	lines.append("[img=9x9]%s[/img] [color=#f2b45a]OBJECTIVE[/color]" % QuestRules.icon_path("goal"))
 	lines.append("[color=%s]%s[/color]" % [INK, goal.get("text", "Look for the way on.") if not goal.is_empty() else "Look for the way on."])
 	var open: Array[Dictionary] = []
 	for quest in QuestRules.visible_quests():
@@ -82,9 +82,9 @@ func text_for(area: String) -> String:
 			if listed >= MAX_SIDE_QUESTS:
 				break
 			var progress := QuestRules.progress(quest)
-			lines.append("[color=%s]●[/color] [color=%s]%s[/color]  [color=#f2d16b]%d/%d[/color]" % [
-				QuestRules.DIFFICULTY_COLORS[quest["difficulty"]], INK,
-				quest["title"], progress["current"], progress["target"]])
+			lines.append("[img=9x9]%s[/img] [color=%s]%s[/color]  [color=%s]%d/%d[/color]" % [
+				QuestRules.icon_path(quest.get("category", "goal")), INK,
+				quest["title"], QuestRules.DIFFICULTY_COLORS[quest["difficulty"]], progress["current"], progress["target"]])
 			listed += 1
 	return "\n".join(lines)
 

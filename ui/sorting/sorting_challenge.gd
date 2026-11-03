@@ -54,6 +54,7 @@ func _ready() -> void:
 	_build()
 	visible = false
 	EventBus.sorting_requested.connect(open)
+	EventBus.player_collapsed.connect(leave)
 
 
 func phase() -> Phase:

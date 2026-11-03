@@ -1,6 +1,8 @@
 class_name Player
 extends CharacterBody2D
 
+## The player's physics layer (value 8); walls are 1, zombies 4, interactables 2.
+const PHYSICS_LAYER := 8
 const SPEED := 70.0
 const SHAKE_PIXELS := 3.0
 const SHAKE_STEPS := 6
@@ -20,7 +22,12 @@ var _spawn_position := Vector2.ZERO
 
 func _ready() -> void:
 	add_to_group("player")
-	collision_mask = 1 | 4  # walls and zombies: walking into a zombie stops you instead of shoving it
+	# Own layer (8) so zombies can tell the player from walls; floating motion so
+	# neither body ever rides on the other (the default "grounded" mode carries
+	# a body standing on another one along with it, which glued zombies to you).
+	collision_layer = Player.PHYSICS_LAYER
+	collision_mask = 1 | Enemy.PHYSICS_LAYER
+	motion_mode = CharacterBody2D.MOTION_MODE_FLOATING
 	add_child(SwordSwing.new())
 	combat = PlayerCombat.new()
 	combat.name = "Combat"
@@ -55,6 +62,7 @@ func place_at(position_in_world: Vector2) -> void:
 func respawn() -> void:
 	global_position = _spawn_position
 	velocity = Vector2.ZERO
+	combat.grant_invulnerability(Survival.COLLAPSE_GRACE_SECONDS)
 
 
 ## Plays the swing animation for `seconds` in the given direction.

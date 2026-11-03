@@ -7,6 +7,9 @@ const WATER_DECAY_PER_SECOND := 0.25
 const HEALTH_REGEN_PER_SECOND := 1.0
 const REGEN_MIN_WATER := 20.0
 const COLLAPSE_RECOVERY_HEALTH := 50.0
+## After a collapse nothing can hurt the player for a moment, so one bad moment
+## (a wrong bin, a pack of zombies at the spawn) costs one life, never several.
+const COLLAPSE_GRACE_SECONDS := 2.0
 const EXHAUSTED_SPEED_FACTOR := 0.6
 
 var _water := MAX_VALUE
@@ -14,8 +17,16 @@ var _health := MAX_VALUE
 var _max_health := MAX_VALUE
 
 
+var _grace_until := 0.0
+
+
 func _process(delta: float) -> void:
-	tick(delta)
+	if Lives.active:  # no thirst on the title, cutscene or game over screens
+		tick(delta)
+
+
+func in_grace() -> bool:
+	return Time.get_ticks_msec() / 1000.0 < _grace_until
 
 
 func water() -> float:
@@ -62,16 +73,20 @@ func heal(amount: float) -> void:
 
 
 func damage(amount: float) -> void:
+	if in_grace():
+		return
 	EventBus.damage_taken.emit(amount)
 	var next_health := maxf(_health - amount, 0.0)
 	if next_health > 0.0:
 		_apply(_water, next_health)
 		return
 	_apply(_water, minf(COLLAPSE_RECOVERY_HEALTH, _max_health))
+	_grace_until = Time.get_ticks_msec() / 1000.0 + COLLAPSE_GRACE_SECONDS
 	EventBus.player_collapsed.emit()
 
 
 func reset() -> void:
+	_grace_until = 0.0
 	_max_health = MAX_VALUE
 	_apply(MAX_VALUE, MAX_VALUE)
 

@@ -59,7 +59,7 @@ func _ready() -> void:
 	_place_entities(layout, definitions, marker_chars)
 	AreaLighting.add_player_lantern(_player)
 	_limit_camera(layout)
-	if _spawned > 0:
+	if not Content.area(area_id).get("entities", {}).is_empty():
 		GameState.set_counter("spawned_%s" % area_id, _spawned)
 
 	_tint.color = Color(config.get("tint", "#ffffff"))
@@ -178,6 +178,25 @@ func _free_offset(position: Vector2, copy: int) -> Vector2:
 	return Vector2.ZERO
 
 
+## True if `point` is inside the map on a tile you can walk on.
+func is_open_ground(point: Vector2) -> bool:
+	var cell := Vector2i((point / MapBuilder.TILE_SIZE).floor())
+	return cell.y >= 0 and cell.y < _layout.size() and cell.x >= 0 and cell.x < _layout[cell.y].length() \
+		and not MapBuilder.is_solid_char(_layout[cell.y][cell.x])
+
+
+## A walkable spot about `distance` from `around`, trying many directions and
+## nearer rings; falls back to `around` itself so nothing lands in a wall.
+func open_spot_near(around: Vector2, distance: float) -> Vector2:
+	var start := randf() * TAU
+	for ring in [1.0, 0.7, 0.45]:
+		for attempt in 12:
+			var spot: Vector2 = around + Vector2.from_angle(start + attempt * TAU / 12.0) * distance * float(ring)
+			if is_open_ground(spot) and is_open_ground(spot + Vector2(6, 0)) and is_open_ground(spot - Vector2(6, 0)):
+				return spot
+	return around
+
+
 ## The generator's racket calls every zombie still around to the player, so a
 ## region can always be cleared even if one wandered somewhere awkward.
 func summon_remaining() -> int:
@@ -186,8 +205,8 @@ func summon_remaining() -> int:
 		var enemy := node as Enemy
 		if enemy == null or enemy.is_dead():
 			continue
-		if enemy.global_position.distance_to(_player.global_position) > PENALTY_DISTANCE * 1.5:
-			enemy.global_position = _player.global_position + Vector2.from_angle(randf() * TAU) * PENALTY_DISTANCE
+		if enemy.global_position.distance_to(_player.global_position) > PENALTY_DISTANCE * 1.5 or not is_open_ground(enemy.global_position):
+			enemy.global_position = open_spot_near(_player.global_position, PENALTY_DISTANCE)
 		enemy.hunt()
 		called += 1
 	return called
@@ -242,9 +261,9 @@ func _on_penalty_spawn(reason: String) -> void:
 		return
 	var enemy: Node2D = ENTITY_SCENES["enemy"].instantiate()
 	enemy.set("enemy_id", PENALTY_ZOMBIE)
-	var angle := randf() * TAU
-	enemy.position = _player.position + Vector2.from_angle(angle) * PENALTY_DISTANCE
+	enemy.position = open_spot_near(_player.position, PENALTY_DISTANCE)
 	_entities.add_child(enemy)
+	(enemy as Enemy).hunt()
 	var title := "CONTAMINATION ALERT" if reason == "sorting" else "THE NOISE DRAWS SOMETHING"
 	EventBus.banner_requested.emit(title, "A zombie is coming.", Color("#ff6a5a"))
 

@@ -32,6 +32,10 @@ func set_counter(key: String, value: int) -> void:
 	EventBus.counter_changed.emit(key, value)
 
 
+func has_counter(key: String) -> bool:
+	return _counters.has(key)
+
+
 func get_counter(key: String) -> int:
 	return _counters.get(key, 0)
 

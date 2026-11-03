@@ -17,6 +17,7 @@ var _line: Label
 var _motes: CPUParticles2D
 var _queue: Array[Dictionary] = []
 var _showing := false
+var _on_done: Callable
 
 
 func _ready() -> void:
@@ -24,11 +25,13 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	theme = UiTheme.get_theme()
 	_build()
-	EventBus.reward_requested.connect(show_reward)
 
 
-func show_reward(kind: String, title: String, line: String) -> void:
-	Notices.run(_enqueue.bind(kind, title, line))
+
+## Shows one reward card, then calls `done` once it has faded away.
+func present(kind: String, title: String, line: String, done: Callable = Callable()) -> void:
+	_enqueue(kind, title, line)
+	_on_done = done
 
 
 func is_showing() -> bool:
@@ -45,6 +48,10 @@ func _next() -> void:
 	if _queue.is_empty():
 		_showing = false
 		_card.visible = false
+		if _on_done.is_valid():
+			var done := _on_done
+			_on_done = Callable()
+			done.call()
 		return
 	_showing = true
 	var reward: Dictionary = _queue.pop_front()

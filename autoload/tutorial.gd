@@ -35,6 +35,12 @@ func _ready() -> void:
 	_reset_clock()
 
 
+func reset_run() -> void:
+	_queue.clear()
+	_waiting = false
+	_reset_clock()
+
+
 ## Starts the run's tip clock; the late tips (menu, map) arrive on a timer.
 func _reset_clock() -> void:
 	_clock = 0.0

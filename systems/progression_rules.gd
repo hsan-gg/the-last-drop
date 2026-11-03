@@ -7,13 +7,17 @@ const MAX_LEVEL := 10
 const BASE_HEALTH := 100.0
 const HEALTH_PER_LEVEL := 8.0
 const DAMAGE_PER_LEVEL := 1
-const XP_BASE := 60
-const XP_STEP := 30
+const XP_BASE := 120
+const XP_STEP := 60
+const XP_CURVE := 15
 
 
-## XP needed to go from `level` to the next one.
+## XP needed to go from `level` to the next one. It grows faster than linearly,
+## so the first levels come at a steady pace and the last ones are earned:
+## 120, 195, 300, 435, 600, 795, 1020, 1275, 1560 (6300 to reach level 10).
 static func xp_needed(level: int) -> int:
-	return XP_BASE + XP_STEP * (level - 1)
+	var steps := level - 1
+	return XP_BASE + XP_STEP * steps + XP_CURVE * steps * steps
 
 
 ## Adds XP and levels up as far as it reaches: {"level", "xp", "levels_gained"}.

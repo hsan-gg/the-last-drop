@@ -71,7 +71,9 @@ func test_the_player_cannot_shove_a_zombie() -> void:
 	enemy.position = Vector2(14, 0)
 	add_child_autofree(enemy)
 	await wait_physics_frames(2)
+	enemy.set_physics_process(false)  # only the player moves: does it shove the zombie?
 	assert_true(player.collision_mask & enemy.collision_layer != 0, "the player collides with zombies")
+	assert_eq(player.motion_mode, CharacterBody2D.MOTION_MODE_FLOATING, "no riding on each other")
 	var start := enemy.global_position
 	for _i in 30:
 		player.velocity = Vector2(80, 0)

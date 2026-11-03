@@ -25,6 +25,7 @@ var _hint: Label
 
 func _ready() -> void:
 	_build_shell(Vector2(452, 230), UiTheme.COLOR_TEAL)
+	EventBus.player_collapsed.connect(leave)
 	_build_contents()
 	EventBus.puzzle_requested.connect(_on_puzzle_requested)
 

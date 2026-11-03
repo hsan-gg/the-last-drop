@@ -105,7 +105,14 @@ func _card(quest: Dictionary) -> Control:
 	box.add_theme_constant_override("separation", 2)
 	panel.add_child(box)
 	var head := HBoxContainer.new()
+	head.add_theme_constant_override("separation", 5)
 	box.add_child(head)
+	var icon := TextureRect.new()
+	icon.texture = load(QuestRules.icon_path("done" if done else quest.get("category", "goal")))
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
+	icon.custom_minimum_size = Vector2(9, 9)
+	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	head.add_child(icon)
 	var title := _label(quest["title"], UiTheme.COLOR_TEXT if not done else Color("#7bc043"))
 	title.autowrap_mode = TextServer.AUTOWRAP_OFF
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL

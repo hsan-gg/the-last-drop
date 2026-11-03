@@ -22,7 +22,9 @@ func _ready() -> void:
 	layer.add_child(_banners)
 	_feed = NotificationFeed.new()
 	layer.add_child(_feed)
-	layer.add_child(RewardCard.new())
+	var card := RewardCard.new()
+	layer.add_child(card)
+	_feed.reward_card = card
 	for area_id in ["outpost", "factory", "dump"]:
 		GameState.set_flag("area_%s_reached" % area_id)
 	GameState.add_to_counter("sort_correct", 4)

@@ -31,7 +31,7 @@ func test_enough_xp_levels_up_and_carries_the_rest_over() -> void:
 
 
 func test_one_big_reward_can_give_several_levels() -> void:
-	assert_gte(ProgressionRules.apply_xp(1, 0, 500)["levels_gained"], 3)
+	assert_gte(ProgressionRules.apply_xp(1, 0, 700)["levels_gained"], 3)
 
 
 func test_the_level_cap_holds() -> void:
@@ -44,7 +44,7 @@ func test_the_whole_game_reaches_about_level_ten() -> void:
 	var total := 0
 	for level in range(1, ProgressionRules.MAX_LEVEL):
 		total += ProgressionRules.xp_needed(level)
-	assert_between(total, 1200, 2000, "a full run should land near the cap")
+	assert_between(total, 5000, 7000, "level 10 is earned over the whole game, not handed out early")
 
 
 func test_levelling_up_raises_max_health_and_heals() -> void:

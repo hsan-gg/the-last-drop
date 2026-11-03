@@ -63,6 +63,10 @@ func ending_ready(chapter_id: String) -> bool:
 	return true
 
 
+func reset() -> void:
+	ending_enabled = true
+
+
 func _on_dialogue_finished() -> void:
 	if not ending_enabled:
 		return

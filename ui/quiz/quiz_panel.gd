@@ -21,6 +21,7 @@ var _hint: Label
 
 func _ready() -> void:
 	_build_shell(Vector2(420, 190), UiTheme.COLOR_ORANGE)
+	EventBus.player_collapsed.connect(abandon)
 	_build_contents()
 	EventBus.quiz_requested.connect(_on_quiz_requested)
 
@@ -83,6 +84,14 @@ func continue_flow() -> void:
 	_phase = Phase.IDLE
 	_hide_panel()
 	EventBus.quiz_finished.emit(_was_correct)
+
+
+## Knocked out mid-question: the panel closes without a verdict.
+func abandon() -> void:
+	if _phase == Phase.IDLE:
+		return
+	_phase = Phase.IDLE
+	_hide_panel()
 
 
 func _on_quiz_requested(lesson_ids: Array) -> void:

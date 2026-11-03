@@ -84,12 +84,8 @@ func test_finishing_an_objective_announces_it_complete_then_the_next() -> void:
 	GameState.set_flag("water_tested")
 	assert_eq(feed.count(), before, "nothing appears in the same instant")
 	await wait_frames(4)
-	var shown := ""
-	for label: Label in feed.find_children("*", "Label", true, false):
-		shown += label.text + "|"
-	assert_string_contains(shown, "Done!")
-	assert_string_contains(shown, "New objective")
-	assert_lte(feed.count(), NotificationFeed.MAX_ENTRIES)
+	assert_eq(feed.pending_kinds().slice(0, 1), ["objective_done"] as Array[String], "what you finished comes first")
+	assert_eq(feed.pending_kinds().back(), "objective_new", "what to do next comes last")
 	assert_true(hud._tracker.has_news(), "the tasks chip shows a quiet !")
 	assert_false(hud._tracker.is_shown(), "the list itself does not pop open")
 
@@ -153,17 +149,45 @@ func test_a_notice_raised_in_the_same_instant_a_talk_opens_waits_for_it() -> voi
 func test_xp_gains_merge_into_one_line() -> void:
 	var feed := NotificationFeed.new()
 	add_child_autofree(feed)
-	feed.add_xp(5)
+	feed.notify("info", "Busy", "something on screen first")
 	await wait_frames(4)
+	feed.add_xp(5)
 	feed.add_xp(7)
 	await wait_frames(4)
-	assert_eq(feed.count(), 1)
-	assert_eq(feed._xp_total, 12)
+	var xp_entries := feed._queue.filter(func(entry: Dictionary) -> bool: return entry["kind"] == "xp")
+	assert_eq(xp_entries.size(), 1)
+	assert_eq(int(xp_entries[0]["amount"]), 12)
 
 
-func test_a_level_up_is_a_calm_card_not_a_flash() -> void:
+func test_things_that_happen_together_are_told_in_order() -> void:
+	var feed := NotificationFeed.new()
+	add_child_autofree(feed)
+	feed.notify("objective_new", "New objective", "Next thing")
+	EventBus.reward_requested.emit("level", "LEVEL 2", "Stronger.")
+	feed.add_xp(30)
+	feed.notify("objective_done", "Done!", "Old thing")
+	await wait_frames(4)
+	assert_eq(feed.pending_kinds(), ["objective_done", "xp", "reward", "objective_new"] as Array[String])
+
+
+func test_messages_come_one_at_a_time() -> void:
+	var feed := NotificationFeed.new()
+	add_child_autofree(feed)
+	for index in 3:
+		feed.notify("quest", "Quest complete", "Quest %d" % index)
+	await wait_seconds(0.6)
+	assert_eq(feed._stack.get_child_count(), 1, "only one card on screen")
+	assert_eq(feed.count(), 3, "the others wait their turn")
+
+
+func test_a_level_up_is_shown_alone_on_a_calm_card() -> void:
+	var feed := NotificationFeed.new()
+	add_child_autofree(feed)
 	var card := RewardCard.new()
 	add_child_autofree(card)
+	feed.reward_card = card
 	EventBus.reward_requested.emit("level", "LEVEL 2", "Stronger.")
-	await wait_frames(4)
+	feed.notify("objective_new", "New objective", "Later")
+	await wait_seconds(0.6)
 	assert_true(card.is_showing())
+	assert_eq(feed._stack.get_child_count(), 0, "no small card next to it")

@@ -13,6 +13,9 @@ const PARRY_STAGGER_SECONDS := 1.3
 const HIT_STAGGER_SECONDS := 0.3
 const POISE_BREAK_DAMAGE := 20.0
 const SEPARATION_RADIUS := 12.0
+const PHYSICS_LAYER := 4
+## A zombie stops this far short of its reach instead of pressing into the player.
+const STANDOFF := 0.65
 const DEATH_LINGER_SECONDS := 1.1
 const HEALTH_BAR_WIDTH := 16.0
 const BODY_OFFSET := Vector2(0, -6)
@@ -49,8 +52,9 @@ func _ready() -> void:
 		return
 	_apply_difficulty()
 	_hp = float(_def["hp"])
-	collision_layer = 4
-	collision_mask = 1
+	collision_layer = PHYSICS_LAYER
+	collision_mask = 1 | Player.PHYSICS_LAYER
+	motion_mode = CharacterBody2D.MOTION_MODE_FLOATING
 	add_to_group("enemies")
 	_build_body()
 
@@ -224,9 +228,12 @@ func _strike() -> void:
 
 func _move() -> void:
 	var desired := Vector2.ZERO
-	if _state == State.CHASE and _player != null:
+	if _state == State.CHASE and _player != null and _distance() > float(_def["reach"]) * STANDOFF:
 		desired = (_player.global_position - global_position).normalized() * float(_def["speed"])
 		desired += _separation() * float(_def["speed"]) * 0.6
+	elif _state == State.RECOVER and _player != null and _distance() < float(_def["reach"]) * STANDOFF:
+		# step back after a swing so it never stays glued to the player
+		desired = (global_position - _player.global_position).normalized() * float(_def["speed"]) * 0.5
 	velocity = desired + _knockback
 	move_and_slide()
 

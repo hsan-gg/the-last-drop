@@ -1,14 +1,21 @@
 class_name NotificationFeed
 extends Control
 ## Small, friendly messages in the bottom-left corner, in the spirit of Stardew
-## Valley's HUD messages: an icon, a short headline and one readable line. They
-## slide in, stack upward, and drift away after a few seconds. XP gains merge
-## into one running line instead of spamming. Each kind has its own soft chime.
-## The feed steps aside while a conversation is open.
+## Valley's HUD messages: an icon, a short headline and one readable line.
+##
+## They come one at a time: each slides in, stays a moment, slides out, and only
+## then does the next one come. Things that happen together are told in a
+## sensible order: what you finished, then the XP it paid, then a level up (on
+## its own calm card, with nothing else on screen), then what to do next. XP
+## from one moment is added up into a single line. Nothing plays while you talk.
 
-const SHOW_SECONDS := 4.2
-const XP_SHOW_SECONDS := 2.6
-const MAX_ENTRIES := 4
+const SHOW_SECONDS := 2.6
+const XP_SHOW_SECONDS := 1.8
+const GATHER_SECONDS := 0.3
+const GAP_SECONDS := 0.2
+const MAX_ENTRIES := 1
+## Lower comes first.
+const PRIORITY := {"objective_done": 0, "quest": 1, "xp": 2, "loot": 3, "reward": 4, "objective_new": 5, "info": 6}
 const WIDTH := 212.0
 const SLIDE := 24.0
 const XP_SOUND_GAP := 0.6
@@ -24,9 +31,15 @@ const KINDS := {
 	"info": {"color": Color("#c8b8e8"), "icon": "dot", "sound": "note_new"},
 }
 
+var reward_card: RewardCard
+
 var _stack: VBoxContainer
-var _xp_entry: Control
-var _xp_total := 0
+var _queue: Array[Dictionary] = []
+var _sequence := 0
+var _busy := false
+var _talking := false
+var _gather_until := 0.0
+var _current: Control
 var _last_xp_sound := -10.0
 
 
@@ -36,94 +49,113 @@ func _ready() -> void:
 	theme = UiTheme.get_theme()
 	_stack = VBoxContainer.new()
 	_stack.alignment = BoxContainer.ALIGNMENT_END
-	_stack.add_theme_constant_override("separation", 3)
 	_stack.anchor_top = 1.0
 	_stack.anchor_bottom = 1.0
 	_stack.offset_left = 6.0
 	_stack.offset_right = 6.0 + WIDTH
-	_stack.offset_top = -170.0
+	_stack.offset_top = -90.0
 	_stack.offset_bottom = -8.0
 	_stack.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_stack)
-	EventBus.dialogue_opened.connect(_step_aside.bind(true))
-	EventBus.dialogue_finished.connect(_step_aside.bind(false).unbind(1))
-	EventBus.dialogue_interrupted.connect(_step_aside.bind(false))
+	EventBus.dialogue_opened.connect(_set_talking.bind(true))
+	EventBus.dialogue_finished.connect(_set_talking.bind(false).unbind(1))
+	EventBus.dialogue_interrupted.connect(_set_talking.bind(false))
+	EventBus.reward_requested.connect(func(kind: String, title: String, line: String) -> void:
+		Notices.run(_enqueue.bind({"kind": "reward", "reward_kind": kind, "headline": title, "line": line})))
 
 
-## Shows a message (after any open conversation).
+## Queues a message (after any open conversation).
 func notify(kind: String, headline: String, line: String) -> void:
-	Notices.run(_present.bind(kind, headline, line))
+	Notices.run(_enqueue.bind({"kind": kind, "headline": headline, "line": line}))
 
 
-## Adds XP to the running "+N XP" line.
+## Adds XP; XP waiting in the queue is added up into one line.
 func add_xp(amount: int) -> void:
 	if amount > 0:
-		Notices.run(_present_xp.bind(amount))
+		Notices.run(_enqueue.bind({"kind": "xp", "amount": amount}))
 
 
+## Messages waiting plus the one on screen.
 func count() -> int:
-	return _stack.get_child_count()
+	return _queue.size() + (1 if _busy else 0)
 
 
-func _present(kind: String, headline: String, line: String) -> void:
-	var spec: Dictionary = KINDS.get(kind, KINDS["info"])
-	var entry := _make_entry(spec, headline, line)
-	_stack.add_child(entry)
-	_trim()
-	_animate_in(entry, SHOW_SECONDS)
-	EventBus.sfx_requested.emit(spec["sound"])
+## Every message waiting, in the order it will be shown (for tests and tools).
+func pending_kinds() -> Array[String]:
+	_sort()
+	var kinds: Array[String] = []
+	for entry in _queue:
+		kinds.append(entry["kind"])
+	return kinds
 
 
-func _present_xp(amount: int) -> void:
-	if is_instance_valid(_xp_entry) and not _xp_entry.is_queued_for_deletion():
-		_xp_total += amount
-		(_xp_entry.get_meta("line") as Label).text = "+%d XP" % _xp_total
-		_xp_entry.set_meta("expires", _now() + XP_SHOW_SECONDS)
-		var pop := create_tween()
-		pop.tween_property(_xp_entry, "modulate", Color(1.25, 1.25, 1.1), 0.08)
-		pop.tween_property(_xp_entry, "modulate", Color.WHITE, 0.25)
-	else:
-		_xp_total = amount
-		_xp_entry = _make_entry(KINDS["xp"], "", "+%d XP" % amount)
-		_stack.add_child(_xp_entry)
-		_trim()
-		_animate_in(_xp_entry, XP_SHOW_SECONDS)
-	if _now() - _last_xp_sound > XP_SOUND_GAP:
-		_last_xp_sound = _now()
-		EventBus.sfx_requested.emit("note_xp")
+func _enqueue(entry: Dictionary) -> void:
+	if entry["kind"] == "xp":
+		for waiting in _queue:
+			if waiting["kind"] == "xp":
+				waiting["amount"] = int(waiting["amount"]) + int(entry["amount"])
+				return
+	_sequence += 1
+	entry["order"] = _sequence
+	_queue.append(entry)
+	if not _busy:
+		_gather_until = maxf(_gather_until, _now() + GATHER_SECONDS)
+
+
+func _sort() -> void:
+	_queue.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		var pa: int = PRIORITY.get(a["kind"], 6)
+		var pb: int = PRIORITY.get(b["kind"], 6)
+		return pa < pb if pa != pb else int(a["order"]) < int(b["order"]))
 
 
 func _process(_delta: float) -> void:
-	for entry in _stack.get_children():
-		if entry.has_meta("expires") and _now() >= float(entry.get_meta("expires")) and not entry.get_meta("leaving", false):
-			_animate_out(entry)
+	if _busy or _talking or _queue.is_empty() or _now() < _gather_until:
+		return
+	_sort()
+	_show(_queue.pop_front())
 
 
-func _trim() -> void:
-	while _stack.get_child_count() > MAX_ENTRIES:
-		var oldest := _stack.get_child(0)
-		_stack.remove_child(oldest)
-		oldest.queue_free()
-
-
-func _animate_in(entry: Control, seconds: float) -> void:
-	entry.set_meta("expires", _now() + seconds)
-	entry.modulate.a = 0.0
-	var body := entry.get_child(0) as Control
+func _show(entry: Dictionary) -> void:
+	_busy = true
+	if entry["kind"] == "reward":
+		if reward_card != null:
+			reward_card.present(entry["reward_kind"], entry["headline"], entry["line"], _finished)
+		else:
+			_finished()
+		return
+	var kind: String = entry["kind"]
+	var spec: Dictionary = KINDS.get(kind, KINDS["info"])
+	var line: String = "+%d XP" % int(entry["amount"]) if kind == "xp" else entry["line"]
+	var headline: String = "" if kind == "xp" else entry["headline"]
+	_current = _make_entry(spec, headline, line)
+	_stack.add_child(_current)
+	var seconds := XP_SHOW_SECONDS if kind == "xp" else SHOW_SECONDS
+	if kind != "xp" or _now() - _last_xp_sound > XP_SOUND_GAP:
+		_last_xp_sound = _now()
+		EventBus.sfx_requested.emit(spec["sound"])
+	var body := _current.get_child(0) as Control
+	_current.modulate.a = 0.0
 	body.position.x = -SLIDE
-	var tween := create_tween().set_parallel()
-	tween.tween_property(entry, "modulate:a", 1.0, 0.25)
-	tween.tween_property(body, "position:x", 0.0, 0.35).set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_OUT)
-
-
-func _animate_out(entry: Control) -> void:
-	entry.set_meta("leaving", true)
 	var tween := create_tween()
-	tween.tween_property(entry, "modulate:a", 0.0, 0.5)
-	tween.tween_callback(entry.queue_free)
+	tween.set_parallel()
+	tween.tween_property(_current, "modulate:a", 1.0, 0.25)
+	tween.tween_property(body, "position:x", 0.0, 0.35).set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_OUT)
+	tween.chain().tween_interval(seconds)
+	tween.chain().tween_property(_current, "modulate:a", 0.0, 0.35)
+	tween.parallel().tween_property(body, "position:x", -SLIDE * 0.5, 0.35).set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_IN)
+	tween.chain().tween_callback(_current.queue_free)
+	tween.chain().tween_interval(GAP_SECONDS)
+	tween.chain().tween_callback(_finished)
 
 
-func _step_aside(talking: bool) -> void:
+func _finished() -> void:
+	_busy = false
+	_current = null
+
+
+func _set_talking(talking: bool) -> void:
+	_talking = talking
 	var tween := create_tween()
 	tween.tween_property(_stack, "modulate:a", 0.0 if talking else 1.0, 0.2)
 

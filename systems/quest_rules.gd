@@ -9,6 +9,15 @@ const DIFFICULTY_COLORS := {"easy": "#7bc043", "medium": "#f2c94c", "hard": "#e0
 const DIFFICULTY_TAGS := {"easy": "EASY", "medium": "MED", "hard": "HARD"}
 
 
+const ICON_FORMAT := "res://assets/sprites/icons/quest_%s.png"
+
+
+## The little picture for a quest's category ("goal" and "done" are also icons).
+static func icon_path(category: String) -> String:
+	var path := ICON_FORMAT % category
+	return path if ResourceLoader.exists(path) else ICON_FORMAT % "goal"
+
+
 static func is_done(quest_id: String) -> bool:
 	return GameState.has_flag(DONE_FLAG_FORMAT % quest_id)
 
@@ -27,8 +36,8 @@ static func progress(quest: Dictionary) -> Dictionary:
 			target = int(goal["target"])
 		"clear":
 			current = GameState.count_flags_with_prefix("slain_%s_" % goal["area"])
-			var spawned := GameState.get_counter("spawned_%s" % goal["area"])
-			target = maxi(spawned if spawned > 0 else Content.enemy_count(goal["area"]), 1)
+			var key := "spawned_%s" % goal["area"]
+			target = GameState.get_counter(key) if GameState.has_counter(key) else Content.enemy_count(goal["area"])
 		"level":
 			current = Progress.level
 			target = int(goal["target"])

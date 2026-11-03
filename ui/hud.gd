@@ -56,6 +56,7 @@ func _ready() -> void:
 	add_child(_feed)
 	_reward = RewardCard.new()
 	add_child(_reward)
+	_feed.reward_card = _reward
 	add_child(QuizPanel.new())
 	add_child(PuzzlePanel.new())
 	add_child(GameMenu.new())

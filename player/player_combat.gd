@@ -67,6 +67,10 @@ func is_blocking() -> bool:
 	return state == State.BLOCK
 
 
+func grant_invulnerability(seconds: float) -> void:
+	_invulnerable_until = maxf(_invulnerable_until, _clock + seconds)
+
+
 func max_stamina() -> float:
 	return BASE_STAMINA + STAMINA_PER_LEVEL * (Progress.level - 1)
 

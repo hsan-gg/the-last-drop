@@ -34,6 +34,7 @@ func change_scene(path: String) -> void:
 	_changing = true
 	await _fade_to(1.0)
 	get_tree().paused = false
+	Notices.clear()  # a conversation torn down mid-way must not hold notices forever
 	var error := get_tree().change_scene_to_file(path)
 	if error != OK:
 		push_error("SceneManager: cannot load %s (error %d)" % [path, error])
@@ -84,6 +85,9 @@ func reset_run() -> void:
 	Progress.reset()
 	Lives.reset()
 	MapMemory.reset()
+	Chapters.reset()
+	Notices.clear()
+	Tutorial.reset_run()
 
 
 func _fade_to(alpha: float) -> void:

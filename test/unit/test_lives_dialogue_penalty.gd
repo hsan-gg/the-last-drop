@@ -41,6 +41,7 @@ func test_losing_the_last_life_ends_the_run() -> void:
 	watch_signals(EventBus)
 	for _i in 3:
 		Survival.damage(1000.0)
+		Survival._grace_until = 0.0  # each collapse is a separate moment
 	assert_eq(Lives.lives, 0)
 	assert_signal_emitted(EventBus, "game_over")
 	assert_false(Lives.active)
@@ -50,6 +51,7 @@ func test_lives_do_not_run_out_unless_a_run_has_started() -> void:
 	watch_signals(EventBus)
 	for _i in 5:
 		Survival.damage(1000.0)
+		Survival._grace_until = 0.0  # each collapse is a separate moment
 	assert_eq(Lives.lives, 3, "tests and tools never lose lives")
 	assert_signal_not_emitted(EventBus, "game_over")
 
@@ -154,3 +156,23 @@ func test_every_configured_pile_has_a_pool_big_enough() -> void:
 				continue
 			var props: Dictionary = definition["props"]
 			assert_gte(props["guaranteed"].size() + props["pool"].size(), int(props["count"]), "%s pile is too small" % props["pile_id"])
+
+
+func test_one_bad_moment_costs_one_life_not_several() -> void:
+	Lives.start_run()
+	Survival.damage(1000.0)
+	Survival.damage(1000.0)
+	Survival.damage(1000.0)
+	assert_eq(Lives.lives, 2, "the grace after a collapse absorbs the rest")
+
+
+func test_collapsing_mid_sort_closes_the_pile() -> void:
+	Lives.start_run()
+	var sorting = preload("res://ui/sorting/sorting_challenge.tscn").instantiate()
+	sorting.pauses_game = false
+	add_child_autofree(sorting)
+	var items: Array[String] = ["battery", "scrap_metal"]
+	sorting.open("pile", items)
+	Survival.damage(1000.0)
+	assert_false(sorting.visible, "knocked out: the sorting screen closes")
+	assert_eq(Lives.lives, 2)
