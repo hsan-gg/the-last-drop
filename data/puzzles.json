@@ -48,7 +48,13 @@
 			"Water it until it is damp, not wet",
 			"Turn it every few days"
 		],
-		"explanation": "Air, browns, greens, water, time. Balance makes soil; plastic or batteries would poison it."
+		"explanation": "Air, browns, greens, water, time. Balance makes soil; plastic or batteries would poison it.",
+		"lessons": [
+			"brown_green",
+			"no_plastic",
+			"waste_to_food",
+			"soil_loss"
+		]
 	},
 	{
 		"id": "power_grid",
@@ -61,7 +67,13 @@
 			"Store the surplus in batteries",
 			"Share the rest along the line"
 		],
-		"explanation": "Efficiency first: the cheapest energy is the energy you don't use. Then make clean power and keep what you can't use yet."
+		"explanation": "Efficiency first: the cheapest energy is the energy you don't use. Then make clean power and keep what you can't use yet.",
+		"lessons": [
+			"efficiency_first",
+			"battery_storage",
+			"panel_reuse",
+			"hazard_symbols"
+		]
 	},
 	{
 		"id": "timeline",
@@ -74,6 +86,10 @@
 			"Cheap goods, poisoned rivers, someone else paying",
 			"Everyone waited for someone else to move first"
 		],
-		"explanation": "There was no single catastrophe. The world had the solutions and kept choosing not to use them."
+		"explanation": "There was no single catastrophe. The world had the solutions and kept choosing not to use them.",
+		"lessons": [
+			"systems_thinking",
+			"shared_responsibility"
+		]
 	}
 ]

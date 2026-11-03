@@ -35,6 +35,7 @@ var _grass: Array[Vector2i] = []
 var _time := 0.0
 var _haze: TextureRect
 var _air: CanvasLayer
+var _has_fireflies := false
 
 
 ## Sets up the ambience for a layout from the area's config.
@@ -59,9 +60,23 @@ func setup(layout: PackedStringArray, config: Dictionary) -> void:
 	for air: String in config.get("ambience", ["ash"]):
 		if AIRS.has(air):
 			_air.add_child(_make_air(AIRS[air]))
+	_has_fireflies = config.get("ambience", []).has("fireflies")
 	var haze: Dictionary = config.get("haze", {})
 	if not haze.is_empty():
 		_air.add_child(_make_haze(Color(haze.get("color", "#6a6040")), float(haze.get("alpha", 0.12))))
+
+
+## The region's lights are back on: the pollution haze thins away and, if the
+## region has them, fireflies come out.
+func clear_air() -> void:
+	if _haze != null:
+		var tween := create_tween()
+		tween.tween_property(_haze, "modulate:a", 0.015, 6.0).set_trans(Tween.TRANS_SINE)
+	if _air != null and not _has_fireflies:
+		_has_fireflies = true
+		var fireflies := _make_air(AIRS["fireflies"])
+		fireflies.amount = 14
+		_air.add_child(fireflies)
 
 
 func counts() -> Dictionary:

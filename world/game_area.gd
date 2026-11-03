@@ -79,6 +79,7 @@ func _ready() -> void:
 		var lantern := _player.get_node_or_null("Lantern") as PointLight2D
 		if lantern != null:
 			lantern.visible = false
+		ambience.call_deferred("clear_air")
 	EventBus.region_lit.connect(_on_region_lit)
 	_hud.set_area(area_id)
 	GameState.set_flag("area_%s_reached" % area_id)
@@ -93,6 +94,7 @@ func _ready() -> void:
 func _on_region_lit(lit_area: String) -> void:
 	if lit_area != area_id:
 		return
+	ambience.clear_air()
 	var tween := create_tween().set_parallel()
 	tween.tween_property(_tint, "color", _lit_tint, 2.5).set_trans(Tween.TRANS_SINE)
 	var lantern := _player.get_node_or_null("Lantern") as PointLight2D

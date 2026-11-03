@@ -64,6 +64,8 @@ func choose(option: String) -> void:
 	if result["solved"]:
 		_phase = Phase.SOLVED
 		GameState.set_flag(SOLVED_FLAG_FORMAT % _puzzle_id)
+		for lesson_id: String in _data.get("lessons", []):  # what the puzzle taught goes in the codex
+			GameState.set_flag("lesson_seen_%s" % lesson_id)
 		EventBus.sfx_requested.emit("repair")
 		_feedback.text = "[color=#7bc043]UNLOCKED[/color]\n%s" % _data["explanation"]
 		_continue.visible = true
