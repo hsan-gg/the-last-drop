@@ -62,6 +62,9 @@ one life, packs of fast zombies that hit very hard, a tiny parry window and fier
 
 - **Stamina:** swings and the guard spend it (yellow bar); a parry refunds some. Hold the guard too long, or take a blow too heavy for it, and it breaks: no guard for a couple of seconds.
 - **Gear is visible:** helmet, armour and sword show on the character as you equip them.
+- **Gates and errands:** an onward gate opens only once its story step is done and the region's generator is lit. Later areas have a gate back, which drops you at the onward gate of the old area. Three errands need a part from one area delivered to another (a radio valve, a seed tin, a filter cartridge).
+- **Map:** a parchment chart in two pages: the area (inked, with fog of war and icons) and the world (the road north, lit regions, errands). Left/Right switches.
+- **One bad moment costs one life:** after a collapse there is a 2 s grace, and any open sorting, quiz or puzzle closes.
 - **Generators and lamps:** each region ends with a generator. Defeat every zombie, start it, and the whole region lights up, with an XP reward and a full heal.
 - **Toxic puddles** hurt when you stand in them.
 
@@ -77,8 +80,8 @@ one life, packs of fast zombies that hit very hard, a tiny parry window and fier
 - **Codex:** a field guide that fills in as you meet each lesson, with quests for discovering them.
 - **Tips:** short, rebinding-aware hints teach moving, interacting, the inventory, attacking, blocking and stamina the first time they matter (Options > Show tips).
 - **Cutscenes:** animated pixel postcards acted by the game's own sprites, with a drifting camera, page-wipe transitions and a title slam. Each beat waits for E; Esc skips.
-- **Notifications:** Stardew-style messages slide in at the bottom-left with an icon and a soft chime (objectives, quests, loot, a running XP total). Level ups and restored regions get a calm card. Nothing appears while you talk; the task list never pops open, the T chip shows a quiet "!" instead.
-- **Music:** a generated track per area plus a combat track, and a title theme (`tools/generate_music.py`).
+- **Notifications:** one at a time and in order (what you finished, the XP, a level up on its own calm card, then what is next). Stardew-style messages slide in at the bottom-left with an icon and a soft chime (objectives, quests, loot, a running XP total). Level ups and restored regions get a calm card. Nothing appears while you talk; the task list never pops open, the T chip shows a quiet "!" instead.
+- **Music:** composed by `tools/generate_music.py`: modelled harp, guitar, piano, e-piano, flute, strings, accordion and percussion, real chord progressions, motif-based melodies and a convolution reverb. One track per area, plus title, story, finale, combat and game over.
 - **Field Check quizzes:** after each sorted pile, one multiple-choice question about what you just handled (`data/quizzes.json`). A right answer restores water; a wrong one only teaches.
 - **Side quests:** `data/quests.json`, shown in the journal (Q). Progress comes from counters and flags, so a quest is data; finishing one pays out water or health.
 - **Terminal puzzles:** ordering puzzles (`data/puzzles.json`) guard the archive terminals: the safe route for hazardous waste, and the waste hierarchy.

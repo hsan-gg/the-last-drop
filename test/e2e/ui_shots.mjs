@@ -12,7 +12,7 @@ const browser = await chromium.launch({
 const page = await browser.newPage({ viewport: { width: 960, height: 540 } });
 await page.goto(process.env.GAME_URL, { waitUntil: "load" });
 await page.waitForSelector("canvas", { timeout: 60000 });
-const names = ["menu_inventory", "menu_quests", "menu_options", "menu_controls", "menu_codex", "hud_feed", "hud_tracker"];
+const names = ["menu_inventory", "menu_quests", "menu_options", "menu_controls", "menu_codex", "hud_feed", "hud_tracker", "hud_tracker2"];
 await page.waitForTimeout(3600);
 for (const name of names) {
   await page.screenshot({ path: `${OUT}/ui_${name}.png` });
