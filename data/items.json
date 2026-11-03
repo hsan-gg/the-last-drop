@@ -140,5 +140,23 @@
 			"heal": 15,
 			"water": 15
 		}
+	},
+	{
+		"id": "radio_valve",
+		"name": "Radio Valve",
+		"category": "keepsake",
+		"description": "A glass valve from an old transmitter. The Outpost's radio mast is missing one."
+	},
+	{
+		"id": "seed_tin",
+		"name": "Seed Tin",
+		"category": "keepsake",
+		"description": "A sealed tin of vegetable seeds. Soil at the Outpost could use them."
+	},
+	{
+		"id": "filter_cartridge",
+		"name": "Filter Cartridge",
+		"category": "keepsake",
+		"description": "A fresh charcoal cartridge. The Factory's drinking fountain takes this size."
 	}
 ]

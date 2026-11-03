@@ -17,6 +17,7 @@ const ENTITY_SCENES := {
 	"chest": preload("res://world/chest.tscn"),
 	"region_generator": preload("res://world/region_generator.tscn"),
 	"lamp": preload("res://world/lamp.tscn"),
+	"request_point": preload("res://world/request_point.tscn"),
 }
 const PENALTY_ZOMBIE := "runner"
 const PENALTY_DISTANCE := 90.0
@@ -58,6 +59,7 @@ func _ready() -> void:
 	move_child(ground, 0)
 	_place_entities(layout, definitions, marker_chars)
 	AreaLighting.add_player_lantern(_player)
+	_arrive(layout)
 	_limit_camera(layout)
 	if not Content.area(area_id).get("entities", {}).is_empty():
 		GameState.set_counter("spawned_%s" % area_id, _spawned)
@@ -176,6 +178,23 @@ func _free_offset(position: Vector2, copy: int) -> Vector2:
 		if cell.y >= 0 and cell.y < _layout.size() and cell.x >= 0 and cell.x < _layout[cell.y].length() and not MapBuilder.is_solid_char(_layout[cell.y][cell.x]):
 			return offset
 	return Vector2.ZERO
+
+
+## Coming back through a gate: stand next to the gate you came through.
+func _arrive(layout: PackedStringArray) -> void:
+	var marker := SceneManager.arrival_marker
+	SceneManager.arrival_marker = ""
+	if marker.is_empty():
+		return
+	var found := MapBuilder.markers(layout, marker)
+	if found.is_empty():
+		return
+	var gate := MapBuilder.cell_center(found[0]["cell"])
+	for step: Vector2 in [Vector2(0, 1), Vector2(0, -1), Vector2(1, 0), Vector2(-1, 0), Vector2(0, 2), Vector2(1, 1), Vector2(-1, 1)]:
+		var spot := gate + step * MapBuilder.TILE_SIZE
+		if is_open_ground(spot):
+			_player.place_at(spot)
+			return
 
 
 ## True if `point` is inside the map on a tile you can walk on.

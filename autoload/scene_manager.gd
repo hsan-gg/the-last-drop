@@ -14,6 +14,8 @@ var _changing := false
 ## A change asked for while another was fading; it runs as soon as that one ends.
 var _queued_path := ""
 var _settle_until := 0.0
+## Set by a gate before travelling: the map marker to arrive next to ("" = the start).
+var arrival_marker := ""
 
 
 func _ready() -> void:
@@ -78,6 +80,7 @@ func go_to_title() -> void:
 
 
 func reset_run() -> void:
+	arrival_marker = ""
 	GameState.reset()
 	Inventory.clear()
 	Survival.reset()

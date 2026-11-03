@@ -59,7 +59,9 @@ func _first_visible(type_name: String) -> Node:
 
 func _goto(argument: String) -> bool:
 	var parts := argument.split(":")
-	var matches := get_tree().current_scene.find_children("*", parts[0], true, false)
+	var matches := get_tree().current_scene.find_children("*", "AreaExit" if parts[0] == "OnwardGate" else parts[0], true, false)
+	if parts[0] == "OnwardGate":
+		matches = matches.filter(func(gate: Node) -> bool: return not (gate as AreaExit).required_flag.is_empty())
 	var index := int(parts[1]) if parts.size() > 1 else 0
 	var players := _find_all("Player")
 	if matches.size() <= index or players.is_empty():

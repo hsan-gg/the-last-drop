@@ -199,8 +199,11 @@ func test_full_outpost_loop_sort_repair_drink_record_unlock() -> void:
 
 	recording.interact(null)
 	assert_true(GameState.has_flag("recording_found"))
-	assert_true(gate.is_open())
+	assert_true(gate.story_ready())
+	assert_false(gate.is_open(), "the gate waits for the region's power")
 	assert_eq(ObjectivesTracker.current("outpost")["id"], "light_outpost")
+	GameState.set_flag("region_lit_outpost")
+	assert_true(gate.is_open())
 
 
 func test_revisiting_a_sorted_area_does_not_respawn_the_pile() -> void:
@@ -281,18 +284,22 @@ func test_dump_loop_from_the_gate_to_the_records() -> void:
 
 func test_dump_gate_in_the_factory_opens_only_after_the_archive() -> void:
 	await _enter(FACTORY)
-	var gate: AreaExit = _find("AreaExit")
+	var gate := _onward_gate()
 	assert_false(gate.is_open())
 	GameState.set_flag("archive_read")
+	assert_false(gate.is_open(), "still needs the generator")
+	GameState.set_flag("region_lit_factory")
 	assert_true(gate.is_open())
 	assert_eq(gate.target_scene, "res://world/dump.tscn")
 
 
 func test_dump_gate_to_the_river_opens_after_the_records() -> void:
 	await _enter(DUMP)
-	var gate: AreaExit = _find("AreaExit")
+	var gate := _onward_gate()
 	assert_false(gate.is_open())
 	GameState.set_flag("dump_records_read")
+	assert_false(gate.is_open(), "still needs the generator")
+	GameState.set_flag("region_lit_dump")
 	assert_true(gate.is_open())
 	assert_eq(gate.target_scene, "res://world/river.tscn")
 
@@ -349,3 +356,24 @@ func test_river_loop_from_the_samples_to_clean_water() -> void:
 	assert_true(QuestRules.is_done("water_detective"))
 	assert_true(QuestRules.is_done("river_cleanup"))
 	assert_true(QuestRules.is_done("filter_builder"))
+
+
+func _onward_gate() -> AreaExit:
+	for gate: AreaExit in _area.find_children("*", "AreaExit", true, false):
+		if not gate.required_flag.is_empty():
+			return gate
+	return null
+
+
+func test_later_areas_have_an_open_gate_back() -> void:
+	for scene in [FACTORY, DUMP]:
+		await _enter(scene)
+		var back: AreaExit = null
+		for gate: AreaExit in _area.find_children("*", "AreaExit", true, false):
+			if gate.required_flag.is_empty():
+				back = gate
+		assert_not_null(back, "a gate back")
+		assert_true(back.is_open(), "going back is always allowed")
+		assert_eq(back.arrive_marker, "^", "you arrive at the onward gate of the old area")
+		_area.queue_free()
+		await wait_physics_frames(2)

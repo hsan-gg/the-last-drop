@@ -1,0 +1,66 @@
+[
+	{
+		"id": "radio",
+		"area": "outpost",
+		"sprite": "request_radio",
+		"needs": "radio_valve",
+		"prompt": "Repair the radio mast",
+		"before": [
+			"A dead radio mast. Its transmitter is missing a glass valve.",
+			"The Battery Factory made these. There may be one left there."
+		],
+		"after": [
+			"The valve glows. Static, then a voice: 'Anyone out there? The river people are alive. Keep going.'",
+			"Somebody else is fighting for clean water too."
+		],
+		"reward": {
+			"xp": 90,
+			"items": {
+				"bandage": 2
+			}
+		}
+	},
+	{
+		"id": "garden",
+		"area": "outpost",
+		"sprite": "request_garden",
+		"needs": "seed_tin",
+		"prompt": "Plant the garden bed",
+		"before": [
+			"A raised bed of soil, still good under the dust.",
+			"With seeds, something could grow here again. The Great Dump buries everything, even seeds."
+		],
+		"after": [
+			"You press the seeds into the soil and water them.",
+			"Food grows from what we don't throw away: compost made this soil."
+		],
+		"reward": {
+			"xp": 110,
+			"items": {
+				"energy_bar": 3
+			}
+		}
+	},
+	{
+		"id": "fountain",
+		"area": "factory",
+		"sprite": "request_fountain",
+		"needs": "filter_cartridge",
+		"prompt": "Fit a filter to the fountain",
+		"before": [
+			"An old drinking fountain. Its filter housing is empty.",
+			"The river camp kept spare cartridges."
+		],
+		"after": [
+			"Clean water runs at the Factory again.",
+			"You find a riot jacket hanging in the fountain's service locker."
+		],
+		"reward": {
+			"xp": 150,
+			"gear": "riot_jacket",
+			"items": {
+				"purified_water": 2
+			}
+		}
+	}
+]

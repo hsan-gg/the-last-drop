@@ -11,7 +11,7 @@ HHHHH...HHHHH.b....b.b...==..r.HH,..3....b..HH
 HH....==..Lb........b....==....HH...R..bbb.NHH
 HH..b.==......Hb.HHHHHHH.==HHHHHH,.........HHH
 HH...e==..b...Y..HHHHHHH.==HHHHHH.....,.f...HH
-HH.b..==...ryb...HH...=====.b..r...,..,.r.r.HH
+HH.b..==...ryb...HH..O=====.b..r...,..,.r.r.HH
 HH....==.....r..rHH..=====..b...b.b..Hb.b...HH
 HH.b..==...br..H.HH..==......b.b...rb.....^.HH
 HH....==..bb..r.bHHb.==.....rbY.....b.Hb...rHH
@@ -26,5 +26,5 @@ HH......=.....bH.HHbr....b.....b....r.b....rHH
 HH......=....d...HH..b.b...r.b..H........r..HH
 HH..@...=..r..rbHHH...H.............r.....,cHH
 HH.q....=....r...HH.................b.bbbj.bHH
-HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+HHHHHHJHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
 HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH

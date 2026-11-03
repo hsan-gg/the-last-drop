@@ -162,7 +162,10 @@ await press("q");
 await sleep(200);
 await shot("5_journal");
 await press("q");
-await interact("AreaExit");
+await interact("RegionGenerator");
+await closeDialogue();
+await sleep(300);
+await interact("OnwardGate");
 s = await waitForArea("factory", "factory loaded");
 check("gate leads to the factory", s.area === "factory");
 await closeDialogue();
@@ -180,7 +183,10 @@ await solvePuzzle();
 await closeDialogue();
 s = await state();
 check("archive read after the puzzle", s.flags.archive_read);
-await interact("AreaExit");
+await interact("RegionGenerator");
+await closeDialogue();
+await sleep(300);
+await interact("OnwardGate");
 s = await waitForArea("dump", "dump loaded");
 check("gate leads to the dump", s.area === "dump");
 await closeDialogue();
@@ -212,7 +218,10 @@ check("no sorting mistakes beyond the one blunder", (s.counters.sort_mistakes ||
 await shot("8_dump_done");
 
 // ---- river
-await interact("AreaExit");
+await interact("RegionGenerator");
+await closeDialogue();
+await sleep(300);
+await interact("OnwardGate");
 s = await waitForArea("river", "river loaded");
 check("the drain leads to the river", s.area === "river");
 await closeDialogue();

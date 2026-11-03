@@ -28,7 +28,7 @@ ROOT = Path(__file__).resolve().parent.parent
 MAPS = ROOT / "data" / "maps"
 
 BLOCKING = set("#~CFPtBSH")
-MARKERS = set("@$WUV^GK123defxyzkghpqjmnoYQRclNL")
+MARKERS = set("@$WUV^GK123defxyzkghpqjmnoYQRclNLJAOZEIX")
 # Markers that block movement; the spawn marker does not.
 BLOCKING_MARKERS = MARKERS - {"@"}
 
@@ -200,6 +200,7 @@ def build_factory():
         grid.put(x, y, "T")
 
     grid.put(18, 21, "@")
+    grid.put(16, 22, "J")  # the gate back to the outpost
     grid.put(10, 13, "$")
     grid.put(27, 12, "G")
     grid.put(18, 3, "K")
@@ -252,6 +253,7 @@ def build_dump():
     grid.fill(6, 10, 7, 16, "=")
 
     grid.put(4, 26, "@")
+    grid.put(6, 28, "J")  # back to the factory
     grid.put(11, 23, "1")
     grid.put(22, 17, "2")
     grid.put(36, 9, "3")
@@ -293,6 +295,7 @@ def build_river():
     grid.fill(25, 6, 29, 7, "=")
 
     grid.put(4, 26, "@")
+    grid.put(6, 28, "J")  # back to the dump
     grid.put(11, 22, "1")
     grid.put(31, 24, "2")
     grid.put(8, 19, "m")
@@ -317,6 +320,21 @@ def build_river():
     return grid
 
 
+# Errands between areas: a part found in one area (A, O, Z) is wanted in
+# another (E, I, X), so the gates back get used.
+CROSS_AREA = {
+    "outpost": (("E", 12, 6, "."), ("I", 30, 18, ".")),
+    "factory": (("A", 8, 6, "M"), ("X", 24, 14, "M")),
+    "dump": (("O", 22, 14, "."),),
+    "river": (("Z", 30, 24, "."),),
+}
+
+
+def add_cross_area(name, grid):
+    for ch, x, y, floor in CROSS_AREA.get(name, ()):
+        place_decor(grid, ch, x, y, floor=floor)
+
+
 def main():
     MAPS.mkdir(parents=True, exist_ok=True)
     names = set(sys.argv[1:])
@@ -325,6 +343,7 @@ def main():
         if names and name not in names:
             continue
         grid = builder()
+        add_cross_area(name, grid)
         check_reachable(name, grid)
         (MAPS / f"{name}.txt").write_text(grid.text())
         print(f"{name}: {grid.w}x{grid.h} ok, every interactable is reachable")

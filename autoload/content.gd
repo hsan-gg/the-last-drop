@@ -12,6 +12,7 @@ const PUZZLES_PATH := "res://data/puzzles.json"
 const QUESTS_PATH := "res://data/quests.json"
 const ENEMIES_PATH := "res://data/enemies.json"
 const GEAR_PATH := "res://data/gear.json"
+const REQUESTS_PATH := "res://data/requests.json"
 
 var _areas: Dictionary = {}
 var _lessons: Dictionary = {}
@@ -24,6 +25,7 @@ var _quests: Array = []
 var _enemies: Dictionary = {}
 var _gear: Dictionary = {}
 var _enemy_counts: Dictionary = {}
+var _requests: Dictionary = {}
 
 
 func _ready() -> void:
@@ -35,6 +37,10 @@ func _ready() -> void:
 	_objectives = objectives if typeof(objectives) == TYPE_ARRAY else []
 	var quizzes: Variant = DataLoader.load_json(QUIZZES_PATH)
 	_quizzes = quizzes if typeof(quizzes) == TYPE_ARRAY else []
+	var requests: Variant = DataLoader.load_json(REQUESTS_PATH)
+	if requests is Array:
+		for entry: Dictionary in requests:
+			_requests[entry["id"]] = entry
 	var quests: Variant = DataLoader.load_json(QUESTS_PATH)
 	_quests = quests if typeof(quests) == TYPE_ARRAY else []
 	_puzzles = DataLoader.index_by_id(PUZZLES_PATH)
@@ -52,6 +58,11 @@ func all_lessons() -> Array:
 
 func lesson(lesson_id: String) -> Dictionary:
 	return _lessons.get(lesson_id, {}).duplicate()
+
+
+## An errand between areas (data/requests.json), or {} if unknown.
+func request(request_id: String) -> Dictionary:
+	return _requests.get(request_id, {})
 
 
 func dialogue(dialogue_id: String) -> Array[String]:

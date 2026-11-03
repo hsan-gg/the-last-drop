@@ -39,6 +39,8 @@ var _mistake_run := 0
 
 var _root: Control
 var _progress: Label
+var _health_label: Label
+var _health_meter: Meter
 var _item_icon: TextureRect
 var _item_name: Label
 var _question: Label
@@ -54,6 +56,7 @@ func _ready() -> void:
 	_build()
 	visible = false
 	EventBus.sorting_requested.connect(open)
+	EventBus.survival_changed.connect(_on_survival_changed)
 	EventBus.player_collapsed.connect(leave)
 
 
@@ -75,6 +78,7 @@ func open(pile_id: String, item_ids: Array[String]) -> void:
 	visible = true
 	if pauses_game:
 		get_tree().paused = true
+	_on_survival_changed(Survival.water(), Survival.health())
 	_show_current_item()
 
 
@@ -99,11 +103,14 @@ func choose_bin(bin_id: String) -> void:
 		EventBus.sfx_requested.emit("sort_bad")
 		_streak = 0
 		_mistake_run += 1
-		Survival.damage(WRONG_SORT_DAMAGE * Difficulty.value("penalty"))
+		var hurt := WRONG_SORT_DAMAGE * Difficulty.value("penalty")
+		Survival.damage(hurt)
+		if visible:
+			_show_damage(hurt)
 		if _mistake_run >= MISTAKES_FOR_ALERT:
 			_mistake_run = 0
 			EventBus.penalty_spawn.emit("sorting")
-		_set_feedback(Phase.FEEDBACK_WRONG, "[color=#e0584a]NOT QUITE[/color]\n%s\n[color=#5fd0c4]%s[/color]" % [lesson.get("wrong", ""), lesson.get("principle", "")])
+		_set_feedback(Phase.FEEDBACK_WRONG, ("[color=#e0584a]WRONG BIN  -%d HP[/color]\n" % roundi(hurt)) + "%s\n[color=#5fd0c4]%s[/color]" % [lesson.get("wrong", ""), lesson.get("principle", "")])
 
 
 ## Walks away from the pile part-way. What was recovered is kept; the rest stays
@@ -137,6 +144,25 @@ func continue_flow() -> void:
 				_show_current_item()
 		Phase.SUMMARY:
 			_close()
+
+
+func _on_survival_changed(_water: float, health: float) -> void:
+	if _health_meter == null:
+		return
+	_health_meter.ratio = health / Survival.max_health()
+	_health_meter.fill_color = UiTheme.COLOR_RED if _health_meter.ratio < 0.3 else UiTheme.COLOR_GREEN
+	_health_label.text = " %d HP" % roundi(health)
+
+
+## A wrong bin hurts: the health bar flashes red and the loss is spelled out.
+func _show_damage(amount: float) -> void:
+	var tween := create_tween()
+	_health_label.add_theme_color_override("font_color", UiTheme.COLOR_RED)
+	_health_label.text = " -%d HP" % roundi(amount)
+	tween.tween_interval(0.9)
+	tween.tween_callback(func() -> void:
+		_health_label.add_theme_color_override("font_color", UiTheme.COLOR_TEXT)
+		_on_survival_changed(Survival.water(), Survival.health()))
 
 
 func _show_current_item() -> void:
@@ -283,6 +309,18 @@ func _build() -> void:
 	_progress = Label.new()
 	_progress.add_theme_color_override("font_color", UiTheme.COLOR_MUTED)
 	header.add_child(_progress)
+	# Your health is right here, so a wrong bin visibly costs something.
+	var spacer := Control.new()
+	spacer.custom_minimum_size = Vector2(10, 0)
+	header.add_child(spacer)
+	_health_meter = Meter.new()
+	_health_meter.custom_minimum_size = Vector2(60, 6)
+	_health_meter.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_health_meter.fill_color = UiTheme.COLOR_GREEN
+	header.add_child(_health_meter)
+	_health_label = Label.new()
+	_health_label.add_theme_color_override("font_color", UiTheme.COLOR_TEXT)
+	header.add_child(_health_label)
 
 	var item_row := HBoxContainer.new()
 	item_row.alignment = BoxContainer.ALIGNMENT_CENTER

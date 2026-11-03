@@ -489,5 +489,56 @@
 			"xp": 150,
 			"gear": "recycled_edge"
 		}
+	},
+	{
+		"id": "errand_radio",
+		"area": "outpost",
+		"title": "Voices on the Air",
+		"text": "Bring a radio valve from the Factory to the Outpost's radio mast.",
+		"difficulty": "medium",
+		"category": "explore",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"request_done_radio"
+			]
+		},
+		"reward": {
+			"xp": 40
+		}
+	},
+	{
+		"id": "errand_garden",
+		"area": "outpost",
+		"title": "Something Green",
+		"text": "Bring seeds from the Great Dump to the Outpost's garden bed.",
+		"difficulty": "medium",
+		"category": "explore",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"request_done_garden"
+			]
+		},
+		"reward": {
+			"xp": 50
+		}
+	},
+	{
+		"id": "errand_fountain",
+		"area": "factory",
+		"title": "Running Water",
+		"text": "Bring a filter cartridge from the river to the Factory's fountain.",
+		"difficulty": "hard",
+		"category": "explore",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"request_done_fountain"
+			]
+		},
+		"reward": {
+			"xp": 60
+		}
 	}
 ]
