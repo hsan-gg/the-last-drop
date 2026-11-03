@@ -41,6 +41,7 @@ SceneManager="*res://autoload/scene_manager.gd"
 Juicee="*res://addons/juicee/core/juicee.gd"
 Settings="*res://autoload/settings.gd"
 AudioManager="*res://autoload/audio_manager.gd"
+Music="*res://autoload/music.gd"
 Polish="*res://autoload/polish.gd"
 
 [display]

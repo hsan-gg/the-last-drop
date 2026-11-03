@@ -7,6 +7,7 @@ const DIALOGUE_SCENE := preload("res://ui/dialogue/dialogue_box.tscn")
 const SORTING_SCENE := preload("res://ui/sorting/sorting_challenge.tscn")
 const DROP_ICON := preload("res://assets/sprites/ui_drop.png")
 const HEART_ICON := preload("res://assets/sprites/ui_heart.png")
+const BOLT_ICON := preload("res://assets/sprites/ui_bolt.png")
 const LOW_THRESHOLD := 0.2
 const DAMAGE_FLASH_ALPHA := 0.35
 const DAMAGE_FLASH_SECONDS := 0.3
@@ -16,6 +17,10 @@ const DAMAGE_FLASH_SECONDS := 0.3
 
 var _water_meter: Meter
 var _health_meter: Meter
+var _stamina_meter: Meter
+var _block_pip: ColorRect
+var _stamina_flash := 0.0
+var _player_combat: PlayerCombat
 var _prompt_panel: PanelContainer
 var _prompt_label: Label
 var _damage_flash: ColorRect
@@ -53,6 +58,8 @@ func _ready() -> void:
 	EventBus.survival_changed.connect(_on_survival_changed)
 	EventBus.damage_taken.connect(_flash_damage)
 	EventBus.xp_changed.connect(_on_xp_changed)
+	EventBus.stamina_changed.connect(_on_stamina_changed)
+	EventBus.stamina_denied.connect(func() -> void: _stamina_flash = 0.4)
 	EventBus.level_up.connect(_on_level_up)
 	EventBus.gear_changed.connect(_refresh_stats)
 	EventBus.loot_found.connect(_show_toast.bind(UiTheme.COLOR_GREEN))
@@ -94,6 +101,23 @@ func _on_survival_changed(water: float, health: float) -> void:
 	_health_meter.ratio = health / Survival.max_health()
 	_water_meter.fill_color = UiTheme.COLOR_RED if _water_meter.ratio < LOW_THRESHOLD else UiTheme.COLOR_WATER
 	_health_meter.fill_color = UiTheme.COLOR_RED if _health_meter.ratio < LOW_THRESHOLD else UiTheme.COLOR_GREEN
+
+
+func _on_stamina_changed(value: float, maximum: float) -> void:
+	_stamina_meter.ratio = value / maxf(maximum, 1.0)
+
+
+func _process(delta: float) -> void:
+	_stamina_flash = maxf(_stamina_flash - delta, 0.0)
+	if _player_combat == null:
+		var player := get_tree().get_first_node_in_group("player") as Player
+		_player_combat = player.combat if player != null else null
+	var ready := _player_combat != null and _player_combat.block_ready()
+	_block_pip.color = Color("#5fe0ff") if ready else Color("#3a4a54")
+	if _stamina_flash > 0.0:
+		_stamina_meter.fill_color = UiTheme.COLOR_RED
+	else:
+		_stamina_meter.fill_color = Color("#d8e04a") if _stamina_meter.ratio > 0.25 else Color("#e09a3a")
 
 
 func _on_xp_changed(level: int, xp: int, needed: int) -> void:
@@ -223,6 +247,12 @@ func _build() -> void:
 	root.add_child(left)
 	_water_meter = _add_meter_row(left, DROP_ICON)
 	_health_meter = _add_meter_row(left, HEART_ICON)
+	_stamina_meter = _add_meter_row(left, BOLT_ICON)
+	_stamina_meter.fill_color = Color("#d8e04a")
+	_block_pip = ColorRect.new()
+	_block_pip.custom_minimum_size = Vector2(5, 5)
+	_block_pip.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_stamina_meter.get_parent().add_child(_block_pip)
 	var level_row := HBoxContainer.new()
 	level_row.add_theme_constant_override("separation", 4)
 	level_row.mouse_filter = Control.MOUSE_FILTER_IGNORE

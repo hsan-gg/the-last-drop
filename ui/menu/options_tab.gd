@@ -9,6 +9,7 @@ const VOLUME_STEP := 0.1
 
 var _rows: Array[Dictionary] = []
 var _list: VBoxContainer
+var _difficulty_label: Label
 
 
 func _ready() -> void:
@@ -48,6 +49,9 @@ func _build() -> void:
 	_list.add_theme_constant_override("separation", 3)
 	scroll.add_child(_list)
 
+	_heading("DIFFICULTY")
+	_difficulty_label = _label("", UiTheme.COLOR_YELLOW)
+	_list.add_child(_difficulty_label)
 	_heading("AUDIO")
 	_volume_row("Master volume", "master")
 	_volume_row("Music", "music")
@@ -121,6 +125,9 @@ func _cycle_row(label_text: String, key: String, names: Array) -> void:
 
 
 func _update_labels() -> void:
+	var level := Difficulty.current()
+	_difficulty_label.text = "%s  (chosen on the title screen, fixed for a run)" % level.get("name", "MEDIUM")
+	_difficulty_label.add_theme_color_override("font_color", Color(level.get("color", "#f2c94c")))
 	for row in _rows:
 		match row["kind"]:
 			"volume":

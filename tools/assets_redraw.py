@@ -225,6 +225,15 @@ def chest(opened):
     return c
 
 
+def bolt():
+    c = Canvas(9, 11)
+    for x0, y0, x1, y1 in ((4, 0, 7, 2), (3, 2, 6, 4), (2, 4, 7, 6), (4, 6, 6, 8), (3, 8, 5, 10)):
+        c.rect(x0, y0, x1, y1, YELLOW)
+    c.rect(2, 4, 5, 5, hexc("#fff0a0"))
+    c.outline(OUT)
+    return c
+
+
 def build():
     named = [OUT, STEEL_D, STEEL, STEEL_L, RUST_D, RUST, RUST_L, BLUE_D, BLUE, BLUE_L, CYAN, WHITE,
              GREEN, GREEN_L, YELLOW, RED, ORANGE, GLASS, GLASS_L, GLASS_D]
@@ -244,6 +253,7 @@ def build():
         "items/paint_tin": paint_tin(),
         "sample_kit": sample_kit(),
         "sword": sword(),
+        "ui_bolt": bolt(),
         "chest_closed": chest(False),
         "chest_open": chest(True),
     }

@@ -3,9 +3,7 @@ extends Node
 ## mute toggle on the M key. Missing files are skipped, so audio is optional.
 
 const SFX_PATH_FORMAT := "res://assets/audio/sfx/%s.wav"
-const AMBIENT_PATH := "res://assets/audio/ambient.ogg"
 const SFX_VOICES := 6
-const AMBIENT_VOLUME_DB := -10.0
 
 var _voices: Array[AudioStreamPlayer] = []
 var _streams: Dictionary = {}
@@ -20,7 +18,6 @@ func _ready() -> void:
 		add_child(voice)
 		_voices.append(voice)
 	EventBus.sfx_requested.connect(play)
-	_start_ambient()
 
 
 func is_muted() -> bool:
@@ -48,17 +45,3 @@ func _stream_for(sfx_name: String) -> AudioStream:
 		var path := SFX_PATH_FORMAT % sfx_name
 		_streams[sfx_name] = load(path) if ResourceLoader.exists(path) else null
 	return _streams[sfx_name]
-
-
-func _start_ambient() -> void:
-	if not ResourceLoader.exists(AMBIENT_PATH):
-		return
-	var stream: AudioStream = load(AMBIENT_PATH)
-	if stream is AudioStreamOggVorbis:
-		stream.loop = true
-	var ambient := AudioStreamPlayer.new()
-	ambient.stream = stream
-	ambient.volume_db = AMBIENT_VOLUME_DB
-	ambient.bus = Settings.MUSIC_BUS
-	add_child(ambient)
-	ambient.play()

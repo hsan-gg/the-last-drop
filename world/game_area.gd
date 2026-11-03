@@ -54,6 +54,7 @@ func _ready() -> void:
 	_tint.color = Color(config.get("tint", "#ffffff"))
 	_hud.set_area(area_id)
 	GameState.set_flag("area_%s_reached" % area_id)
+	Music.play_area(area_id)
 	EventBus.player_collapsed.connect(_on_player_collapsed)
 	EventBus.quiz_finished.connect(_on_quiz_finished)
 	EventBus.celebrate.connect(_spawn_burst)

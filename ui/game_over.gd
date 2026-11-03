@@ -8,6 +8,8 @@ var _remaining := RESTART_SECONDS
 
 
 func _ready() -> void:
+	Music.stop_area()
+	Music.play("gameover", false)
 	theme = UiTheme.get_theme()
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	var background := ColorRect.new()

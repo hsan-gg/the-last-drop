@@ -188,3 +188,87 @@ func test_you_cannot_attack_while_blocking() -> void:
 	_player.combat.attack()
 	assert_true(_player.combat.is_blocking())
 	assert_false(_player.combat.is_busy())
+
+
+# ------------------------------------------------------------- stamina and the guard
+
+func _tick(seconds: float, step: float = 0.05) -> void:
+	for _i in int(seconds / step):
+		_player.combat._physics_process(step)
+
+
+func test_attacking_costs_stamina() -> void:
+	var before := _player.combat.stamina
+	_player.combat.attack()
+	assert_eq(_player.combat.stamina, before - PlayerCombat.ATTACK_COST)
+
+
+func test_you_cannot_swing_with_no_stamina() -> void:
+	_player.combat.stamina = 3.0
+	watch_signals(EventBus)
+	assert_false(_player.combat.attack())
+	assert_false(_player.combat.is_busy())
+	assert_signal_emitted(EventBus, "stamina_denied")
+
+
+func test_stamina_comes_back_after_a_short_delay() -> void:
+	_player.combat.stamina = 20.0
+	_player.combat._regen_after = _player.combat._clock + PlayerCombat.REGEN_DELAY_SECONDS
+	_tick(0.3)
+	assert_eq(_player.combat.stamina, 20.0, "no regeneration straight after spending")
+	_tick(1.0)
+	assert_gt(_player.combat.stamina, 40.0)
+
+
+func test_the_guard_can_only_be_held_for_a_while_then_goes_on_cooldown() -> void:
+	Input.action_press("block")
+	assert_true(_player.combat.raise_guard())
+	_tick(PlayerCombat.BLOCK_MAX_HOLD_SECONDS + 0.2)
+	assert_false(_player.combat.is_blocking(), "the arm tires and the guard drops")
+	assert_gt(_player.combat.block_cooldown_left(), 0.0)
+	assert_false(_player.combat.raise_guard(), "on cooldown")
+	Input.action_release("block")
+	_tick(PlayerCombat.BLOCK_COOLDOWN_SECONDS + 0.2)
+	assert_true(_player.combat.raise_guard(), "ready again")
+
+
+func test_holding_the_guard_drains_stamina() -> void:
+	Input.action_press("block")
+	_player.combat.raise_guard()
+	var after_raise := _player.combat.stamina
+	_tick(0.5)
+	Input.action_release("block")
+	assert_lt(_player.combat.stamina, after_raise)
+
+
+func test_a_blow_too_heavy_for_the_guard_breaks_it() -> void:
+	_player.combat.raise_guard()
+	_player.combat._clock += 1.0
+	_player.combat.stamina = 10.0
+	var result := _player.receive_hit(40.0, Vector2(30, 0))
+	assert_eq(result["outcome"], CombatRules.OUTCOME_HIT, "the hit lands in full once the guard breaks")
+	assert_false(_player.combat.is_blocking())
+	assert_gte(_player.combat.block_cooldown_left(), PlayerCombat.GUARD_BREAK_COOLDOWN_SECONDS - 0.01)
+
+
+func test_a_light_blocked_hit_drains_stamina_but_holds() -> void:
+	_player.combat.raise_guard()
+	_player.combat._clock += 1.0
+	var before := _player.combat.stamina
+	var result := _player.receive_hit(10.0, Vector2(30, 0))
+	assert_eq(result["outcome"], CombatRules.OUTCOME_BLOCKED)
+	assert_lt(_player.combat.stamina, before)
+	assert_true(_player.combat.is_blocking())
+
+
+func test_a_parry_costs_nothing_and_refunds_stamina() -> void:
+	_player.combat.raise_guard()
+	_player.combat.stamina = 30.0
+	_player.receive_hit(20.0, Vector2(30, 0))
+	assert_gt(_player.combat.stamina, 30.0)
+
+
+func test_levels_raise_the_stamina_pool() -> void:
+	var base := _player.combat.max_stamina()
+	Progress.add_xp(500)
+	assert_gt(_player.combat.max_stamina(), base)

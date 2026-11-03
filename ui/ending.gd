@@ -23,6 +23,8 @@ var _drop: TextureRect
 
 
 func _ready() -> void:
+	Music.stop_area()
+	Music.play("finale")
 	theme = UiTheme.get_theme()
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 

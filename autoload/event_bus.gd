@@ -54,3 +54,10 @@ signal game_over
 signal dialogue_interrupted
 ## A short headline on the screen: (title, text, colour).
 signal banner_requested(title: String, text: String, color: Color)
+
+signal stamina_changed(value: float, maximum: float)
+## The player tried to act with too little stamina, or with the guard on cooldown.
+signal stamina_denied
+signal block_state_changed
+## A mistake summons a zombie near the player (wrong sort, wrong Field Check).
+signal penalty_spawn(reason: String)

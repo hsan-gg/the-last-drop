@@ -68,6 +68,7 @@ func _physics_process(_delta: float) -> void:
 	move_and_slide()
 	if not combat.is_busy():
 		_sprite.face(facing if combat.is_blocking() else direction, direction != Vector2.ZERO)
+	_sprite.scale = Vector2(1.08, 0.92) if combat.is_blocking() else Vector2.ONE
 
 
 func _unhandled_input(event: InputEvent) -> void:

@@ -20,6 +20,8 @@ var _done := false
 
 
 func _ready() -> void:
+	Music.stop_area()
+	Music.play("finale" if Cutscenes.pending_id == "finale" else "story")
 	theme = UiTheme.get_theme()
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	_build()

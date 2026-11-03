@@ -7,9 +7,12 @@ const CONTROLS := "WASD move  J attack  K block  E act  Esc menu"
 
 var _start: Button
 var _menu: GameMenu
+var _picker: DifficultyPicker
 
 
 func _ready() -> void:
+	Music.stop_area()
+	Music.play("title")
 	theme = UiTheme.get_theme()
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	_build()
@@ -18,6 +21,11 @@ func _ready() -> void:
 
 func _on_start_pressed() -> void:
 	EventBus.sfx_requested.emit("click")
+	_picker.open_picker()
+
+
+func _on_difficulty_chosen(difficulty_id: String) -> void:
+	Difficulty.select(difficulty_id)
 	SceneManager.new_game()
 
 
@@ -66,6 +74,10 @@ func _build() -> void:
 	_menu.title_mode = true
 	_menu.pauses_game = false
 	add_child(_menu)
+	_picker = DifficultyPicker.new()
+	_picker.pauses_game = false
+	_picker.chosen.connect(_on_difficulty_chosen)
+	add_child(_picker)
 
 	column.add_child(_label(CONTROLS, 8, UiTheme.COLOR_MUTED))
 
