@@ -1,4 +1,4 @@
-# Demo script (about 2 minutes)
+# Demo script (about 2 to 3 minutes)
 
 Have the web build open on the title screen. Keep a recorded backup run ready in case the venue network fails.
 
@@ -15,9 +15,11 @@ Have the web build open on the title screen. Keep a recorded backup run ready in
 
 **1:20 Repair and reward (15s).** Repair the treatment unit with the recovered scrap, pipe and bottle. Drink clean water. Point out that one repair unlocked another system.
 
-**1:35 The reveal (15s).** Play the recording, open the gate, and read the factory archive: there was no single catastrophe, and the Last Drop is a restoration facility, not magic.
+**1:35 The factory (10s).** Play the recording, open the gate, restore the generator and read the archive. Its link is unstable, but it points on to the Great Dump.
 
-**1:50 Ending (10s).** Choose Preserve or Share. The epilogue changes with how carefully you sorted. Close on: "The world wasn't destroyed in a single day. And it won't be rebuilt in one either."
+**1:45 The Great Dump (15s).** Take the gate. Sort the heaps (note the fourth, compost bin), rebuild the shelter roof from the recovered materials, find the second recording, and read the municipal records: there was no villain, only people waiting for someone else to act.
+
+**2:00 Ending (10s).** Choose Preserve or Share. The epilogue changes with how carefully you sorted. Close on: "The world wasn't destroyed in a single day. And it won't be rebuilt in one either."
 
 ## Talking points
 
