@@ -5,6 +5,11 @@ extends Interactable
 
 @export var pile_id: String = ""
 @export var item_ids: Array[String] = []
+## Variety: these items are always present, the rest are drawn from `pool` up to `count`.
+@export var guaranteed: Array[String] = []
+@export var pool: Array[String] = []
+@export var count: int = 7
+@export var min_hazardous: int = 1
 
 
 func _ready() -> void:
@@ -12,6 +17,8 @@ func _ready() -> void:
 	if GameState.has_flag(flag_name()):
 		queue_free()
 		return
+	if not pool.is_empty():
+		item_ids = PileBuilder.build(guaranteed, pool, count, min_hazardous, PileBuilder.seed_for(pile_id, GameState.run_seed))
 	set_prompt("Sort the scrap pile")
 	interacted.connect(_on_interacted)
 	EventBus.sorting_finished.connect(_on_sorting_finished)

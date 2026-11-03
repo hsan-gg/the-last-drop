@@ -118,3 +118,39 @@ func test_clearing_an_area_completes_its_quest() -> void:
 	GameState.set_flag("slain_outpost_99_0")
 	assert_true(QuestRules.is_done("clear_outpost"))
 	assert_false(QuestRules.is_done("clear_factory"), "another area's zombies do not count")
+
+
+func test_a_pile_always_holds_what_the_repair_needs_and_something_hazardous() -> void:
+	ItemDB._ready()
+	var guaranteed: Array[String] = ["scrap_metal", "pipe_section"]
+	var pool: Array[String] = ["battery", "chemical_can", "tin_can", "cardboard", "glass_jar", "phone", "food_scraps"]
+	for seed_value in 25:
+		var items := PileBuilder.build(guaranteed, pool, 6, 1, seed_value)
+		assert_eq(items.size(), 6)
+		assert_true(items.has("scrap_metal") and items.has("pipe_section"), "guaranteed items stay")
+		var hazards := 0
+		for item_id in items:
+			hazards += 1 if ItemDB.is_hazardous(item_id) else 0
+		assert_gte(hazards, 1, "a hazard to handle with care")
+
+
+func test_piles_vary_between_runs_but_not_within_one() -> void:
+	var guaranteed: Array[String] = ["scrap_metal"]
+	var pool: Array[String] = ["battery", "chemical_can", "tin_can", "cardboard", "glass_jar", "phone", "food_scraps", "paint_tin", "textile_scrap"]
+	var first := PileBuilder.build(guaranteed, pool, 6, 1, PileBuilder.seed_for("outpost", 11))
+	var again := PileBuilder.build(guaranteed, pool, 6, 1, PileBuilder.seed_for("outpost", 11))
+	assert_eq(first, again, "the same run sees the same pile")
+	var different := false
+	for run_seed in range(12, 40):
+		if PileBuilder.build(guaranteed, pool, 6, 1, PileBuilder.seed_for("outpost", run_seed)) != first:
+			different = true
+	assert_true(different, "another run draws different rubbish")
+
+
+func test_every_configured_pile_has_a_pool_big_enough() -> void:
+	for area_id in ["outpost", "factory", "dump", "river"]:
+		for definition: Dictionary in Content.area(area_id)["entities"].values():
+			if definition["scene"] != "scrap_pile":
+				continue
+			var props: Dictionary = definition["props"]
+			assert_gte(props["guaranteed"].size() + props["pool"].size(), int(props["count"]), "%s pile is too small" % props["pile_id"])

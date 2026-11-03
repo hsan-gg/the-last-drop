@@ -5,6 +5,8 @@ extends Node
 
 var _flags: Dictionary = {}
 var _counters: Dictionary = {}
+## Seeds the random pile contents, so a run keeps its piles but each run differs.
+var run_seed := 0
 
 
 func set_flag(key: String, value: Variant = true) -> void:
@@ -41,3 +43,4 @@ func count_flags_with_prefix(prefix: String) -> int:
 func reset() -> void:
 	_flags = {}
 	_counters = {}
+	run_seed = randi()

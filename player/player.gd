@@ -24,6 +24,9 @@ func _ready() -> void:
 	combat = PlayerCombat.new()
 	combat.name = "Combat"
 	add_child(combat)
+	var visuals := GearVisuals.new()
+	visuals.name = "GearVisuals"
+	add_child(visuals)
 	_spawn_position = global_position
 	EventBus.player_collapsed.connect(respawn)
 	EventBus.damage_taken.connect(_shake)

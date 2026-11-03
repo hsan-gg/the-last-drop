@@ -10,14 +10,25 @@
 				"scene": "scrap_pile",
 				"props": {
 					"pile_id": "outpost",
-					"item_ids": [
-						"battery",
-						"plastic_bottle",
-						"chemical_can",
+					"guaranteed": [
 						"scrap_metal",
+						"pipe_section",
+						"plastic_bottle"
+					],
+					"pool": [
+						"battery",
+						"chemical_can",
 						"glass_shard",
-						"pipe_section"
-					]
+						"cardboard",
+						"tin_can",
+						"paint_tin",
+						"phone",
+						"glass_jar",
+						"greasy_pizza_box",
+						"fluorescent_tube"
+					],
+					"count": 7,
+					"min_hazardous": 2
 				}
 			},
 			"W": {
@@ -143,13 +154,23 @@
 				"scene": "scrap_pile",
 				"props": {
 					"pile_id": "factory",
-					"item_ids": [
+					"guaranteed": [
+						"scrap_metal",
+						"copper_wire"
+					],
+					"pool": [
 						"battery",
-						"copper_wire",
 						"chemical_can",
-						"battery",
-						"scrap_metal"
-					]
+						"fluorescent_tube",
+						"paint_tin",
+						"phone",
+						"glass_shard",
+						"tin_can",
+						"cardboard",
+						"plastic_bottle"
+					],
+					"count": 8,
+					"min_hazardous": 3
 				}
 			},
 			"G": {
@@ -271,41 +292,65 @@
 				"scene": "scrap_pile",
 				"props": {
 					"pile_id": "dump_west",
-					"item_ids": [
-						"food_scraps",
+					"guaranteed": [
 						"cardboard",
+						"food_scraps"
+					],
+					"pool": [
 						"tin_can",
 						"greasy_pizza_box",
-						"phone"
-					]
+						"phone",
+						"glass_jar",
+						"fluorescent_tube",
+						"plastic_bottle",
+						"battery",
+						"glass_shard"
+					],
+					"count": 7,
+					"min_hazardous": 1
 				}
 			},
 			"2": {
 				"scene": "scrap_pile",
 				"props": {
 					"pile_id": "dump_centre",
-					"item_ids": [
-						"fluorescent_tube",
-						"glass_jar",
-						"textile_scrap",
+					"guaranteed": [
 						"scrap_metal",
-						"food_scraps",
-						"tin_can"
-					]
+						"textile_scrap",
+						"food_scraps"
+					],
+					"pool": [
+						"glass_jar",
+						"tin_can",
+						"fluorescent_tube",
+						"phone",
+						"paint_tin",
+						"greasy_pizza_box",
+						"pipe_section"
+					],
+					"count": 7,
+					"min_hazardous": 1
 				}
 			},
 			"3": {
 				"scene": "scrap_pile",
 				"props": {
 					"pile_id": "dump_east",
-					"item_ids": [
+					"guaranteed": [
+						"textile_scrap"
+					],
+					"pool": [
 						"phone",
 						"cardboard",
-						"textile_scrap",
 						"glass_jar",
 						"greasy_pizza_box",
-						"fluorescent_tube"
-					]
+						"fluorescent_tube",
+						"battery",
+						"tin_can",
+						"copper_wire"
+					],
+					"count": 7,
+					"min_hazardous": 1
 				}
 			},
 			"U": {
@@ -487,27 +532,45 @@
 				"scene": "scrap_pile",
 				"props": {
 					"pile_id": "river_bank",
-					"item_ids": [
+					"guaranteed": [
 						"charcoal",
+						"textile_scrap"
+					],
+					"pool": [
 						"paint_tin",
-						"textile_scrap",
 						"plastic_bottle",
-						"tin_can"
-					]
+						"tin_can",
+						"cardboard",
+						"glass_jar",
+						"battery",
+						"chemical_can",
+						"food_scraps"
+					],
+					"count": 7,
+					"min_hazardous": 1
 				}
 			},
 			"2": {
 				"scene": "scrap_pile",
 				"props": {
 					"pile_id": "river_camp",
-					"item_ids": [
+					"guaranteed": [
 						"sand_sack",
-						"kettle",
 						"pipe_section",
+						"kettle"
+					],
+					"pool": [
 						"cardboard",
 						"glass_jar",
-						"paint_tin"
-					]
+						"paint_tin",
+						"tin_can",
+						"phone",
+						"greasy_pizza_box",
+						"fluorescent_tube",
+						"scrap_metal"
+					],
+					"count": 7,
+					"min_hazardous": 1
 				}
 			},
 			"m": {

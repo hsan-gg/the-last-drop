@@ -228,6 +228,7 @@ func test_the_guard_can_only_be_held_for_a_while_then_goes_on_cooldown() -> void
 	assert_gt(_player.combat.block_cooldown_left(), 0.0)
 	assert_false(_player.combat.raise_guard(), "on cooldown")
 	Input.action_release("block")
+	await wait_physics_frames(2)  # let the engine forget the press this frame
 	_tick(PlayerCombat.BLOCK_COOLDOWN_SECONDS + 0.2)
 	assert_true(_player.combat.raise_guard(), "ready again")
 

@@ -117,8 +117,9 @@ func test_entity_configs_reference_real_scenes_items_and_repairs() -> void:
 			var definition: Dictionary = config["entities"][marker]
 			assert_true(GameArea.ENTITY_SCENES.has(definition["scene"]), "%s: scene %s" % [area_id, definition["scene"]])
 			var props: Dictionary = definition.get("props", {})
-			for item_id: String in props.get("item_ids", []):
-				assert_true(ItemDB.has_item(item_id), "%s pile item %s" % [area_id, item_id])
+			for key in ["item_ids", "guaranteed", "pool"]:
+				for item_id: String in props.get(key, []):
+					assert_true(ItemDB.has_item(item_id), "%s pile item %s" % [area_id, item_id])
 			if props.has("repair_id"):
 				assert_true(RepairRules.exists(props["repair_id"]), "%s repair %s" % [area_id, props["repair_id"]])
 			if props.has("target_scene"):
@@ -132,7 +133,9 @@ func test_every_pile_can_supply_its_areas_repair() -> void:
 		var needed := {}
 		for definition: Dictionary in Content.area(area_id)["entities"].values():
 			var props: Dictionary = definition.get("props", {})
-			for item_id: String in props.get("item_ids", []):
+			# Random piles only promise their guaranteed items, so count just those.
+			var promised: Array = props.get("guaranteed", props.get("item_ids", []))
+			for item_id: String in promised:
 				if SortingRules.correct_bin(item_id) == SortingRules.BIN_RECOVERY:
 					recoverable[item_id] = int(recoverable.get(item_id, 0)) + 1
 			if props.has("repair_id"):

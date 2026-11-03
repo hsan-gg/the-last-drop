@@ -26,9 +26,28 @@ func after_each() -> void:
 	Survival.set_process(true)
 
 
+## Piles are random in the game; these fixed contents keep the scripted runs exact.
+const FIXED_PILES := {
+	"outpost": ["battery", "plastic_bottle", "chemical_can", "scrap_metal", "glass_shard", "pipe_section"],
+	"factory": ["battery", "copper_wire", "chemical_can", "battery", "scrap_metal"],
+	"dump_west": ["food_scraps", "cardboard", "tin_can", "greasy_pizza_box", "phone"],
+	"dump_centre": ["fluorescent_tube", "glass_jar", "textile_scrap", "scrap_metal", "food_scraps", "tin_can"],
+	"dump_east": ["phone", "cardboard", "textile_scrap", "glass_jar", "greasy_pizza_box", "fluorescent_tube"],
+	"river_bank": ["charcoal", "paint_tin", "textile_scrap", "plastic_bottle", "tin_can"],
+	"river_camp": ["sand_sack", "kettle", "pipe_section", "cardboard", "glass_jar", "paint_tin"],
+}
+
+
 func _enter(scene: PackedScene) -> void:
-	_area = add_child_autofree(scene.instantiate())
+	_area = scene.instantiate()
+	for pile: ScrapPile in _area.find_children("*", "ScrapPile", true, false):
+		pile.pool = [] as Array[String]
+	add_child_autofree(_area)
 	await wait_physics_frames(2)
+	for pile: ScrapPile in _area.find_children("*", "ScrapPile", true, false):
+		var fixed: Array[String] = []
+		fixed.assign(FIXED_PILES.get(pile.pile_id, pile.item_ids))
+		pile.item_ids = fixed
 	for overlay in _area.find_children("*", "DialogueBox", true, false):
 		overlay.pauses_game = false
 	for overlay in _area.find_children("*", "SortingChallenge", true, false):
