@@ -174,6 +174,12 @@
 				"props": {
 					"npc_id": "mira"
 				}
+			},
+			"4": {
+				"scene": "rail_cart",
+				"props": {
+					"region_id": "outpost"
+				}
 			}
 		},
 		"lit_tint": "#f0d8bc",
@@ -364,6 +370,12 @@
 				"props": {
 					"item_id": "memory_shard_factory",
 					"pickup_id": "shard_factory"
+				}
+			},
+			"4": {
+				"scene": "rail_cart",
+				"props": {
+					"region_id": "factory"
 				}
 			}
 		},
@@ -658,6 +670,12 @@
 					"item_id": "memory_shard_dump",
 					"pickup_id": "shard_dump"
 				}
+			},
+			"4": {
+				"scene": "rail_cart",
+				"props": {
+					"region_id": "dump"
+				}
 			}
 		},
 		"lit_tint": "#f0dcc4",
@@ -937,6 +955,12 @@
 					"cutscene": "to_fields",
 					"requires_lit": "river"
 				}
+			},
+			"4": {
+				"scene": "rail_cart",
+				"props": {
+					"region_id": "river"
+				}
 			}
 		},
 		"lit_tint": "#c8e0e4",
@@ -1121,6 +1145,12 @@
 					],
 					"light_color": "#ff9a4a",
 					"light_radius": 48.0
+				}
+			},
+			"4": {
+				"scene": "rail_cart",
+				"props": {
+					"region_id": "fields"
 				}
 			}
 		}
@@ -1318,6 +1348,12 @@
 						"bandage": 2
 					}
 				}
+			},
+			"4": {
+				"scene": "rail_cart",
+				"props": {
+					"region_id": "industry"
+				}
 			}
 		}
 	},
@@ -1441,6 +1477,12 @@
 					],
 					"count": 6,
 					"min_hazardous": 1
+				}
+			},
+			"4": {
+				"scene": "rail_cart",
+				"props": {
+					"region_id": "sanctuary"
 				}
 			}
 		}

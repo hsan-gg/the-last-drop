@@ -20,6 +20,7 @@ const ENTITY_SCENES := {
 	"request_point": preload("res://world/request_point.tscn"),
 	"npc": preload("res://world/npc.tscn"),
 	"harvest_plot": preload("res://world/harvest_plot.tscn"),
+	"rail_cart": preload("res://world/rail_cart.tscn"),
 }
 const PENALTY_ZOMBIE := "runner"
 const PENALTY_DISTANCE := 90.0

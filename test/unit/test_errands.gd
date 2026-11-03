@@ -55,3 +55,20 @@ func test_every_errand_part_is_found_in_a_different_area_from_where_it_is_needed
 		assert_ne(found_in, request["area"], "%s: you have to travel for it" % id)
 		assert_true(ResourceLoader.exists("res://assets/sprites/%s.png" % request["sprite"]))
 		assert_true(ResourceLoader.exists("res://assets/sprites/items/%s.png" % request["needs"]))
+
+
+func test_the_rail_cart_runs_only_between_lit_regions_you_have_visited() -> void:
+	MapMemory.reset()
+	assert_eq(TravelPanel.stops_from("outpost"), [] as Array[String])
+	MapMemory.reveal("factory", Vector2i(1, 1), 1)
+	GameState.set_flag("region_lit_factory")
+	MapMemory.reveal("dump", Vector2i(1, 1), 1)
+	assert_eq(TravelPanel.stops_from("outpost"), ["factory"] as Array[String], "the dump has no power yet")
+	assert_eq(TravelPanel.stops_from("factory"), [] as Array[String], "not to where you already are")
+	MapMemory.reset()
+
+
+func test_every_region_has_a_rail_cart() -> void:
+	for area_id in TravelPanel.ORDER:
+		var layout := MapBuilder.load_layout(Content.area(area_id)["layout"])
+		assert_eq(MapBuilder.markers(layout, TravelPanel.CART_MARKER).size(), 1, area_id)

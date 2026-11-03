@@ -37,7 +37,27 @@ PHOTO = [
     "................",
 ]
 
+CART = [
+    "................",
+    "................",
+    "................",
+    "..kkkkkkkkkkkk..",
+    ".kGGGGGGGGGGGGk.",
+    ".kGwwwwwwwwwwGk.",
+    ".kGbBBBBBBBBbGk.",
+    ".kGbBBBBBBBBbGk.",
+    ".kGGGGGGGGGGGGk.",
+    "..kgggggggggk...",
+    "..kk.kk..kk.kk..",
+    ".kggk....kggk...",
+    ".kggk....kggk...",
+    "..kk......kk....",
+    "gggggggggggggggg",
+    "kkkkkkkkkkkkkkkk",
+]
+
 ART = {
+    "rail_cart": CART,
     **{f"items/memory_shard_{area}": PHOTO for area in ("factory", "dump", "river", "fields", "industry")},
     "items/radio_valve": [
         "................",

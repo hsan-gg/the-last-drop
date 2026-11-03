@@ -60,6 +60,9 @@ func _ready() -> void:
 	add_child(QuizPanel.new())
 	add_child(PuzzlePanel.new())
 	add_child(GameMenu.new())
+	var travel := TravelPanel.new()
+	travel.add_to_group("travel_panel")
+	add_child(travel)
 
 	EventBus.prompt_changed.connect(_on_prompt_changed)
 	EventBus.flag_changed.connect(_refresh_objective.unbind(2))

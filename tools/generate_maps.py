@@ -28,7 +28,7 @@ ROOT = Path(__file__).resolve().parent.parent
 MAPS = ROOT / "data" / "maps"
 
 BLOCKING = set("#~CFPtBSH")
-MARKERS = set("@$WUV^GK123defxyzkghpqjmnoYQRclNLJAOZEIXaisuvw56789")
+MARKERS = set("@$WUV^GK123defxyzkghpqjmnoYQRclNLJAOZEIXaisuvw456789")
 # Markers that block movement; the spawn marker does not.
 BLOCKING_MARKERS = MARKERS - {"@"}
 
@@ -464,9 +464,17 @@ CROSS_AREA = {
 }
 
 
+# The rail cart network: a cart a few steps from each region's start.
+CARTS = {"outpost": (10, 17, "."), "factory": (22, 21, "M"), "dump": (8, 24, "."), "river": (8, 24, "."),
+         "fields": (8, 24, "."), "industry": (6, 13, "."), "sanctuary": (26, 26, ".")}
+
+
 def add_cross_area(name, grid):
     for ch, x, y, floor in CROSS_AREA.get(name, ()):
         place_decor(grid, ch, x, y, floor=floor)
+    if name in CARTS:
+        x, y, floor = CARTS[name]
+        place_decor(grid, "4", x, y, floor=floor)
 
 
 def main():
