@@ -92,12 +92,12 @@ for (let round = 0; round < 40 && !guarded; round++) {
   if (!target) break;
   await faceToward(s, target);
   await page.keyboard.down("k");
-  await sleep(700);
+  await sleep(900);
   s = await state();
   guarded = (s.counters.blocks || 0) + (s.counters.parries || 0) >= 1;
   if (round === 2) await shot("4_guarding");
   await page.keyboard.up("k");
-  await sleep(100);
+  await sleep(1400); // the guard is on cooldown after each hold
 }
 check("the guard blocked or parried a strike", guarded);
 

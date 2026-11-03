@@ -16,10 +16,10 @@ Open `game/` in Godot and press F5, or run the web build (see Export).
 | WASD / arrows | Move |
 | E / Space | Interact, continue dialogue |
 | J / left click | Sword attack |
-| K / right click (hold) | Block; raise it just as a strike lands to parry |
+| K / right click (hold) | Block; raise it just as a strike lands to parry. The guard tires after about 1.6 s and then goes on cooldown |
 | H / G | Use a bandage / drink purified water |
 | T | Show or hide the task tracker |
-| Esc | Menu: Inventory, Quests, Map, Options, Controls |
+| Esc | Menu: Items, Quests, Codex, Map, Options, Keys |
 | I / Q / M | Open the menu on Inventory / Quests / Map |
 | Tab or PgDn (in the menu) | Next page |
 | 1 / 2 / 3 / 4 or click | Choose a bin while sorting (4 is compost) |
@@ -50,7 +50,19 @@ Every key except the menu and fixed shortcuts can be rebound in Menu > Controls.
 - **Map with fog of war;** quests as cards sorted by difficulty; options for audio, display, gameplay and accessibility (saved).
 - **Objective tracker:** hidden until you press T. It slides in with OBJECTIVE COMPLETE and NEW OBJECTIVE banners. The objective pointer is subtle (Options > Objective hints: Off, Subtle, Strong).
 
+## Difficulty
+
+Chosen on the title screen (Easy, **Medium** default, Hard, Hardcore) and fixed for the run
+(`data/difficulties.json`). Each level scales zombie health, damage, speed and pack size, the
+penalty for mistakes, lives, XP and thirst. Hardcore is built to be close to unwinnable:
+one life, packs of fast zombies that hit very hard, a tiny parry window and fierce thirst.
+
 ## Combat and progression
+
+- **Stamina:** swings and the guard spend it (yellow bar); a parry refunds some. Hold the guard too long, or take a blow too heavy for it, and it breaks: no guard for a couple of seconds.
+- **Gear is visible:** helmet, armour and sword show on the character as you equip them.
+- **Generators and lamps:** each region ends with a generator. Defeat every zombie, start it, and the whole region lights up, with an XP reward and a full heal.
+- **Toxic puddles** hurt when you stand in them.
 
 - **Zombies** (walker, runner, brute) chase on sight and telegraph every strike with a visible windup. Block it, parry it for a stun, or dodge it.
 - **XP and levels (1 to 10):** from kills, objectives, quests and parries. A level raises max health and damage and heals you.
@@ -60,6 +72,11 @@ Every key except the menu and fixed shortcuts can be rebound in Menu > Controls.
 
 ## Fun layer
 
+- **Randomised piles:** what a scrap pile holds changes every run (the materials a repair needs are always in it, plus at least one hazard). Wrong bins hurt, and two in a row draw a zombie; a streak of right ones pays bonus XP.
+- **Codex:** a field guide that fills in as you meet each lesson, with quests for discovering them.
+- **Tips:** short, rebinding-aware hints teach moving, interacting, the inventory, attacking, blocking and stamina the first time they matter (Options > Show tips).
+- **Cutscenes:** animated pixel postcards with a drifting camera, a title slam and auto-advance; E is faster, Esc skips.
+- **Music:** a generated track per area plus a combat track, and a title theme (`tools/generate_music.py`).
 - **Field Check quizzes:** after each sorted pile, one multiple-choice question about what you just handled (`data/quizzes.json`). A right answer restores water; a wrong one only teaches.
 - **Side quests:** `data/quests.json`, shown in the journal (Q). Progress comes from counters and flags, so a quest is data; finishing one pays out water or health.
 - **Terminal puzzles:** ordering puzzles (`data/puzzles.json`) guard the archive terminals: the safe route for hazardous waste, and the waste hierarchy.
