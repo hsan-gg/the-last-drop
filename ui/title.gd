@@ -6,6 +6,7 @@ const TAGLINE := "A survival adventure in a world buried by its own waste."
 const CONTROLS := "WASD move  J attack  K block  E act  Esc menu"
 
 var _start: Button
+var _continue: Button
 var _menu: GameMenu
 var _picker: DifficultyPicker
 
@@ -16,7 +17,10 @@ func _ready() -> void:
 	theme = UiTheme.get_theme()
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	_build()
-	_start.grab_focus()
+	if _continue.visible:
+		_continue.grab_focus()
+	else:
+		_start.grab_focus()
 
 
 func _on_start_pressed() -> void:
@@ -57,8 +61,18 @@ func _build() -> void:
 	tagline.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	column.add_child(tagline)
 
+	_continue = Button.new()
+	_continue.text = "CONTINUE"
+	_continue.custom_minimum_size = Vector2(120, 24)
+	_continue.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_continue.visible = SaveGame.has_save()
+	_continue.pressed.connect(func() -> void:
+		EventBus.sfx_requested.emit("click")
+		SceneManager.continue_game())
+	column.add_child(_continue)
+
 	_start = Button.new()
-	_start.text = "START"
+	_start.text = "NEW GAME" if SaveGame.has_save() else "START"
 	_start.custom_minimum_size = Vector2(120, 24)
 	_start.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	_start.pressed.connect(_on_start_pressed)

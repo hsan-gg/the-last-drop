@@ -60,8 +60,21 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
+## Picks up a saved run where it was left.
+func continue_game() -> bool:
+	var data := SaveGame.read()
+	if data.is_empty():
+		return false
+	reset_run()
+	Combat.enemies_enabled = true
+	SaveGame.restore(data)
+	change_scene("res://world/%s.tscn" % data.get("area", "outpost"))
+	return true
+
+
 ## `skip_intro` is for restarts after dying, so the opening is not replayed.
 func new_game(skip_intro: bool = false) -> void:
+	SaveGame.delete()
 	reset_run()
 	Combat.enemies_enabled = true
 	Lives.start_run()

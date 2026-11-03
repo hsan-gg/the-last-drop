@@ -88,6 +88,7 @@ func _ready() -> void:
 	EventBus.penalty_spawn.connect(_on_penalty_spawn)
 	EventBus.celebrate.connect(_spawn_burst)
 	_play_arrival_dialogue(config.get("arrival_dialogue", ""))
+	SaveGame.call_deferred("save_now")
 
 
 ## The whole place brightens when its generator starts.
