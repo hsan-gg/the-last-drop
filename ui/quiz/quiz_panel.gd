@@ -70,6 +70,8 @@ func answer(index: int) -> void:
 		Survival.damage(damage)
 		_feedback.text = "[color=#e0584a]NOT QUITE  -%d health[/color]\nThe answer: %s\n%s" % [int(round(damage)), correct_text, _quiz["explanation"]]
 	# Counters last, so a quest that completes on this answer fires after the feedback is set.
+	if not _was_correct:
+		EventBus.penalty_spawn.emit("quiz")
 	GameState.add_to_counter("quiz_correct" if _was_correct else "quiz_wrong")
 	_continue.visible = true
 	_hint.text = "Press E to continue"

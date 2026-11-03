@@ -4,13 +4,14 @@ extends Control
 ## it also slides in for a few seconds whenever the objective changes.
 
 const AUTO_SHOW_SECONDS := 5.0
+## A manual show also fades after a while, so the list never lingers.
+const MANUAL_SHOW_SECONDS := 10.0
 const MAX_SIDE_QUESTS := 3
 const PANEL_WIDTH := 150.0
 
 var _panel: PanelContainer
 var _body: RichTextLabel
 var _chip: Label
-var _shown := false
 var _auto_timer := 0.0
 var _hud: Hud
 
@@ -27,12 +28,11 @@ func _ready() -> void:
 
 
 func is_shown() -> bool:
-	return _shown
+	return _auto_timer > 0.0
 
 
 func toggle() -> void:
-	_shown = not _shown
-	_auto_timer = 0.0
+	_auto_timer = 0.0 if is_shown() else MANUAL_SHOW_SECONDS
 	_apply()
 
 
@@ -84,7 +84,7 @@ func _update_chip() -> void:
 
 
 func _apply() -> void:
-	var visible_now := _shown or _auto_timer > 0.0
+	var visible_now := _auto_timer > 0.0
 	refresh()
 	_panel.visible = visible_now
 	_chip.visible = not visible_now

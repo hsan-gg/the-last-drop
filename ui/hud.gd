@@ -37,6 +37,9 @@ var _stats_label: Label
 var _toast_label: Label
 var _toast_tween: Tween
 var _quick_label: Label
+var _tip_panel: PanelContainer
+var _tip_label: Label
+var _tip_tween: Tween
 
 
 func _ready() -> void:
@@ -58,6 +61,7 @@ func _ready() -> void:
 	EventBus.survival_changed.connect(_on_survival_changed)
 	EventBus.damage_taken.connect(_flash_damage)
 	EventBus.xp_changed.connect(_on_xp_changed)
+	EventBus.tip_requested.connect(_show_tip)
 	EventBus.stamina_changed.connect(_on_stamina_changed)
 	EventBus.stamina_denied.connect(func() -> void: _stamina_flash = 0.4)
 	EventBus.level_up.connect(_on_level_up)
@@ -101,6 +105,18 @@ func _on_survival_changed(water: float, health: float) -> void:
 	_health_meter.ratio = health / Survival.max_health()
 	_water_meter.fill_color = UiTheme.COLOR_RED if _water_meter.ratio < LOW_THRESHOLD else UiTheme.COLOR_WATER
 	_health_meter.fill_color = UiTheme.COLOR_RED if _health_meter.ratio < LOW_THRESHOLD else UiTheme.COLOR_GREEN
+
+
+func _show_tip(text: String) -> void:
+	_tip_label.text = text
+	_tip_panel.visible = true
+	_tip_panel.modulate.a = 1.0
+	if _tip_tween != null:
+		_tip_tween.kill()
+	_tip_tween = create_tween()
+	_tip_tween.tween_interval(6.0)
+	_tip_tween.tween_property(_tip_panel, "modulate:a", 0.0, 0.6)
+	_tip_tween.tween_callback(func() -> void: _tip_panel.visible = false)
 
 
 func _on_stamina_changed(value: float, maximum: float) -> void:
@@ -295,6 +311,31 @@ func _build() -> void:
 	_toast_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_toast_label.visible = false
 	root.add_child(_toast_label)
+
+	_tip_panel = PanelContainer.new()
+	_tip_panel.add_theme_stylebox_override("panel", UiTheme.banner_style())
+	_tip_panel.anchor_left = 0.0
+	_tip_panel.anchor_right = 0.0
+	_tip_panel.anchor_top = 1.0
+	_tip_panel.anchor_bottom = 1.0
+	_tip_panel.offset_left = 8.0
+	_tip_panel.offset_right = 200.0
+	_tip_panel.offset_top = -78.0
+	_tip_panel.offset_bottom = -44.0
+	_tip_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_tip_panel.visible = false
+	root.add_child(_tip_panel)
+	var tip_row := HBoxContainer.new()
+	tip_row.add_theme_constant_override("separation", 6)
+	_tip_panel.add_child(tip_row)
+	var tip_tag := Label.new()
+	tip_tag.text = "TIP"
+	tip_tag.add_theme_color_override("font_color", UiTheme.COLOR_YELLOW)
+	tip_row.add_child(tip_tag)
+	_tip_label = Label.new()
+	_tip_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_tip_label.custom_minimum_size = Vector2(150, 0)
+	tip_row.add_child(_tip_label)
 
 	_prompt_panel = PanelContainer.new()
 	_prompt_panel.anchor_left = 0.5

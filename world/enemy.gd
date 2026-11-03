@@ -169,6 +169,7 @@ func _do_idle() -> void:
 	_play("idle")
 	if _player != null and _distance() <= float(_def["aggro"]):
 		_state = State.CHASE
+		EventBus.enemy_alerted.emit()
 
 
 func _do_chase() -> void:
@@ -179,6 +180,7 @@ func _do_chase() -> void:
 	if _distance() <= float(_def["reach"]):
 		_enter(State.WINDUP, float(_def["windup"]))
 		_set_alert(true)
+		EventBus.enemy_windup.emit()
 		_play("attack", false, 7.0 / (float(_def["windup"]) + 0.25))
 		return
 	_play("walk")

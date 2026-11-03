@@ -140,8 +140,18 @@
 						"bandage": 2
 					}
 				}
+			},
+			"N": {
+				"scene": "region_generator",
+				"props": {
+					"region_id": "outpost"
+				}
+			},
+			"L": {
+				"scene": "lamp"
 			}
-		}
+		},
+		"lit_tint": "#f0d8bc"
 	},
 	{
 		"id": "factory",
@@ -278,8 +288,18 @@
 						"purified_water": 1
 					}
 				}
+			},
+			"N": {
+				"scene": "region_generator",
+				"props": {
+					"region_id": "factory"
+				}
+			},
+			"L": {
+				"scene": "lamp"
 			}
-		}
+		},
+		"lit_tint": "#bcc8f0"
 	},
 	{
 		"id": "dump",
@@ -518,8 +538,18 @@
 						"energy_bar": 2
 					}
 				}
+			},
+			"N": {
+				"scene": "region_generator",
+				"props": {
+					"region_id": "dump"
+				}
+			},
+			"L": {
+				"scene": "lamp"
 			}
-		}
+		},
+		"lit_tint": "#f0dcc4"
 	},
 	{
 		"id": "river",
@@ -741,7 +771,17 @@
 						"bandage": 2
 					}
 				}
+			},
+			"N": {
+				"scene": "region_generator",
+				"props": {
+					"region_id": "river"
+				}
+			},
+			"L": {
+				"scene": "lamp"
 			}
-		}
+		},
+		"lit_tint": "#c8e0e4"
 	}
 ]

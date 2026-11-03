@@ -373,5 +373,73 @@
 			"xp": 140,
 			"gear": "crash_helmet"
 		}
+	},
+	{
+		"id": "lights_outpost",
+		"area": "outpost",
+		"title": "Bring the Lights Back",
+		"text": "Clear the zombies and start the generator.",
+		"difficulty": "medium",
+		"category": "explore",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"region_lit_outpost"
+			]
+		},
+		"reward": {
+			"xp": 70
+		}
+	},
+	{
+		"id": "lights_factory",
+		"area": "factory",
+		"title": "Bring the Lights Back",
+		"text": "Clear the zombies and start the generator.",
+		"difficulty": "medium",
+		"category": "explore",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"region_lit_factory"
+			]
+		},
+		"reward": {
+			"xp": 90
+		}
+	},
+	{
+		"id": "lights_dump",
+		"area": "dump",
+		"title": "Bring the Lights Back",
+		"text": "Clear the zombies and start the generator.",
+		"difficulty": "hard",
+		"category": "explore",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"region_lit_dump"
+			]
+		},
+		"reward": {
+			"xp": 110
+		}
+	},
+	{
+		"id": "lights_river",
+		"area": "river",
+		"title": "Bring the Lights Back",
+		"text": "Clear the zombies and start the generator.",
+		"difficulty": "hard",
+		"category": "explore",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"region_lit_river"
+			]
+		},
+		"reward": {
+			"xp": 120
+		}
 	}
 ]

@@ -51,6 +51,15 @@
 		}
 	},
 	{
+		"id": "light_outpost",
+		"area": "outpost",
+		"text": "Clear the zombies, then start the generator",
+		"done_flag": "region_lit_outpost",
+		"target": {
+			"scene": "region_generator"
+		}
+	},
+	{
 		"id": "go_factory",
 		"area": "outpost",
 		"text": "Head north to the battery factory",
@@ -90,6 +99,15 @@
 		"done_flag": "archive_read",
 		"target": {
 			"scene": "archive_terminal"
+		}
+	},
+	{
+		"id": "light_factory",
+		"area": "factory",
+		"text": "Clear the zombies, then start the generator",
+		"done_flag": "region_lit_factory",
+		"target": {
+			"scene": "region_generator"
 		}
 	},
 	{
@@ -162,6 +180,15 @@
 		"done_flag": "dump_records_read",
 		"target": {
 			"scene": "archive_terminal"
+		}
+	},
+	{
+		"id": "light_dump",
+		"area": "dump",
+		"text": "Clear the zombies, then start the generator",
+		"done_flag": "region_lit_dump",
+		"target": {
+			"scene": "region_generator"
 		}
 	},
 	{
@@ -242,6 +269,15 @@
 		"done_flag": "recording_3_found",
 		"target": {
 			"scene": "recording"
+		}
+	},
+	{
+		"id": "light_river",
+		"area": "river",
+		"text": "Clear the zombies, then start the generator",
+		"done_flag": "region_lit_river",
+		"target": {
+			"scene": "region_generator"
 		}
 	}
 ]

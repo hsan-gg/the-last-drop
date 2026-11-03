@@ -63,6 +63,7 @@ func _build() -> void:
 	_cycle_row("Objective hints", "objective_hints", HINT_NAMES)
 	_cycle_row("Text speed", "text_speed", SPEED_NAMES)
 	_toggle_row("Damage numbers", "damage_numbers")
+	_toggle_row("Show tips", "tips")
 	_heading("ACCESSIBILITY")
 	_toggle_row("Screen shake", "screen_shake")
 	_toggle_row("Reduce flashing", "reduce_flashing")

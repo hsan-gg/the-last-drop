@@ -27,6 +27,11 @@ func add_to_counter(key: String, amount: int = 1) -> void:
 	EventBus.counter_changed.emit(key, _counters[key])
 
 
+func set_counter(key: String, value: int) -> void:
+	_counters = _counters.merged({key: value}, true)
+	EventBus.counter_changed.emit(key, value)
+
+
 func get_counter(key: String) -> int:
 	return _counters.get(key, 0)
 

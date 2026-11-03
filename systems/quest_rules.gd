@@ -24,7 +24,8 @@ static func progress(quest: Dictionary) -> Dictionary:
 			target = int(goal["target"])
 		"clear":
 			current = GameState.count_flags_with_prefix("slain_%s_" % goal["area"])
-			target = maxi(Content.enemy_count(goal["area"]), 1)
+			var spawned := GameState.get_counter("spawned_%s" % goal["area"])
+			target = maxi(spawned if spawned > 0 else Content.enemy_count(goal["area"]), 1)
 		"level":
 			current = Progress.level
 			target = int(goal["target"])

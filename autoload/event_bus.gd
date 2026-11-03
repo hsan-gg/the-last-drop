@@ -61,3 +61,12 @@ signal stamina_denied
 signal block_state_changed
 ## A mistake summons a zombie near the player (wrong sort, wrong Field Check).
 signal penalty_spawn(reason: String)
+
+## A zombie noticed the player / began a strike (for the tutorial tips).
+signal enemy_alerted
+signal enemy_windup
+## A tip to show on the HUD.
+signal tip_requested(text: String)
+
+## A region's generator was started: the place lights up.
+signal region_lit(area_id: String)

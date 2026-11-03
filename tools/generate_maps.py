@@ -14,7 +14,7 @@ Decor markers (set dressing, data/areas.json gives each its sprite):
   g trash bag  h open box
 Pickup markers (hidden finds, data/areas.json names the item): p q j
 Water test points: m n o
-Enemies: Y walker  Q runner  R brute.   Chests: c l (areas.json gives each its loot)
+Generator N (lights the region) and lamps L.   Enemies: Y walker  Q runner  R brute.   Chests: c l (areas.json gives each its loot)
 Marker characters (entities, placed by data/areas.json; the floor shows beneath):
   @ spawn  $ scrap pile  W water  U treatment unit  V recording
   ^ gate   G generator   K terminal  1 2 3 numbered scrap piles
@@ -28,7 +28,7 @@ ROOT = Path(__file__).resolve().parent.parent
 MAPS = ROOT / "data" / "maps"
 
 BLOCKING = set("#~CFPtBSH")
-MARKERS = set("@$WUV^GK123defxyzkghpqjmnoYQRcl")
+MARKERS = set("@$WUV^GK123defxyzkghpqjmnoYQRclNL")
 # Markers that block movement; the spawn marker does not.
 BLOCKING_MARKERS = MARKERS - {"@"}
 
@@ -175,6 +175,8 @@ def build_outpost():
     for ch, x, y in (("Y", 28, 5), ("Y", 12, 3)):
         place_decor(grid, ch, x, y)
     place_decor(grid, "c", 9, 15, floor=":")
+    for ch, x, y in (("N", 22, 4), ("L", 17, 8), ("L", 24, 15), ("L", 32, 20), ("L", 14, 4)):
+        place_decor(grid, ch, x, y)
     return grid
 
 
@@ -213,6 +215,9 @@ def build_factory():
     for ch, x, y in (("Y", 9, 10), ("Q", 28, 17), ("Q", 6, 18), ("R", 29, 5)):
         place_decor(grid, ch, x, y, floor="M")
     place_decor(grid, "c", 4, 20, floor="M")
+    place_decor(grid, "N", 30, 3, floor="D")
+    for x, y in ((8, 12), (26, 19), (14, 20), (32, 10)):
+        place_decor(grid, "L", x, y, floor="M")
     return grid
 
 
@@ -263,7 +268,7 @@ def build_dump():
     scatter(grid, rng, reserved, [("b", 0.14), ("r", 0.07), ("H", 0.035), (",", 0.02)])
     for ch, x, y in (("d", 13, 25), ("d", 30, 18), ("d", 38, 22), ("e", 6, 13), ("f", 4, 22), ("f", 40, 12), ("x", 20, 24), ("x", 27, 6), ("y", 12, 13), ("z", 35, 4), ("g", 28, 22), ("g", 14, 4), ("p", 43, 3), ("q", 3, 27), ("j", 41, 27), ("^", 42, 15)):
         place_decor(grid, ch, x, y)
-    for ch, x, y in (("Y", 22, 8), ("Y", 30, 16), ("Y", 14, 12), ("Q", 38, 24), ("Q", 8, 8), ("R", 36, 10), ("c", 43, 27), ("l", 3, 3)):
+    for ch, x, y in (("Y", 22, 8), ("Y", 30, 16), ("Y", 14, 12), ("Q", 38, 24), ("Q", 8, 8), ("R", 36, 10), ("c", 43, 27), ("l", 3, 3), ("N", 43, 10), ("L", 10, 10), ("L", 26, 20), ("L", 34, 6), ("L", 8, 24)):
         place_decor(grid, ch, x, y)
     return grid
 
@@ -307,7 +312,7 @@ def build_river():
     scatter(grid, rng, reserved, [("b", 0.08), ("r", 0.07), (",", 0.06), ("t", 0.02)])
     for ch, x, y in (("f", 10, 11), ("d", 18, 20), ("e", 14, 7), ("x", 20, 26), ("y", 36, 26), ("z", 28, 10), ("g", 38, 25), ("g", 5, 11), ("f", 40, 22)):
         place_decor(grid, ch, x, y)
-    for ch, x, y in (("Y", 16, 20), ("Y", 36, 20), ("Q", 20, 10), ("Q", 12, 6), ("R", 26, 5), ("c", 4, 9), ("l", 38, 8)):
+    for ch, x, y in (("Y", 16, 20), ("Y", 36, 20), ("Q", 20, 10), ("Q", 12, 6), ("R", 26, 5), ("c", 4, 9), ("l", 38, 8), ("N", 40, 12), ("L", 14, 10), ("L", 30, 11), ("L", 10, 22), ("L", 36, 22)):
         place_decor(grid, ch, x, y)
     return grid
 

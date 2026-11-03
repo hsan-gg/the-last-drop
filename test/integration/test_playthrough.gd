@@ -200,7 +200,7 @@ func test_full_outpost_loop_sort_repair_drink_record_unlock() -> void:
 	recording.interact(null)
 	assert_true(GameState.has_flag("recording_found"))
 	assert_true(gate.is_open())
-	assert_eq(ObjectivesTracker.current("outpost")["id"], "go_factory")
+	assert_eq(ObjectivesTracker.current("outpost")["id"], "light_outpost")
 
 
 func test_revisiting_a_sorted_area_does_not_respawn_the_pile() -> void:
@@ -276,7 +276,7 @@ func test_dump_loop_from_the_gate_to_the_records() -> void:
 	terminal.interact(null)
 	_solve_puzzle("waste_hierarchy")
 	assert_true(GameState.has_flag("dump_records_read"))
-	assert_eq(ObjectivesTracker.current("dump")["id"], "go_river", "the way on is the last objective here")
+	assert_eq(ObjectivesTracker.current("dump")["id"], "light_dump", "restoring the lights is the last objective here")
 
 
 func test_dump_gate_in_the_factory_opens_only_after_the_archive() -> void:
@@ -345,7 +345,7 @@ func test_river_loop_from_the_samples_to_clean_water() -> void:
 
 	recording.interact(null)
 	assert_true(GameState.has_flag("recording_3_found"))
-	assert_eq(ObjectivesTracker.current("river"), {})
+	assert_eq(ObjectivesTracker.current("river")["id"], "light_river", "only restoring the lights is left")
 	assert_true(QuestRules.is_done("water_detective"))
 	assert_true(QuestRules.is_done("river_cleanup"))
 	assert_true(QuestRules.is_done("filter_builder"))

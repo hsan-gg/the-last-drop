@@ -156,6 +156,7 @@ def build_props():
 def build_decor():
     if not CRAFTPIX.exists():
         return
+    write_png(ROOT / "assets" / "sprites" / "decor" / "lamp.png", load("Objects/Street-Light_3_Down.png"))
     sheet = read_png(CRAFTPIX / "City_Tileset" / "PSD" / "Tile.png")
     for name, (x, y, w, h) in DECOR.items():
         write_png(ROOT / "assets" / "sprites" / "decor" / f"{name}.png", sheet[y:y + h, x:x + w].copy())

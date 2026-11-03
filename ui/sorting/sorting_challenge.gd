@@ -6,7 +6,11 @@ extends CanvasLayer
 
 enum Phase { IDLE, CHOOSING, FEEDBACK_WRONG, FEEDBACK_RIGHT, SUMMARY }
 
-const WRONG_SORT_DAMAGE := 8.0
+const WRONG_SORT_DAMAGE := 15.0
+## Two wrong bins in a row is careless enough to draw a zombie.
+const MISTAKES_FOR_ALERT := 2
+const STREAK_FOR_BONUS := 3
+const MAX_STREAK_BONUS := 8
 const BIN_PATH_FORMAT := "res://assets/sprites/bins/%s.png"
 const BIN_LABELS := {
 	SortingRules.BIN_GENERAL: "1 General",
@@ -30,6 +34,8 @@ var _session: SortingSession
 var _total := 0
 var _opened_on_frame := -1
 var _lesson_ids: Array[String] = []
+var _streak := 0
+var _mistake_run := 0
 
 var _root: Control
 var _progress: Label
@@ -61,6 +67,8 @@ func open(pile_id: String, item_ids: Array[String]) -> void:
 	_session = SortingSession.new(item_ids)
 	_total = item_ids.size()
 	_lesson_ids = _lessons_of(item_ids)
+	_streak = 0
+	_mistake_run = 0
 	_show_bins(SortingRules.bins_for(item_ids))
 	_opened_on_frame = Engine.get_process_frames()
 	visible = true
@@ -75,15 +83,25 @@ func choose_bin(bin_id: String) -> void:
 
 	var verdict := _session.place(bin_id)
 	var lesson := Content.lesson(verdict["lesson_id"])
+	if not lesson.is_empty():
+		GameState.set_flag("lesson_seen_%s" % verdict["lesson_id"])
 	if verdict["correct"]:
 		_count_correct(verdict)
+		_streak += 1
+		_mistake_run = 0
+		_reward_streak()
 		GameState.add_to_counter("sort_correct")
 		EventBus.sfx_requested.emit("sort_ok")
 		_set_feedback(Phase.FEEDBACK_RIGHT, "[color=#7bc043]CORRECT[/color]\n%s\n[color=#f2c94c]In real life:[/color] %s" % [lesson.get("right", ""), lesson.get("real_life", "")])
 	else:
 		GameState.add_to_counter("sort_mistakes")
 		EventBus.sfx_requested.emit("sort_bad")
-		Survival.damage(WRONG_SORT_DAMAGE)
+		_streak = 0
+		_mistake_run += 1
+		Survival.damage(WRONG_SORT_DAMAGE * Difficulty.value("penalty"))
+		if _mistake_run >= MISTAKES_FOR_ALERT:
+			_mistake_run = 0
+			EventBus.penalty_spawn.emit("sorting")
 		_set_feedback(Phase.FEEDBACK_WRONG, "[color=#e0584a]NOT QUITE[/color]\n%s\n[color=#5fd0c4]%s[/color]" % [lesson.get("wrong", ""), lesson.get("principle", "")])
 
 
@@ -111,6 +129,14 @@ func _show_current_item() -> void:
 	_set_bins_enabled(true)
 	_continue.visible = false
 	_hint.text = "Press 1, 2 or 3, or click a bin"
+
+
+## A run of correct bins pays a growing XP bonus.
+func _reward_streak() -> void:
+	if _streak >= STREAK_FOR_BONUS:
+		var bonus := mini(_streak, MAX_STREAK_BONUS)
+		Progress.add_xp(bonus)
+		EventBus.loot_found.emit("Sorting streak x%d  +%d XP" % [_streak, bonus])
 
 
 func _count_correct(verdict: Dictionary) -> void:
