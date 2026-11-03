@@ -54,6 +54,13 @@ func _ready() -> void:
 	_build_body()
 
 
+## Forgets the player (after a collapse the player is back at the start).
+func reset_aggro() -> void:
+	if _state != State.DEAD:
+		_state = State.IDLE
+		_set_alert(false)
+
+
 func is_dead() -> bool:
 	return _state == State.DEAD
 

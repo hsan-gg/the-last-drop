@@ -44,3 +44,11 @@ signal gear_changed
 signal loot_found(text: String)
 signal enemy_killed(enemy_id: String)
 signal player_hit(outcome: String, damage: int)
+
+signal lives_changed(lives: int)
+signal life_lost(lives_left: int)
+signal game_over
+## The player was hit while a conversation was open, so it was cut short.
+signal dialogue_interrupted
+## A short headline on the screen: (title, text, colour).
+signal banner_requested(title: String, text: String, color: Color)

@@ -38,13 +38,13 @@ func test_a_correct_answer_refreshes_water_and_counts() -> void:
 	assert_eq(GameState.get_counter("quiz_correct"), 1)
 
 
-func test_a_wrong_answer_teaches_without_a_penalty() -> void:
+func test_a_wrong_answer_teaches_and_costs_health() -> void:
 	_quiz_panel.open_quiz(QuizRules.pick(["battery_leak"]))
 	var health := Survival.health()
 	_quiz_panel.answer(_wrong_index(_quiz_panel.current_quiz()))
 	assert_eq(GameState.get_counter("quiz_wrong"), 1)
 	assert_eq(GameState.get_counter("quiz_correct"), 0)
-	assert_eq(Survival.health(), health, "no damage for a wrong answer")
+	assert_eq(Survival.health(), health - QuizPanel.WRONG_DAMAGE, "a wrong answer now has a price")
 
 
 func test_a_question_is_asked_only_once() -> void:

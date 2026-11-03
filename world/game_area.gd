@@ -16,10 +16,8 @@ const ENTITY_SCENES := {
 	"enemy": preload("res://world/enemy.tscn"),
 	"chest": preload("res://world/chest.tscn"),
 }
-const COLLAPSE_LINES: Array[String] = [
-	"You collapse from the strain, and come to at the edge of camp.",
-	"Mistakes with hazardous waste cost health. Take more care.",
-]
+const PENALTY_ZOMBIE := "runner"
+const PENALTY_DISTANCE := 90.0
 
 const BURST_PARTICLES := 14
 const BURST_SECONDS := 0.6
@@ -56,6 +54,7 @@ func _ready() -> void:
 	_hud.set_area(area_id)
 	GameState.set_flag("area_%s_reached" % area_id)
 	EventBus.player_collapsed.connect(_on_player_collapsed)
+	EventBus.quiz_finished.connect(_on_quiz_finished)
 	EventBus.celebrate.connect(_spawn_burst)
 	_play_arrival_dialogue(config.get("arrival_dialogue", ""))
 
@@ -125,7 +124,19 @@ func _spawn_burst(world_position: Vector2) -> void:
 
 func _on_player_collapsed() -> void:
 	EventBus.sfx_requested.emit("collapse")
-	EventBus.text_requested.emit(COLLAPSE_LINES)
+	get_tree().call_group("enemies", "reset_aggro")
+
+
+## A wrong Field Check has consequences: the noise draws a zombie.
+func _on_quiz_finished(correct: bool) -> void:
+	if correct or not Combat.enemies_enabled:
+		return
+	var enemy: Node2D = ENTITY_SCENES["enemy"].instantiate()
+	enemy.set("enemy_id", PENALTY_ZOMBIE)
+	var angle := randf() * TAU
+	enemy.position = _player.position + Vector2.from_angle(angle) * PENALTY_DISTANCE
+	_entities.add_child(enemy)
+	EventBus.banner_requested.emit("THE NOISE DRAWS SOMETHING", "A zombie is coming.", Color("#ff6a5a"))
 
 
 ## JSON has no Vector2 and its arrays are untyped, so convert to whatever type

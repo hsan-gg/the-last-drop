@@ -23,6 +23,7 @@ var _puzzles: Dictionary = {}
 var _quests: Array = []
 var _enemies: Dictionary = {}
 var _gear: Dictionary = {}
+var _enemy_counts: Dictionary = {}
 
 
 func _ready() -> void:
@@ -86,3 +87,19 @@ func gear_item(gear_id: String) -> Dictionary:
 
 func all_gear() -> Array:
 	return _gear.values().duplicate(true)
+
+
+## How many zombies an area starts with (its enemy markers), for clear-the-area quests.
+func enemy_count(area_id: String) -> int:
+	if _enemy_counts.has(area_id):
+		return _enemy_counts[area_id]
+	var config := area(area_id)
+	var markers := ""
+	for marker: String in config.get("entities", {}):
+		if config["entities"][marker].get("scene", "") == "enemy":
+			markers += marker
+	var total := 0
+	if not markers.is_empty():
+		total = MapBuilder.markers(MapBuilder.load_layout(config["layout"]), markers).size()
+	_enemy_counts[area_id] = total
+	return total

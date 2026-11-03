@@ -29,6 +29,15 @@ func get_counter(key: String) -> int:
 	return _counters.get(key, 0)
 
 
+## How many set flags start with `prefix` (e.g. every slain_outpost_ flag).
+func count_flags_with_prefix(prefix: String) -> int:
+	var total := 0
+	for key: String in _flags:
+		if key.begins_with(prefix) and bool(_flags[key]):
+			total += 1
+	return total
+
+
 func reset() -> void:
 	_flags = {}
 	_counters = {}

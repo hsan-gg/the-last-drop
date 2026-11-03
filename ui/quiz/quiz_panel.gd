@@ -6,6 +6,7 @@ extends OverlayPanel
 enum Phase { IDLE, ASKING, FEEDBACK }
 
 const CORRECT_WATER_REWARD := 12.0
+const WRONG_DAMAGE := 12.0
 const OPTION_KEYS := [KEY_1, KEY_2, KEY_3]
 
 var _phase := Phase.IDLE
@@ -65,7 +66,8 @@ func answer(index: int) -> void:
 	else:
 		EventBus.sfx_requested.emit("sort_bad")
 		var correct_text: String = _quiz["options"][int(_quiz["answer"])]
-		_feedback.text = "[color=#e0584a]NOT QUITE[/color]  The answer: %s\n%s" % [correct_text, _quiz["explanation"]]
+		Survival.damage(WRONG_DAMAGE)
+		_feedback.text = "[color=#e0584a]NOT QUITE  -%d health[/color]\nThe answer: %s\n%s" % [int(WRONG_DAMAGE), correct_text, _quiz["explanation"]]
 	# Counters last, so a quest that completes on this answer fires after the feedback is set.
 	GameState.add_to_counter("quiz_correct" if _was_correct else "quiz_wrong")
 	_continue.visible = true

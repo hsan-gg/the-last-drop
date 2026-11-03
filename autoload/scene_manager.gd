@@ -4,6 +4,7 @@ extends CanvasLayer
 const FADE_SECONDS := 0.35
 const TITLE_SCENE := "res://ui/title.tscn"
 const FIRST_AREA := "res://world/outpost.tscn"
+const GAME_OVER_SCENE := "res://ui/game_over.tscn"
 
 var _fade: ColorRect
 var _changing := false
@@ -34,10 +35,16 @@ func change_scene(path: String) -> void:
 	_changing = false
 
 
-func new_game() -> void:
+## `skip_intro` is for restarts after dying, so the opening is not replayed.
+func new_game(_skip_intro: bool = false) -> void:
 	reset_run()
 	Combat.enemies_enabled = true
+	Lives.start_run()
 	change_scene(FIRST_AREA)
+
+
+func go_to_game_over() -> void:
+	change_scene(GAME_OVER_SCENE)
 
 
 func go_to_title() -> void:
@@ -50,6 +57,7 @@ func reset_run() -> void:
 	Survival.reset()
 	Gear.reset()
 	Progress.reset()
+	Lives.reset()
 
 
 func _fade_to(alpha: float) -> void:

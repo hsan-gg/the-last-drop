@@ -32,7 +32,7 @@ func test_every_quest_is_well_formed() -> void:
 		for key in ["area", "title", "text", "goal", "reward"]:
 			assert_true(quest.has(key), "%s missing %s" % [quest["id"], key])
 		assert_false(Content.area(quest["area"]).is_empty(), "%s names unknown area" % quest["id"])
-		assert_true(quest["goal"]["type"] in ["counter", "flags", "level"], quest["id"])
+		assert_true(quest["goal"]["type"] in ["counter", "flags", "level", "clear"], quest["id"])
 		var reward: Dictionary = quest["reward"]
 		assert_gt(int(reward.get("xp", 0)), 0, "%s pays no XP" % quest["id"])
 		assert_true(quest["difficulty"] in QuestRules.DIFFICULTY_ORDER, "%s: unknown difficulty" % quest["id"])

@@ -6,8 +6,9 @@ extends CanvasLayer
 const CHARS_PER_SECOND := 70.0
 const BLIP_EVERY_N_CHARS := 3
 
-## Tests and the ending screen turn this off so the tree keeps running.
-@export var pauses_game: bool = true
+## Conversations no longer stop the world: zombies still come, and being hit
+## cuts the conversation short. Turn this on only for a modal use of the box.
+@export var pauses_game: bool = false
 
 var _lines: Array[String] = []
 var _index := 0
@@ -27,6 +28,7 @@ func _ready() -> void:
 	visible = false
 	EventBus.dialogue_requested.connect(_on_dialogue_requested)
 	EventBus.text_requested.connect(show_lines.bind(""))
+	EventBus.damage_taken.connect(interrupt.unbind(1))
 
 
 func is_open() -> bool:
@@ -45,6 +47,18 @@ func show_lines(lines: Array[String], dialogue_id: String = "") -> void:
 	if pauses_game:
 		get_tree().paused = true
 	_show_line()
+
+
+## Ends the conversation without finishing it, e.g. because the player was hit.
+func interrupt() -> void:
+	if not visible:
+		return
+	if _typing != null:
+		_typing.kill()
+	visible = false
+	if pauses_game:
+		get_tree().paused = false
+	EventBus.dialogue_interrupted.emit()
 
 
 func advance() -> void:

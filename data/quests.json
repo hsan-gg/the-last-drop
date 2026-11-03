@@ -309,5 +309,69 @@
 			"xp": 130,
 			"gear": "solar_saber"
 		}
+	},
+	{
+		"id": "clear_outpost",
+		"area": "outpost",
+		"title": "Clear the Outpost",
+		"text": "Defeat every zombie in the Outpost.",
+		"difficulty": "easy",
+		"category": "combat",
+		"goal": {
+			"type": "clear",
+			"area": "outpost"
+		},
+		"reward": {
+			"xp": 40,
+			"health": 15
+		}
+	},
+	{
+		"id": "clear_factory",
+		"area": "factory",
+		"title": "Clear the Factory",
+		"text": "Defeat every zombie in the Battery Factory.",
+		"difficulty": "medium",
+		"category": "combat",
+		"goal": {
+			"type": "clear",
+			"area": "factory"
+		},
+		"reward": {
+			"xp": 85,
+			"health": 20
+		}
+	},
+	{
+		"id": "clear_dump",
+		"area": "dump",
+		"title": "Clear the Dump",
+		"text": "Defeat every zombie in the Great Dump.",
+		"difficulty": "hard",
+		"category": "combat",
+		"goal": {
+			"type": "clear",
+			"area": "dump"
+		},
+		"reward": {
+			"xp": 130,
+			"gear": "welding_mask"
+		}
+	},
+	{
+		"id": "clear_river",
+		"area": "river",
+		"title": "Clear the River",
+		"text": "Defeat every zombie along the Dead River.",
+		"difficulty": "hard",
+		"category": "combat",
+		"goal": {
+			"type": "clear",
+			"area": "river"
+		},
+		"reward": {
+			"xp": 140,
+			"gear": "crash_helmet"
+		}
 	}
 ]
