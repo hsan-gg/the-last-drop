@@ -87,7 +87,7 @@ func count() -> int:
 
 ## Cards on screen right now.
 func showing() -> int:
-	_showing = _showing.filter(func(card: Control) -> bool: return is_instance_valid(card))
+	_showing = _showing.filter(func(card) -> bool: return is_instance_valid(card))
 	return _showing.size()
 
 

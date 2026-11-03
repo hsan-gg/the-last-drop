@@ -190,3 +190,12 @@ func test_a_level_up_shows_at_once() -> void:
 	EventBus.reward_requested.emit("level", "LEVEL 2", "Stronger.")
 	await wait_frames(5)
 	assert_true(card.is_showing(), "no waiting behind the other messages")
+
+
+func test_cards_that_have_left_are_forgotten_cleanly() -> void:
+	# Regression: counting cards after one was freed raised an engine error.
+	var feed := NotificationFeed.new()
+	add_child_autofree(feed)
+	feed.notify("quest", "Quest complete", "One")
+	await wait_seconds(3.6)
+	assert_eq(feed.showing(), 0)

@@ -261,6 +261,79 @@ check("clean river water drunk", s.flags.river_water_secure);
 check("the game still waits for the recording", s.scene === "River");
 await interact("Recording");
 await closeDialogue();
+s = await state();
+check("the river is not the end any more", s.scene === "River");
+
+// Plays a region's chain: piles, repair, terminal puzzle, then whatever is listed.
+const sortAllPiles = async (label, count) => {
+  for (let i = 0; i < count; i++) {
+    await interact("ScrapPile");
+    await until((x) => x.sorting.phase === "CHOOSING", `${label} pile ${i}`);
+    await sortOpenPile();
+    await answerQuizIfShown();
+    await sleep(300);
+  }
+};
+const travelOn = async (area, label) => {
+  await interact("RegionGenerator");
+  await closeDialogue();
+  await sleep(300);
+  await interact("OnwardGate");
+  const arrived = await waitForArea(area, label);
+  await closeDialogue();
+  await drive("peace");
+  return arrived;
+};
+
+// ---- the silent fields
+s = await travelOn("fields", "fields loaded");
+check("the river leads upstream to the fields", s.area === "fields");
+await shot("11_fields");
+await sortAllPiles("fields", 2);
+await interact("RepairStation");
+await closeDialogue();
+await interact("ArchiveTerminal");
+await solvePuzzle();
+await closeDialogue();
+await interact("HarvestPlot");
+await closeDialogue();
+await interact("Recording");
+await closeDialogue();
+s = await state();
+check("compost built and soil awake", s.flags.compost_built && s.flags.soil_restored);
+check("the first harvest", s.flags.harvest_done);
+await shot("11b_fields_harvest");
+
+// ---- the forgotten industry
+s = await travelOn("industry", "industry loaded");
+check("the rail line leads to the plant", s.area === "industry");
+await shot("12_industry");
+await sortAllPiles("industry", 2);
+await interact("RepairStation");
+await closeDialogue();
+await interact("ArchiveTerminal");
+await solvePuzzle();
+await closeDialogue();
+await interact("Recording");
+await closeDialogue();
+s = await state();
+check("the grid is balanced", s.flags.grid_online);
+
+// ---- the last sanctuary
+s = await travelOn("sanctuary", "sanctuary loaded");
+check("the power line leads to the Sanctuary", s.area === "sanctuary");
+await shot("13_sanctuary");
+await sortAllPiles("sanctuary", 1);
+await interact("RepairStation");
+await closeDialogue();
+await interact("ArchiveTerminal");
+await solvePuzzle();
+await closeDialogue();
+s = await state();
+check("the archive is rebuilt", s.flags.archive_complete);
+check("the game waits for Ines's last words", s.scene === "Sanctuary");
+await interact("Recording");
+await closeDialogue();
 
 // ---- ending
 s = await until((x) => x.scene === "Cutscene", "the finale cutscene", 15000);
@@ -268,8 +341,8 @@ check("the recording starts the finale", s.scene === "Cutscene");
 await sleep(800);
 await shot("11a_finale");
 await press("Escape");
-s = await until((x) => x.scene !== "River" && x.scene !== "Cutscene", "ending scene", 15000);
-check("the finale leads to the ending", s.scene !== "River" && s.scene !== "Cutscene");
+s = await until((x) => x.scene !== "Sanctuary" && x.scene !== "Cutscene", "ending scene", 15000);
+check("the finale leads to the ending", s.scene !== "Sanctuary" && s.scene !== "Cutscene");
 await sleep(800);
 await shot("11_ending_choice");
 await press("Enter");
