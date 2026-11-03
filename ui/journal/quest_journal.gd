@@ -18,7 +18,7 @@ func _ready() -> void:
 	_body = _rich(150)
 	_body.scroll_active = true
 	_box.add_child(_body)
-	_box.add_child(_label("Press Q to close", UiTheme.COLOR_MUTED))
+	_box.add_child(_label("Q: close   Tab: this area / all   Up, Down: scroll", UiTheme.COLOR_MUTED))
 	_build_toast()
 	EventBus.quest_completed.connect(_on_quest_completed)
 
@@ -60,7 +60,7 @@ func text_for(area: String, show_all: bool = false) -> String:
 	for quest in QuestRules.sorted_by_difficulty(shown):
 		lines.append(_quest_line(quest))
 	lines.append("")
-	lines.append("[color=#9fb0bb]%d of %d done   Tab: switch page[/color]" % [done, total])
+	lines.append("[color=#9fb0bb]%d of %d side quests done[/color]" % [done, total])
 	return "\n".join(lines)
 
 
@@ -101,11 +101,14 @@ func _build_toast() -> void:
 	_toast.theme = UiTheme.get_theme()
 	_toast.add_theme_stylebox_override("panel", UiTheme.panel_style(UiTheme.COLOR_GREEN))
 	_toast.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	_toast.offset_left = -120.0
+	_toast.offset_right = 120.0
 	_toast.offset_top = 36.0
 	_toast.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_toast.visible = false
 	toast_layer.add_child(_toast)
 	_toast_label = _label("", UiTheme.COLOR_TEXT)
+	_toast_label.custom_minimum_size = Vector2(224, 0)
 	_toast_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_toast.add_child(_toast_label)
 

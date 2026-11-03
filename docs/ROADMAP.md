@@ -30,3 +30,15 @@ that follow Encounter, Experiment, Consequence, Principle, Real life.
 - Art pass in the chosen style, audio pass, lighting.
 - Touch controls and mobile layout for the web build.
 - Content accuracy review of every lesson against UNEP and local guidance.
+
+## Gameplay overhaul (see `docs/DESIGN_BRIEF.md`)
+
+| Phase | Status |
+|---|---|
+| A mood and objective visibility | done |
+| B player combat | done |
+| C zombies | done (three types; boss and ranged types still open) |
+| D progression | done |
+| E gear, chests, equipment screen | done |
+| F tiered quests | done |
+| G polish and balance | in progress: tune from play, add enemy variety per chapter |

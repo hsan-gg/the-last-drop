@@ -16,7 +16,10 @@ Open `game/` in Godot and press F5, or run the web build (see Export).
 | WASD / arrows | Move |
 | E / Space | Interact, continue dialogue |
 | 1 / 2 / 3 / 4 or click | Choose a bin while sorting (4 is compost, shown only when a pile has organic waste) |
-| Q | Journal: main goal and side quests |
+| J / left click | Sword attack |
+| K / right click (hold) | Block; raise it just as a strike lands to parry |
+| I | Equipment and stats (Tab slot, 1 to 6 wear) |
+| Q | Journal: main goal and quests by difficulty (Tab page) |
 | Esc | Leave a puzzle |
 | M | Mute |
 
@@ -33,6 +36,14 @@ Open `game/` in Godot and press F5, or run the web build (see Export).
 5. **Ending:** preserve the knowledge or share it. The epilogue reflects how
    carefully you sorted. The ending triggers at the last chapter marked `built` in
    `data/chapters.json`, so it moves on as chapters are added.
+
+## Combat and progression
+
+- **Zombies** (walker, runner, brute) chase on sight and telegraph every strike with a visible windup. Block it, parry it for a stun, or dodge it.
+- **XP and levels (1 to 10):** from kills, objectives, quests and parries. A level raises max health and damage and heals you.
+- **Gear:** weapon, head and body pieces from chests, drops and hard quests (`data/gear.json`); armor trims damage but never makes you immune.
+- **Quests** are tiered easy, medium and hard with XP (and gear for the hard ones). Numbers are in `docs/BALANCE.md`.
+- **Darker world:** light pools mean safety and attention. A pulsing objective, a beacon over its target and an edge arrow keep the next step obvious.
 
 ## Fun layer
 
@@ -77,6 +88,7 @@ Open `game/` in Godot and press F5, or run the web build (see Export).
 bash scripts/test.sh     # GUT unit + integration, headless
 bash scripts/e2e.sh      # exports the web build and smoke-tests it in Chromium
 bash scripts/playthrough.sh   # plays all four areas to the ending in a real browser
+bash scripts/playthrough.sh combat.mjs   # fights with real key presses
 ```
 
 `bash scripts/test.sh` also fails if any script fails to compile, which GUT alone only warns about.

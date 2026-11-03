@@ -7,11 +7,12 @@ const STEP_SECONDS := 3.0
 var _quiz := QuizPanel.new()
 var _puzzle := PuzzlePanel.new()
 var _journal := QuestJournal.new()
+var _equipment := EquipmentPanel.new()
 var _step := 0
 
 
 func _ready() -> void:
-	for panel: OverlayPanel in [_quiz, _puzzle, _journal]:
+	for panel: OverlayPanel in [_quiz, _puzzle, _journal, _equipment]:
 		panel.pauses_game = false
 		add_child(panel)
 	for area_id in ["outpost", "factory", "dump"]:
@@ -30,16 +31,19 @@ func _ready() -> void:
 func _advance() -> void:
 	match _step:
 		0:
-			_quiz.open_quiz(QuizRules.pick(["battery_leak"]))
+			Gear.grant("rusty_sword")
+			Gear.grant("scrap_blade")
+			Gear.grant("hard_hat")
+			Gear.grant("tire_vest")
+			Progress.add_xp(150)
+			GameState.add_to_counter("kills", 3)
+			_equipment.toggle()
 		1:
-			_quiz.answer(0)
+			_equipment.next_slot()
 		2:
-			_quiz.continue_flow()
-			_puzzle.open_puzzle("waste_hierarchy", 3)
-			var steps: Array = Content.puzzle("waste_hierarchy")["steps"]
-			_puzzle.choose(steps[0])
-			_puzzle.choose(steps[1])
-		3:
-			_puzzle.leave()
+			_equipment.toggle()
 			_journal.toggle()
+		3:
+			_journal._show_all = true
+			_journal.refresh()
 	_step += 1

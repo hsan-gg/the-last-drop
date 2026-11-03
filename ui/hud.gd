@@ -42,6 +42,7 @@ func _ready() -> void:
 	add_child(QuizPanel.new())
 	add_child(PuzzlePanel.new())
 	add_child(QuestJournal.new())
+	add_child(EquipmentPanel.new())
 
 	EventBus.prompt_changed.connect(_on_prompt_changed)
 	EventBus.inventory_changed.connect(_refresh_inventory)

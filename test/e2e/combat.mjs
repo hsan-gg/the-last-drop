@@ -69,8 +69,8 @@ for (let round = 0; round < 60; round++) {
   if (!target || s.counters.kills >= 1) break;
   await faceToward(s, target);
   await press("j", 60);
+  if (round === 1) await shot("2_swing");
   await sleep(150);
-  if (round === 6) await shot("2_fighting");
 }
 s = await state();
 check("a zombie was killed with the sword", (s.counters.kills || 0) >= 1);
