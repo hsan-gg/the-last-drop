@@ -69,4 +69,4 @@ func _on_dialogue_finished() -> void:
 	var scene := get_tree().current_scene
 	if scene is GameArea and ending_ready(chapter_for_area((scene as GameArea).area_id).get("id", "")):
 		ending_enabled = false
-		SceneManager.change_scene(ENDING_SCENE)
+		Cutscenes.play("finale", ENDING_SCENE)

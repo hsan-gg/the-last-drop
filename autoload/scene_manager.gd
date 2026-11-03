@@ -36,11 +36,14 @@ func change_scene(path: String) -> void:
 
 
 ## `skip_intro` is for restarts after dying, so the opening is not replayed.
-func new_game(_skip_intro: bool = false) -> void:
+func new_game(skip_intro: bool = false) -> void:
 	reset_run()
 	Combat.enemies_enabled = true
 	Lives.start_run()
-	change_scene(FIRST_AREA)
+	if skip_intro:
+		change_scene(FIRST_AREA)
+	else:
+		Cutscenes.play("intro", FIRST_AREA)
 
 
 func go_to_game_over() -> void:

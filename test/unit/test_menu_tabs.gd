@@ -61,8 +61,12 @@ func test_the_backpack_lists_gear_then_consumables_then_materials() -> void:
 
 
 func test_fists_are_not_a_backpack_item() -> void:
+	Gear.grant("rusty_sword")
+	var ids: Array[String] = []
 	for entry in _inventory().entries():
-		assert_ne(entry["id"], "fists")
+		ids.append(entry["id"])
+	assert_false(ids.has("fists"))
+	assert_true(ids.has("rusty_sword"))
 
 
 func test_activating_gear_wears_it() -> void:

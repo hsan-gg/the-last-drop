@@ -1,0 +1,136 @@
+{
+	"intro": [
+		{
+			"visual": "sky",
+			"title": "THE LAST DROP",
+			"text": "The world was not destroyed in a day.\\nIt was buried, one thrown-away thing at a time.",
+			"focus": []
+		},
+		{
+			"visual": "sky",
+			"title": "",
+			"text": "Cities sank under their own waste. Rivers turned the colour of old tea. Clean water became a rumour.",
+			"focus": []
+		},
+		{
+			"visual": "map",
+			"title": "THE JOURNEY",
+			"text": "Beyond the ruins, people whisper about a place called the Last Drop. A spring of pure water, if it exists at all.",
+			"focus": []
+		},
+		{
+			"visual": "map",
+			"title": "THE FORGOTTEN OUTPOST",
+			"text": "You wake here, alone and thirsty, with a cracked recorder that says: follow the old pipeline north.",
+			"focus": [
+				"outpost"
+			]
+		},
+		{
+			"visual": "map",
+			"title": "THE BATTERY FACTORY",
+			"text": "A battery factory where hazardous waste was left to leak. Dangerous, but it holds the first answers.",
+			"focus": [
+				"outpost",
+				"factory"
+			]
+		},
+		{
+			"visual": "map",
+			"title": "THE GREAT DUMP",
+			"text": "A megacity's rubbish, piled into mountains. Everything you need is buried in it, and so is something hungry.",
+			"focus": [
+				"outpost",
+				"factory",
+				"dump"
+			]
+		},
+		{
+			"visual": "map",
+			"title": "THE DEAD RIVER",
+			"text": "Poisoned by what the heaps leaked. Clean it, and you clean the way forward.",
+			"focus": [
+				"outpost",
+				"factory",
+				"dump",
+				"river"
+			]
+		},
+		{
+			"visual": "map",
+			"title": "AND BEYOND",
+			"text": "Fields that forgot how to grow. Factories that never stopped. And at the end, the truth about the Last Drop.",
+			"focus": [
+				"outpost",
+				"factory",
+				"dump",
+				"river",
+				"fields",
+				"industry",
+				"sanctuary"
+			]
+		},
+		{
+			"visual": "black",
+			"title": "SURVIVE",
+			"text": "Sort what you find. Fight what stalks the ruins. Learn what the old world refused to.\\n\\nJ attack   K block   E act   Esc menu",
+			"focus": []
+		}
+	],
+	"to_factory": [
+		{
+			"visual": "black",
+			"title": "NORTH OF THE OUTPOST",
+			"text": "The pipeline runs north, straight through a fence marked with a faded battery. The recorder crackles: 'I worked here once. They said it was safe.'",
+			"focus": []
+		}
+	],
+	"to_dump": [
+		{
+			"visual": "black",
+			"title": "THE ARCHIVE",
+			"text": "The archive was damaged, but one file survived: a municipal route. Waste, shipped away to the Great Dump, year after year.",
+			"focus": []
+		},
+		{
+			"visual": "black",
+			"title": "INES",
+			"text": "'Away has an address,' the voice said. 'It is always someone else's backyard.' You follow it.",
+			"focus": []
+		}
+	],
+	"to_river": [
+		{
+			"visual": "black",
+			"title": "THE DRAIN",
+			"text": "The dump drains downhill through a rusted pipe. Whatever the heaps leaked is on its way to the river.",
+			"focus": []
+		},
+		{
+			"visual": "black",
+			"title": "DOWNSTREAM",
+			"text": "You smell it before you see it: metal, and something sweet. Clear water is not always safe water.",
+			"focus": []
+		}
+	],
+	"finale": [
+		{
+			"visual": "sky",
+			"title": "THE FIRST DROP",
+			"text": "The pumps shudder and run. For the first time in years, water moves through a plant that was meant to clean it.",
+			"focus": []
+		},
+		{
+			"visual": "sky",
+			"title": "THE TRUTH",
+			"text": "The Last Drop was never a spring. It was a place, a plan, and people willing to use what already existed.",
+			"focus": []
+		},
+		{
+			"visual": "black",
+			"title": "WHAT NOW?",
+			"text": "The world wasn't destroyed in a single day. And it won't be rebuilt in one either.",
+			"focus": []
+		}
+	]
+}

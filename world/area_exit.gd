@@ -5,6 +5,8 @@ extends Interactable
 @export_file("*.tscn") var target_scene: String = ""
 @export var required_flag: String = ""
 @export var prompt: String = "Open the gate"
+## A story cutscene to play (once) on the way through.
+@export var cutscene: String = ""
 
 
 func _ready() -> void:
@@ -22,4 +24,7 @@ func _on_interacted(_by: Node) -> void:
 		EventBus.dialogue_requested.emit("exit_locked")
 		return
 	EventBus.sfx_requested.emit("click")
-	SceneManager.change_scene(target_scene)
+	if cutscene.is_empty():
+		SceneManager.change_scene(target_scene)
+	else:
+		Cutscenes.play(cutscene, target_scene)

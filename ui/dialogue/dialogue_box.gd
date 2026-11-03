@@ -1,10 +1,22 @@
 class_name DialogueBox
 extends CanvasLayer
-## Typewriter dialogue at the bottom of the screen. Listens to the EventBus,
-## pauses the game while open, and reports back with dialogue_finished.
+## Typewriter dialogue along the bottom of the screen, with a speaker name and
+## portrait. It does not pause the world; being hit cuts it short. Reports back
+## with dialogue_finished (or dialogue_interrupted).
 
 const CHARS_PER_SECOND := 70.0
 const BLIP_EVERY_N_CHARS := 3
+const ICON_PATH_FORMAT := "res://assets/sprites/%s.png"
+## Who is speaking, by dialogue id prefix. Anything else is narration.
+const SPEAKERS: Array[Dictionary] = [
+	{"prefix": "recording_", "name": "INES", "tag": "recording", "color": "#f08a24", "icon": "recorder"},
+	{"prefix": "archive_", "name": "ARCHIVE", "tag": "terminal", "color": "#5fe0d0", "icon": "terminal_on"},
+	{"prefix": "dump_records", "name": "MUNICIPAL RECORDS", "tag": "terminal", "color": "#5fe0d0", "icon": "terminal_on"},
+	{"prefix": "terminal_", "name": "TERMINAL", "tag": "", "color": "#5fe0d0", "icon": "terminal_off"},
+	{"prefix": "river_cleaned", "name": "TREATMENT PLANT", "tag": "", "color": "#5fe0d0", "icon": "terminal_on"},
+	{"prefix": "sample_", "name": "TEST STRIP", "tag": "", "color": "#9be04a", "icon": "sample_kit"},
+]
+const NARRATION := {"name": "", "tag": "", "color": "#5fd0c4", "icon": ""}
 
 ## Conversations no longer stop the world: zombies still come, and being hit
 ## cuts the conversation short. Turn this on only for a modal use of the box.
@@ -17,6 +29,10 @@ var _typing: Tween
 var _opened_on_frame := -1
 
 var _root: Control
+var _stripe: ColorRect
+var _portrait: TextureRect
+var _portrait_frame: PanelContainer
+var _name: Label
 var _text: Label
 var _hint: Label
 
@@ -35,6 +51,14 @@ func is_open() -> bool:
 	return visible
 
 
+## Who speaks a dialogue: {"name", "tag", "color", "icon"}. Narration has no name.
+static func speaker_for(dialogue_id: String) -> Dictionary:
+	for speaker in SPEAKERS:
+		if dialogue_id.begins_with(speaker["prefix"]):
+			return speaker
+	return NARRATION
+
+
 func show_lines(lines: Array[String], dialogue_id: String = "") -> void:
 	if lines.is_empty():
 		EventBus.dialogue_finished.emit(dialogue_id)
@@ -43,6 +67,7 @@ func show_lines(lines: Array[String], dialogue_id: String = "") -> void:
 	_dialogue_id = dialogue_id
 	_index = 0
 	_opened_on_frame = Engine.get_process_frames()
+	_apply_speaker(speaker_for(dialogue_id))
 	visible = true
 	if pauses_game:
 		get_tree().paused = true
@@ -93,14 +118,26 @@ func _on_panel_gui_input(event: InputEvent) -> void:
 		advance()
 
 
+func _apply_speaker(speaker: Dictionary) -> void:
+	var color := Color(speaker["color"])
+	_stripe.color = color
+	_name.visible = not String(speaker["name"]).is_empty()
+	_name.text = speaker["name"] if speaker["tag"] == "" else "%s  (%s)" % [speaker["name"], speaker["tag"]]
+	_name.add_theme_color_override("font_color", color)
+	var icon_path: String = ICON_PATH_FORMAT % speaker["icon"] if speaker["icon"] != "" else ""
+	_portrait.texture = load(icon_path) if not icon_path.is_empty() and ResourceLoader.exists(icon_path) else null
+	_portrait_frame.visible = _portrait.texture != null
+
+
 func _show_line() -> void:
 	var line := _lines[_index]
 	_text.text = line
 	_text.visible_characters = 0
-	_hint.text = "[E] Continue" if _index < _lines.size() - 1 else "[E] Close"
+	var last := _index >= _lines.size() - 1
+	_hint.text = "%d/%d   [E] %s" % [_index + 1, _lines.size(), "Close" if last else "Continue"]
 	if _typing != null:
 		_typing.kill()
-	_typing = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	_typing = create_tween()
 	_typing.tween_method(_reveal, 0, line.length(), maxf(line.length() / (CHARS_PER_SECOND * Settings.text_speed_multiplier()), 0.05))
 	_typing.finished.connect(func() -> void: _text.visible_characters = -1)
 
@@ -132,26 +169,45 @@ func _build() -> void:
 	add_child(_root)
 
 	var panel := PanelContainer.new()
+	panel.add_theme_stylebox_override("panel", UiTheme.banner_style())
 	panel.anchor_top = 1.0
 	panel.anchor_bottom = 1.0
 	panel.anchor_right = 1.0
-	panel.offset_left = 16.0
-	panel.offset_right = -16.0
-	panel.offset_top = -92.0
+	panel.offset_left = 14.0
+	panel.offset_right = -14.0
+	panel.offset_top = -86.0
 	panel.offset_bottom = -10.0
 	panel.gui_input.connect(_on_panel_gui_input)
 	_root.add_child(panel)
 
-	var box := VBoxContainer.new()
-	box.add_theme_constant_override("separation", 4)
-	panel.add_child(box)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 7)
+	panel.add_child(row)
+	_stripe = ColorRect.new()
+	_stripe.custom_minimum_size = Vector2(3, 0)
+	row.add_child(_stripe)
 
+	_portrait_frame = PanelContainer.new()
+	_portrait_frame.add_theme_stylebox_override("panel", UiTheme.slot_style(false))
+	_portrait_frame.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(_portrait_frame)
+	_portrait = TextureRect.new()
+	_portrait.custom_minimum_size = Vector2(32, 32)
+	_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_portrait_frame.add_child(_portrait)
+
+	var box := VBoxContainer.new()
+	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	box.add_theme_constant_override("separation", 3)
+	row.add_child(box)
+	_name = Label.new()
+	box.add_child(_name)
 	_text = Label.new()
 	_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_text.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_text.custom_minimum_size = Vector2(0, 48)
+	_text.custom_minimum_size = Vector2(0, 34)
 	box.add_child(_text)
-
 	_hint = Label.new()
 	_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_hint.add_theme_color_override("font_color", UiTheme.COLOR_ORANGE)

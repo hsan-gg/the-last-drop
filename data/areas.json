@@ -37,7 +37,8 @@
 				"props": {
 					"target_scene": "res://world/factory.tscn",
 					"required_flag": "recording_found",
-					"prompt": "Open the north gate"
+					"prompt": "Open the north gate",
+					"cutscene": "to_factory"
 				}
 			},
 			"f": {
@@ -173,7 +174,8 @@
 				"props": {
 					"target_scene": "res://world/dump.tscn",
 					"required_flag": "archive_read",
-					"prompt": "Take the gate to the Great Dump"
+					"prompt": "Take the gate to the Great Dump",
+					"cutscene": "to_dump"
 				}
 			},
 			"x": {
@@ -428,7 +430,8 @@
 				"props": {
 					"target_scene": "res://world/river.tscn",
 					"required_flag": "dump_records_read",
-					"prompt": "Follow the drain to the river"
+					"prompt": "Follow the drain to the river",
+					"cutscene": "to_river"
 				}
 			},
 			"Y": {

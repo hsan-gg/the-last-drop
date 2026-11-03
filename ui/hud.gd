@@ -31,6 +31,7 @@ var _xp_meter: Meter
 var _stats_label: Label
 var _toast_label: Label
 var _toast_tween: Tween
+var _quick_label: Label
 
 
 func _ready() -> void:
@@ -60,6 +61,7 @@ func _ready() -> void:
 	EventBus.game_over.connect(_on_game_over)
 	EventBus.quest_completed.connect(_on_quest_completed)
 	Settings.changed.connect(_on_settings_changed.unbind(1))
+	EventBus.inventory_changed.connect(_refresh_quick)
 
 	_on_prompt_changed("")
 	_refresh_objective()
@@ -67,6 +69,7 @@ func _ready() -> void:
 	_on_xp_changed(Progress.level, Progress.xp, Progress.xp_needed())
 	_refresh_stats()
 	_on_lives_changed(Lives.lives)
+	_refresh_quick()
 
 
 func set_area(new_area_id: String) -> void:
@@ -174,6 +177,21 @@ func _on_quest_completed(quest_id: String) -> void:
 
 func _on_settings_changed() -> void:
 	_tracker.refresh()
+	_refresh_quick()
+
+
+func _refresh_quick() -> void:
+	var heal := Inventory.count("bandage") + Inventory.count("energy_bar")
+	var water := Inventory.count("purified_water")
+	_quick_label.text = "%s heal x%d   %s water x%d" % [Settings.key_label("quick_heal"), heal, Settings.key_label("quick_drink"), water]
+	_quick_label.modulate.a = 1.0 if heal + water > 0 else 0.35
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("quick_heal"):
+		Consumables.use_first(Consumables.HEAL_ORDER)
+	elif event.is_action_pressed("quick_drink"):
+		Consumables.use_first(Consumables.DRINK_ORDER)
 
 
 func _build() -> void:
@@ -213,6 +231,10 @@ func _build() -> void:
 	_stats_label.add_theme_font_size_override("font_size", 8)
 	_stats_label.add_theme_color_override("font_color", UiTheme.COLOR_MUTED)
 	left.add_child(_stats_label)
+	_quick_label = Label.new()
+	_quick_label.add_theme_font_size_override("font_size", 8)
+	_quick_label.add_theme_color_override("font_color", UiTheme.COLOR_MUTED)
+	left.add_child(_quick_label)
 	_lives_row = HBoxContainer.new()
 	_lives_row.add_theme_constant_override("separation", 2)
 	_lives_row.mouse_filter = Control.MOUSE_FILTER_IGNORE

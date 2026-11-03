@@ -6,6 +6,7 @@ const TAGLINE := "A survival adventure in a world buried by its own waste."
 const CONTROLS := "WASD move  J attack  K block  E act  Q quests  I gear"
 
 var _start: Button
+var _menu: GameMenu
 
 
 func _ready() -> void:
@@ -54,6 +55,17 @@ func _build() -> void:
 	_start.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	_start.pressed.connect(_on_start_pressed)
 	column.add_child(_start)
+
+	var options := Button.new()
+	options.text = "OPTIONS"
+	options.custom_minimum_size = Vector2(120, 20)
+	options.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	options.pressed.connect(func() -> void: _menu.open(GameMenu.OPTIONS))
+	column.add_child(options)
+	_menu = GameMenu.new()
+	_menu.title_mode = true
+	_menu.pauses_game = false
+	add_child(_menu)
 
 	column.add_child(_label(CONTROLS, 8, UiTheme.COLOR_MUTED))
 
