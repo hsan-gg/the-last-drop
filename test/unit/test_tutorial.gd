@@ -6,8 +6,7 @@ func before_each() -> void:
 	Settings.reset_all()
 	Tutorial._queue.clear()
 	Tutorial._waiting = false
-	Notices._holding = false
-	Notices._waiting.clear()
+	Notices.clear()
 	Lives.start_run()
 
 
@@ -21,10 +20,12 @@ func after_each() -> void:
 func test_a_tip_shows_once_and_is_remembered() -> void:
 	watch_signals(EventBus)
 	Tutorial.show_tip("attack")
+	await wait_frames(4)
 	assert_signal_emit_count(EventBus, "tip_requested", 1)
 	assert_true(Tutorial.has_seen("attack"))
 	Tutorial._waiting = false
 	Tutorial.show_tip("attack")
+	await wait_frames(4)
 	assert_signal_emit_count(EventBus, "tip_requested", 1, "never repeated")
 
 
@@ -55,6 +56,7 @@ func test_tips_wait_while_a_conversation_is_open() -> void:
 	Tutorial.show_tip("inventory")
 	assert_signal_not_emitted(EventBus, "tip_requested", "not over the dialogue")
 	EventBus.dialogue_finished.emit("x")
+	await wait_seconds(0.7)
 	assert_signal_emitted(EventBus, "tip_requested")
 
 
@@ -67,5 +69,6 @@ func test_the_important_basics_all_have_tips() -> void:
 func test_a_zombie_noticing_you_teaches_attacking() -> void:
 	watch_signals(EventBus)
 	EventBus.enemy_alerted.emit()
+	await wait_frames(4)
 	assert_signal_emitted(EventBus, "tip_requested")
 	assert_string_contains(Tutorial.text_for("attack"), "swing")

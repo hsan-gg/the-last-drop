@@ -73,3 +73,8 @@ signal region_lit(area_id: String)
 
 ## The player walked away from a scrap pile part-way; `remaining` goes back on the pile.
 signal sorting_left(pile_id: String, remaining: Array)
+
+## A calm, celebratory card: kind is "level" or "region".
+signal reward_requested(kind: String, title: String, line: String)
+## XP was earned (before difficulty scaling is shown, the amount actually added).
+signal xp_gained(amount: int)

@@ -17,15 +17,16 @@ func max_health() -> float:
 func add_xp(amount: int) -> void:
 	if amount <= 0:
 		return
-	var result := ProgressionRules.apply_xp(level, xp, maxi(roundi(amount * Difficulty.value("xp")), 1))
+	var gained := maxi(roundi(amount * Difficulty.value("xp")), 1)
+	var result := ProgressionRules.apply_xp(level, xp, gained)
 	level = result["level"]
 	xp = result["xp"]
 	if result["levels_gained"] > 0:
 		Survival.set_max_health(max_health())
 		Survival.heal(Survival.max_health())
-		EventBus.sfx_requested.emit("reveal")
 		EventBus.level_up.emit(level)
 	EventBus.xp_changed.emit(level, xp, xp_needed())
+	EventBus.xp_gained.emit(gained)
 
 
 func reset() -> void:

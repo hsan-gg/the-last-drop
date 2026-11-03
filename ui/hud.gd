@@ -34,8 +34,8 @@ var _banners: BannerQueue
 var _level_label: Label
 var _xp_meter: Meter
 var _stats_label: Label
-var _toast_label: Label
-var _toast_tween: Tween
+var _feed: NotificationFeed
+var _reward: RewardCard
 var _quick_label: Label
 var _tip_panel: PanelContainer
 var _tip_label: Label
@@ -52,6 +52,10 @@ func _ready() -> void:
 	add_child(_banners)
 	_tracker = ObjectiveTracker.new()
 	add_child(_tracker)
+	_feed = NotificationFeed.new()
+	add_child(_feed)
+	_reward = RewardCard.new()
+	add_child(_reward)
 	add_child(QuizPanel.new())
 	add_child(PuzzlePanel.new())
 	add_child(GameMenu.new())
@@ -66,7 +70,8 @@ func _ready() -> void:
 	EventBus.stamina_denied.connect(func() -> void: _stamina_flash = 0.4)
 	EventBus.level_up.connect(_on_level_up)
 	EventBus.gear_changed.connect(_refresh_stats)
-	EventBus.loot_found.connect(_show_toast.bind(UiTheme.COLOR_GREEN))
+	EventBus.loot_found.connect(func(text: String) -> void: _feed.notify("loot", "", text))
+	EventBus.xp_gained.connect(_feed.add_xp)
 	EventBus.lives_changed.connect(_on_lives_changed)
 	EventBus.life_lost.connect(_on_life_lost)
 	EventBus.game_over.connect(_on_game_over)
@@ -148,34 +153,7 @@ func _refresh_stats() -> void:
 
 
 func _on_level_up(level: int) -> void:
-	Notices.run(_celebrate_level.bind(level))
-
-
-func _celebrate_level(level: int) -> void:
-	_display_toast("LEVEL UP!  You are level %d" % level, UiTheme.COLOR_YELLOW)
-	var flash := create_tween()
-	_damage_flash.color = UiTheme.COLOR_YELLOW
-	_damage_flash.modulate.a = 0.45
-	flash.tween_property(_damage_flash, "modulate:a", 0.0, 0.6)
-	flash.tween_callback(func() -> void: _damage_flash.color = UiTheme.COLOR_RED)
-
-
-## A line of text that appears under the banner and fades: loot, level ups.
-func _show_toast(text: String, color: Color) -> void:
-	Notices.run(_display_toast.bind(text, color))
-
-
-func _display_toast(text: String, color: Color) -> void:
-	_toast_label.text = text
-	_toast_label.add_theme_color_override("font_color", color)
-	_toast_label.visible = true
-	_toast_label.modulate.a = 1.0
-	if _toast_tween != null:
-		_toast_tween.kill()
-	_toast_tween = create_tween()
-	_toast_tween.tween_interval(2.0)
-	_toast_tween.tween_property(_toast_label, "modulate:a", 0.0, 0.5)
-	_toast_tween.tween_callback(func() -> void: _toast_label.visible = false)
+	EventBus.reward_requested.emit("level", "LEVEL %d" % level, "Max health +%d, sword damage +1, stamina +%d. You feel restored." % [roundi(ProgressionRules.max_health(level) - ProgressionRules.max_health(level - 1)), int(PlayerCombat.STAMINA_PER_LEVEL)])
 
 
 func _refresh_objective() -> void:
@@ -195,11 +173,10 @@ func _refresh_objective() -> void:
 ## slides in briefly so the next step is easy to find again.
 func _announce_change(new_text: String) -> void:
 	if not _last_objective_text.is_empty():
-		_banners.push("OBJECTIVE COMPLETE", _last_objective_text, UiTheme.COLOR_GREEN, 2.0)
-		EventBus.sfx_requested.emit("sort_ok")
+		_feed.notify("objective_done", "Done!", _last_objective_text)
 	if not new_text.is_empty():
-		_banners.push("NEW OBJECTIVE", new_text, UiTheme.COLOR_ORANGE, 2.6)
-	Notices.run(_tracker.flash)
+		_feed.notify("objective_new", "New objective", new_text)
+		_tracker.mark_new()
 
 
 func _on_lives_changed(lives: int) -> void:
@@ -219,7 +196,7 @@ func _on_quest_completed(quest_id: String) -> void:
 	for quest: Dictionary in Content.quests():
 		if quest["id"] == quest_id:
 			var reward: Dictionary = quest.get("reward", {})
-			_banners.push("QUEST COMPLETE", "%s   +%d XP" % [quest["title"], int(reward.get("xp", 0))], UiTheme.COLOR_YELLOW, 3.0)
+			_feed.notify("quest", "Quest complete", quest["title"])
 	_tracker.refresh()
 
 
@@ -300,26 +277,14 @@ func _build() -> void:
 		_lives_row.add_child(heart)
 	left.add_child(_lives_row)
 
-	_toast_label = Label.new()
-	_toast_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_toast_label.add_theme_color_override("font_outline_color", Color("#1a1008"))
-	_toast_label.add_theme_constant_override("outline_size", 4)
-	_toast_label.set_anchors_preset(Control.PRESET_CENTER_TOP)
-	_toast_label.offset_left = -150.0
-	_toast_label.offset_right = 150.0
-	_toast_label.offset_top = 112.0
-	_toast_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_toast_label.visible = false
-	root.add_child(_toast_label)
-
 	_tip_panel = PanelContainer.new()
 	_tip_panel.add_theme_stylebox_override("panel", UiTheme.banner_style())
-	_tip_panel.anchor_left = 0.0
-	_tip_panel.anchor_right = 0.0
+	_tip_panel.anchor_left = 1.0
+	_tip_panel.anchor_right = 1.0
 	_tip_panel.anchor_top = 1.0
 	_tip_panel.anchor_bottom = 1.0
-	_tip_panel.offset_left = 8.0
-	_tip_panel.offset_right = 200.0
+	_tip_panel.offset_left = -200.0
+	_tip_panel.offset_right = -8.0
 	_tip_panel.offset_top = -78.0
 	_tip_panel.offset_bottom = -44.0
 	_tip_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE

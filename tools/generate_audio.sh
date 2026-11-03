@@ -33,6 +33,26 @@ synth enemy_die 0.4 sawtooth 160:30 lowpass 900 fade h 0.01 0.4 0.3 vol 0.4
 synth level_up 0.7 sine 523 sine 659 sine 784 fade h 0.02 0.7 0.5 vol 0.3
 synth loot 0.25 sine 700:1400 sine 1050 fade h 0.01 0.25 0.15 vol 0.3
 
+# Notifications: soft plucked notes, like a music box, so good news sounds gentle.
+chord() {
+	local name="$1" length="$2" gap="$3"
+	shift 3
+	local tones=() delays=()
+	local index=0
+	for note in "$@"; do
+		tones+=(pluck "$note")
+		delays+=("$(awk "BEGIN{print $index * $gap}")")
+		index=$((index + 1))
+	done
+	sox -r 44100 -c "$#" -n -r 22050 -c 1 -b 16 "$SFX/$name.wav" synth "$length" "${tones[@]}" delay "${delays[@]}" remix - vol 0.4 reverb 30 fade h 0.005 "$length" 0.3 norm -9
+}
+chord note_new 0.7 0.09 E5 A5
+chord note_xp 0.35 0.0 B5
+chord note_loot 0.6 0.07 A5 E6
+chord note_quest 1.0 0.09 C5 E5 G5 C6
+chord note_level 1.6 0.12 G4 C5 E5 G5 C6
+chord note_region 2.2 0.16 C4 G4 C5 E5 G5 C6
+
 # 24 s of brown noise; 0.25 Hz tremolo completes whole cycles so the loop is seamless.
 sox -n -r 22050 -c 1 assets/audio/ambient.ogg synth 24 brownnoise lowpass 500 tremolo 0.25 40 vol 0.5
 

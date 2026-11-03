@@ -61,7 +61,7 @@ func _start() -> void:
 	Progress.add_xp(REWARD_XP)
 	Survival.heal(Survival.max_health())
 	Survival.drink(Survival.MAX_VALUE * 0.5)
-	EventBus.banner_requested.emit("REGION RESTORED", "The lights are back on. +%d XP, fully healed." % REWARD_XP, Color("#ffd27a"))
+	EventBus.reward_requested.emit("region", "REGION RESTORED", "The lights are back on. You are fully healed and rested.")
 	EventBus.region_lit.emit(region_id)
 	_refresh()
 

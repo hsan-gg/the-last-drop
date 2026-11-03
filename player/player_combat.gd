@@ -217,7 +217,6 @@ func _strike() -> void:
 	if hit_any:
 		EventBus.sfx_requested.emit("hit")
 		Juicee.hit_stop(self, HIT_STOP_SECONDS)
-		Juicee.shake_camera(self, 1.5, 0.1)
 
 
 ## An enemy strike lands on the player. Returns {"outcome", "damage"}.

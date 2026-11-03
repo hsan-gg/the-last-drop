@@ -5,8 +5,7 @@ const HUD_SCENE := preload("res://world/outpost.tscn")
 
 
 func before_each() -> void:
-	Notices._holding = false
-	Notices._waiting.clear()
+	Notices.clear()
 	GameState.reset()
 	Survival.set_process(false)
 	Survival.reset()
@@ -78,10 +77,21 @@ func test_finishing_an_objective_announces_it_complete_then_the_next() -> void:
 	var area: Node = add_child_autofree(HUD_SCENE.instantiate())
 	await wait_physics_frames(2)
 	var hud: Hud = area.find_children("*", "Hud", true, false)[0]
-	var banners: BannerQueue = hud._banners
-	var before := banners.pending()
+	var feed: NotificationFeed = hud._feed
+	(area.find_children("*", "DialogueBox", true, false)[0] as DialogueBox).interrupt()  # the arrival talk
+	await wait_seconds(0.6)
+	var before := feed.count()
 	GameState.set_flag("water_tested")
-	assert_eq(banners.pending(), before + 2, "COMPLETE and NEW both queue")
+	assert_eq(feed.count(), before, "nothing appears in the same instant")
+	await wait_frames(4)
+	var shown := ""
+	for label: Label in feed.find_children("*", "Label", true, false):
+		shown += label.text + "|"
+	assert_string_contains(shown, "Done!")
+	assert_string_contains(shown, "New objective")
+	assert_lte(feed.count(), NotificationFeed.MAX_ENTRIES)
+	assert_true(hud._tracker.has_news(), "the tasks chip shows a quiet !")
+	assert_false(hud._tracker.is_shown(), "the list itself does not pop open")
 
 
 func test_a_bandage_heals_from_the_quick_key_helper() -> void:
@@ -112,6 +122,7 @@ func test_notices_wait_for_a_conversation_to_end() -> void:
 	assert_eq(Notices.waiting(), 1, "held back while talking")
 	EventBus.dialogue_finished.emit("x")
 	assert_false(Notices.is_holding())
+	await wait_seconds(0.7)
 	assert_eq(Notices.waiting(), 0)
 	assert_eq(banners.pending(), 1, "shown once the talk is over")
 
@@ -122,5 +133,37 @@ func test_a_cut_short_conversation_also_releases_notices() -> void:
 	EventBus.dialogue_opened.emit()
 	banners.push("NEW OBJECTIVE", "Sort the pile")
 	EventBus.dialogue_interrupted.emit()
+	await wait_seconds(0.7)
 	assert_eq(Notices.waiting(), 0)
 	assert_eq(banners.pending(), 1)
+
+
+func test_a_notice_raised_in_the_same_instant_a_talk_opens_waits_for_it() -> void:
+	var feed := NotificationFeed.new()
+	add_child_autofree(feed)
+	feed.notify("objective_new", "New objective", "Fix the pump")
+	EventBus.dialogue_opened.emit()  # same frame, as when talking to something sets a flag
+	await wait_frames(5)
+	assert_eq(feed.count(), 0, "held back behind the conversation")
+	EventBus.dialogue_finished.emit("x")
+	await wait_seconds(0.7)
+	assert_eq(feed.count(), 1)
+
+
+func test_xp_gains_merge_into_one_line() -> void:
+	var feed := NotificationFeed.new()
+	add_child_autofree(feed)
+	feed.add_xp(5)
+	await wait_frames(4)
+	feed.add_xp(7)
+	await wait_frames(4)
+	assert_eq(feed.count(), 1)
+	assert_eq(feed._xp_total, 12)
+
+
+func test_a_level_up_is_a_calm_card_not_a_flash() -> void:
+	var card := RewardCard.new()
+	add_child_autofree(card)
+	EventBus.reward_requested.emit("level", "LEVEL 2", "Stronger.")
+	await wait_frames(4)
+	assert_true(card.is_showing())
