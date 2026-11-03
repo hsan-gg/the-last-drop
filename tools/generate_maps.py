@@ -12,6 +12,7 @@ Tile characters (see world/map_builder.gd):
 Decor markers (set dressing, data/areas.json gives each its sprite):
   d dumpster  e bench  f fire barrel  x box  y tire  z hydrant  k AC unit
   g trash bag  h open box
+Pickup markers (hidden finds, data/areas.json names the item): p q j
 Marker characters (entities, placed by data/areas.json; the floor shows beneath):
   @ spawn  $ scrap pile  W water  U treatment unit  V recording
   ^ gate   G generator   K terminal  1 2 3 numbered scrap piles
@@ -25,7 +26,7 @@ ROOT = Path(__file__).resolve().parent.parent
 MAPS = ROOT / "data" / "maps"
 
 BLOCKING = set("#~CFPtBSH")
-MARKERS = set("@$WUV^GK123defxyzkgh")
+MARKERS = set("@$WUV^GK123defxyzkghpqj")
 # Markers that block movement; the spawn marker does not.
 BLOCKING_MARKERS = MARKERS - {"@"}
 
@@ -252,7 +253,7 @@ def build_dump():
     for x0, y0, x1, y1 in ((8, 19, 8, 27), (8, 20, 21, 21), (21, 14, 22, 21), (22, 13, 25, 14), (25, 5, 26, 13), (25, 5, 36, 6), (6, 10, 7, 16)):
         reserved |= rect_cells(x0, y0, x1, y1, 1)
     scatter(grid, rng, reserved, [("b", 0.14), ("r", 0.07), ("H", 0.035), (",", 0.02)])
-    for ch, x, y in (("d", 13, 25), ("d", 30, 18), ("d", 38, 22), ("e", 6, 13), ("f", 4, 22), ("f", 40, 12), ("x", 20, 24), ("x", 27, 6), ("y", 12, 13), ("z", 35, 4), ("g", 28, 22), ("g", 14, 4)):
+    for ch, x, y in (("d", 13, 25), ("d", 30, 18), ("d", 38, 22), ("e", 6, 13), ("f", 4, 22), ("f", 40, 12), ("x", 20, 24), ("x", 27, 6), ("y", 12, 13), ("z", 35, 4), ("g", 28, 22), ("g", 14, 4), ("p", 43, 3), ("q", 3, 27), ("j", 41, 27)):
         place_decor(grid, ch, x, y)
     return grid
 

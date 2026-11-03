@@ -28,6 +28,9 @@ func _ready() -> void:
 	_build()
 	add_child(DIALOGUE_SCENE.instantiate())
 	add_child(SORTING_SCENE.instantiate())
+	add_child(QuizPanel.new())
+	add_child(PuzzlePanel.new())
+	add_child(QuestJournal.new())
 
 	EventBus.prompt_changed.connect(_on_prompt_changed)
 	EventBus.inventory_changed.connect(_refresh_inventory)

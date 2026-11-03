@@ -21,6 +21,8 @@ Have the web build open on the title screen. Keep a recorded backup run ready in
 
 **2:00 Ending (10s).** Choose Preserve or Share. The epilogue changes with how carefully you sorted. Close on: "The world wasn't destroyed in a single day. And it won't be rebuilt in one either."
 
+**Extras to show if there is time.** After a pile, a Field Check quiz pops up (right answer restores water). Press Q for the journal. At the terminals, solve the ordering puzzle to unlock the records.
+
 ## Talking points
 
 - Every environmental action solves an immediate problem **and** reveals a real principle.

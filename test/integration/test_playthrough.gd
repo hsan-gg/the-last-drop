@@ -30,6 +30,9 @@ func _enter(scene: PackedScene) -> void:
 		overlay.pauses_game = false
 	for overlay in _area.find_children("*", "SortingChallenge", true, false):
 		overlay.pauses_game = false
+	for overlay_type in ["QuizPanel", "PuzzlePanel", "QuestJournal"]:
+		for overlay in _area.find_children("*", overlay_type, true, false):
+			overlay.pauses_game = false
 
 
 func _find(type_name: String) -> Node:
@@ -42,6 +45,16 @@ func _sorting() -> SortingChallenge:
 
 func _dialogue() -> DialogueBox:
 	return _find("DialogueBox")
+
+
+## Opens the terminal's puzzle and solves it, as a player would.
+func _solve_puzzle(puzzle_id: String) -> void:
+	var panel: PuzzlePanel = _find("PuzzlePanel")
+	assert_eq(panel.phase(), PuzzlePanel.Phase.SOLVING, "terminal opened %s" % puzzle_id)
+	for step: String in Content.puzzle(puzzle_id)["steps"]:
+		panel.choose(step)
+	assert_eq(panel.phase(), PuzzlePanel.Phase.SOLVED)
+	panel.continue_flow()
 
 
 ## Sorts every item in `pile` correctly, clicking through each lesson.
@@ -196,6 +209,8 @@ func test_factory_loop_to_the_archive() -> void:
 	assert_true(GameState.has_flag("power_restored"))
 
 	terminal.interact(null)
+	assert_false(GameState.has_flag("archive_read"), "the terminal wants its puzzle solved first")
+	_solve_puzzle("hazard_route")
 	assert_true(GameState.has_flag("archive_read"))
 
 
@@ -237,6 +252,7 @@ func test_dump_loop_from_the_gate_to_the_records() -> void:
 	assert_false(GameState.has_flag("recording_found"), "chapter 2 must not reuse the outpost flag")
 
 	terminal.interact(null)
+	_solve_puzzle("waste_hierarchy")
 	assert_true(GameState.has_flag("dump_records_read"))
 	assert_eq(ObjectivesTracker.current("dump"), {})
 

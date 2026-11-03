@@ -147,7 +147,8 @@
 					"required_flag": "power_restored",
 					"read_flag": "archive_read",
 					"final_dialogue": "archive_truth",
-					"continue_dialogue": "archive_partial"
+					"continue_dialogue": "archive_partial",
+					"puzzle_id": "hazard_route"
 				}
 			},
 			"^": {
@@ -278,7 +279,8 @@
 					"required_flag": "shelter_built",
 					"read_flag": "dump_records_read",
 					"final_dialogue": "dump_records",
-					"continue_dialogue": "dump_records"
+					"continue_dialogue": "dump_records",
+					"puzzle_id": "waste_hierarchy"
 				}
 			},
 			"d": {
@@ -351,6 +353,27 @@
 						10,
 						8
 					]
+				}
+			},
+			"p": {
+				"scene": "item_pickup",
+				"props": {
+					"item_id": "cardboard",
+					"pickup_id": "dump_a"
+				}
+			},
+			"q": {
+				"scene": "item_pickup",
+				"props": {
+					"item_id": "tin_can",
+					"pickup_id": "dump_b"
+				}
+			},
+			"j": {
+				"scene": "item_pickup",
+				"props": {
+					"item_id": "glass_jar",
+					"pickup_id": "dump_c"
 				}
 			}
 		}

@@ -24,3 +24,15 @@ signal celebrate(world_position: Vector2)
 
 ## Name of a sound in assets/audio/sfx/ (without extension).
 signal sfx_requested(sfx_name: String)
+
+signal counter_changed(key: String, value: int)
+
+## Open a Field Check quiz drawn from the lessons just learned.
+signal quiz_requested(lesson_ids: Array)
+signal quiz_finished(correct: bool)
+
+## Open an ordering puzzle from data/puzzles.json.
+signal puzzle_requested(puzzle_id: String)
+signal puzzle_finished(puzzle_id: String, solved: bool)
+
+signal quest_completed(quest_id: String)

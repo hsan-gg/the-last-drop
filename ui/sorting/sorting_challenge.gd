@@ -29,6 +29,7 @@ var _pile_id := ""
 var _session: SortingSession
 var _total := 0
 var _opened_on_frame := -1
+var _lesson_ids: Array[String] = []
 
 var _root: Control
 var _progress: Label
@@ -59,6 +60,7 @@ func open(pile_id: String, item_ids: Array[String]) -> void:
 	_pile_id = pile_id
 	_session = SortingSession.new(item_ids)
 	_total = item_ids.size()
+	_lesson_ids = _lessons_of(item_ids)
 	_show_bins(SortingRules.bins_for(item_ids))
 	_opened_on_frame = Engine.get_process_frames()
 	visible = true
@@ -74,6 +76,7 @@ func choose_bin(bin_id: String) -> void:
 	var verdict := _session.place(bin_id)
 	var lesson := Content.lesson(verdict["lesson_id"])
 	if verdict["correct"]:
+		_count_correct(verdict)
 		GameState.add_to_counter("sort_correct")
 		EventBus.sfx_requested.emit("sort_ok")
 		_set_feedback(Phase.FEEDBACK_RIGHT, "[color=#7bc043]CORRECT[/color]\n%s\n[color=#f2c94c]In real life:[/color] %s" % [lesson.get("right", ""), lesson.get("real_life", "")])
@@ -110,7 +113,26 @@ func _show_current_item() -> void:
 	_hint.text = "Press 1, 2 or 3, or click a bin"
 
 
+func _count_correct(verdict: Dictionary) -> void:
+	match verdict["bin_id"]:
+		SortingRules.BIN_HAZARDOUS:
+			GameState.add_to_counter("hazard_correct")
+		SortingRules.BIN_COMPOST:
+			GameState.add_to_counter("compost_correct")
+
+
+func _lessons_of(item_ids: Array[String]) -> Array[String]:
+	var lessons: Array[String] = []
+	for item_id in item_ids:
+		var lesson_id: String = ItemDB.get_item(item_id).get("lesson_id", "")
+		if not lesson_id.is_empty() and not lessons.has(lesson_id):
+			lessons.append(lesson_id)
+	return lessons
+
+
 func _show_summary() -> void:
+	if _session.mistakes() == 0:
+		GameState.add_to_counter("perfect_piles")
 	var recovered := _session.recovered_items()
 	for item_id in recovered:
 		Inventory.add(item_id)
@@ -152,8 +174,10 @@ func _close() -> void:
 	if pauses_game:
 		get_tree().paused = false
 	var finished_pile := _pile_id
+	var lessons := _lesson_ids
 	_session = null
 	EventBus.sorting_finished.emit(finished_pile)
+	EventBus.quiz_requested.emit(lessons)
 
 
 func _unhandled_input(event: InputEvent) -> void:

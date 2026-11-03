@@ -1,0 +1,27 @@
+[
+	{
+		"id": "hazard_route",
+		"title": "RECONNECT THE ARCHIVE",
+		"prompt": "The terminal asks for the safe route for hazardous waste. Put the steps in order.",
+		"steps": [
+			"Spot the hazard and keep back",
+			"Put on protection",
+			"Seal it in a safe container",
+			"Take it to hazardous-waste collection"
+		],
+		"explanation": "Spot, protect, contain, hand over. Skipping a step is how people get hurt."
+	},
+	{
+		"id": "waste_hierarchy",
+		"title": "UNLOCK THE MUNICIPAL RECORDS",
+		"prompt": "The records are locked behind the waste hierarchy. Put it in order, best first.",
+		"steps": [
+			"Reduce what you use",
+			"Reuse what you can",
+			"Recycle the rest",
+			"Recover energy or nutrients",
+			"Dispose safely as a last resort"
+		],
+		"explanation": "The best waste is the waste never made. Disposal comes last, not first."
+	}
+]

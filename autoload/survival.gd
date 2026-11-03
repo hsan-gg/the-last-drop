@@ -45,6 +45,10 @@ func drink(amount: float) -> void:
 	_apply(minf(_water + amount, MAX_VALUE), _health)
 
 
+func heal(amount: float) -> void:
+	_apply(_water, minf(_health + amount, MAX_VALUE))
+
+
 func damage(amount: float) -> void:
 	EventBus.damage_taken.emit(amount)
 	var next_health := maxf(_health - amount, 0.0)

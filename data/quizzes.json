@@ -1,0 +1,302 @@
+[
+	{
+		"id": "q_battery",
+		"lesson_id": "battery_leak",
+		"question": "A worn-out battery. Where does it go?",
+		"options": [
+			"In the general bin",
+			"To a hazardous-waste collection point",
+			"Buried in the garden"
+		],
+		"answer": 1,
+		"explanation": "Batteries leak toxic metals and acid. Hazardous collection keeps them out of soil and water."
+	},
+	{
+		"id": "q_chemical",
+		"lesson_id": "chemical_leak",
+		"question": "Why must leftover paint or solvent stay out of drains?",
+		"options": [
+			"It makes pipes smell",
+			"Contamination travels from soil to groundwater to rivers",
+			"It fills the bin too fast"
+		],
+		"answer": 1,
+		"explanation": "Chemicals travel. What you pour away can end up in someone's drinking water."
+	},
+	{
+		"id": "q_plastic",
+		"lesson_id": "plastic_reuse",
+		"question": "What is the best thing to do with a clean plastic bottle you cannot reuse?",
+		"options": [
+			"Recycle it",
+			"Burn it",
+			"Bury it"
+		],
+		"answer": 0,
+		"explanation": "Recycled plastic becomes new parts, so new material does not have to be made."
+	},
+	{
+		"id": "q_reuse",
+		"lesson_id": "material_reuse",
+		"question": "Reusing sorted metal and pipe instead of making new ones saves...",
+		"options": [
+			"Nothing, it is just tidier",
+			"Only money",
+			"Energy and raw materials"
+		],
+		"answer": 2,
+		"explanation": "Reuse and repair come before recycling. Nothing new has to be made."
+	},
+	{
+		"id": "q_glass_general",
+		"lesson_id": "glass_general",
+		"question": "Why is a broken glass shard bagged with general waste here?",
+		"options": [
+			"It is toxic",
+			"It is sharp, and loose it injures whoever sorts it next",
+			"It rots into compost"
+		],
+		"answer": 1,
+		"explanation": "Broken glass is inert but sharp. Wrap it before binning it."
+	},
+	{
+		"id": "q_phone",
+		"lesson_id": "ewaste_phone",
+		"question": "Why do old phones go to e-waste collection?",
+		"options": [
+			"They hold toxic metals and recoverable copper and gold",
+			"They are too heavy for bins",
+			"They attract insects"
+		],
+		"answer": 0,
+		"explanation": "Electronics are both a hazard and a mine of reusable metal."
+	},
+	{
+		"id": "q_tube",
+		"lesson_id": "tube_mercury",
+		"question": "What do old fluorescent tubes contain that is dangerous if they break?",
+		"options": [
+			"Mercury",
+			"Helium",
+			"Sugar"
+		],
+		"answer": 0,
+		"explanation": "Never break old bulbs. Take them whole to a collection point."
+	},
+	{
+		"id": "q_food",
+		"lesson_id": "food_compost",
+		"question": "What gas does food rotting in a landfill give off?",
+		"options": [
+			"Oxygen",
+			"Helium",
+			"Methane"
+		],
+		"answer": 2,
+		"explanation": "Without air, food rots and makes methane. Composted, it becomes soil."
+	},
+	{
+		"id": "q_paper",
+		"lesson_id": "paper_recycle",
+		"question": "What spoils paper for recycling?",
+		"options": [
+			"Being flat",
+			"Being wet or soiled",
+			"Being folded"
+		],
+		"answer": 1,
+		"explanation": "Keep paper and cardboard clean and dry until collection."
+	},
+	{
+		"id": "q_glass",
+		"lesson_id": "glass_infinite",
+		"question": "How many times can glass be recycled?",
+		"options": [
+			"Once",
+			"Three times",
+			"Again and again"
+		],
+		"answer": 2,
+		"explanation": "Glass melts into new glass with no loss of quality."
+	},
+	{
+		"id": "q_textile",
+		"lesson_id": "textile_reuse",
+		"question": "Before binning worn clothes, you should first...",
+		"options": [
+			"Burn them",
+			"Repair, reuse or donate them",
+			"Wash them twice"
+		],
+		"answer": 1,
+		"explanation": "Reuse comes before recycling."
+	},
+	{
+		"id": "q_metal",
+		"lesson_id": "metal_recycle",
+		"question": "Recycling metal saves...",
+		"options": [
+			"Energy compared with making it new",
+			"Nothing",
+			"Only space in the bin"
+		],
+		"answer": 0,
+		"explanation": "Recycling saves the energy already spent making the material."
+	},
+	{
+		"id": "q_contamination",
+		"lesson_id": "contamination_ruins",
+		"question": "A pizza box is greasy. What is the right call?",
+		"options": [
+			"Recycle all of it",
+			"Recycle the clean parts, bin the greasy ones",
+			"Put it in hazardous"
+		],
+		"answer": 1,
+		"explanation": "Grease and food spoil a whole recycling batch. Clean sorting keeps recycling worth doing."
+	},
+	{
+		"id": "q_clear",
+		"lesson_id": "clear_not_safe",
+		"question": "Clear water is...",
+		"options": [
+			"Always safe",
+			"Not necessarily safe",
+			"Always poisonous"
+		],
+		"answer": 1,
+		"explanation": "Dissolved metals and chemicals are invisible. Test or treat uncertain water."
+	},
+	{
+		"id": "q_filter",
+		"lesson_id": "filter_limits",
+		"question": "What does a sand filter remove?",
+		"options": [
+			"Dissolved chemicals",
+			"Particles",
+			"Metals in solution"
+		],
+		"answer": 1,
+		"explanation": "Each treatment stage does one job. Match the stage to the contaminant."
+	},
+	{
+		"id": "q_boil",
+		"lesson_id": "boil_limits",
+		"question": "Boiling water kills germs. Does it remove metals and chemicals?",
+		"options": [
+			"No",
+			"Yes, all of them",
+			"Only chemicals"
+		],
+		"answer": 0,
+		"explanation": "Match the treatment to the contaminant."
+	},
+	{
+		"id": "q_runoff",
+		"lesson_id": "runoff",
+		"question": "Rain washes pollution from a dump into the river. This is called...",
+		"options": [
+			"Evaporation",
+			"Runoff",
+			"Composting"
+		],
+		"answer": 1,
+		"explanation": "Where waste goes, water follows."
+	},
+	{
+		"id": "q_brown_green",
+		"lesson_id": "brown_green",
+		"question": "Good compost needs...",
+		"options": [
+			"Only wet scraps",
+			"Only dry leaves",
+			"A mix of dry material and wet scraps"
+		],
+		"answer": 2,
+		"explanation": "Balance makes soil."
+	},
+	{
+		"id": "q_no_plastic",
+		"lesson_id": "no_plastic",
+		"question": "What does not belong in a compost bin?",
+		"options": [
+			"Plastic",
+			"Vegetable peelings",
+			"Dry leaves"
+		],
+		"answer": 0,
+		"explanation": "Plastic does not rot. It stays in the soil as pollution."
+	},
+	{
+		"id": "q_soil",
+		"lesson_id": "soil_loss",
+		"question": "Soil takes...",
+		"options": [
+			"Moments to build",
+			"Centuries to build and moments to lose",
+			"No time to lose"
+		],
+		"answer": 1,
+		"explanation": "Keep soil covered and fed."
+	},
+	{
+		"id": "q_waste_food",
+		"lesson_id": "waste_to_food",
+		"question": "In a healthy cycle, food scraps become...",
+		"options": [
+			"Landfill",
+			"Soil that grows food",
+			"Plastic"
+		],
+		"answer": 1,
+		"explanation": "Waste is a resource in the wrong place."
+	},
+	{
+		"id": "q_symbols",
+		"lesson_id": "hazard_symbols",
+		"question": "Before touching an unlabelled drum you should...",
+		"options": [
+			"Open it carefully",
+			"Read its hazard symbol, or leave it alone",
+			"Shake it"
+		],
+		"answer": 1,
+		"explanation": "Read the label before you touch it."
+	},
+	{
+		"id": "q_panel",
+		"lesson_id": "panel_reuse",
+		"question": "A working solar panel in a scrapped factory is...",
+		"options": [
+			"Junk",
+			"A store of useful parts",
+			"Dangerous to look at"
+		],
+		"answer": 1,
+		"explanation": "Repair or donate working equipment before recycling it."
+	},
+	{
+		"id": "q_efficiency",
+		"lesson_id": "efficiency_first",
+		"question": "The cheapest energy is...",
+		"options": [
+			"Solar",
+			"Coal",
+			"The energy you do not use"
+		],
+		"answer": 2,
+		"explanation": "Efficient devices let the same power go much further."
+	},
+	{
+		"id": "q_storage",
+		"lesson_id": "battery_storage",
+		"question": "What happens to a worn-out storage battery?",
+		"options": [
+			"It becomes hazardous waste again",
+			"It turns into compost",
+			"Nothing"
+		],
+		"answer": 0,
+		"explanation": "Treat storage as part of the whole system."
+	}
+]

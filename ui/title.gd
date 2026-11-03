@@ -3,7 +3,7 @@ extends Control
 
 const SHEET := preload("res://assets/sprites/player.png")
 const TAGLINE := "A survival adventure in a world buried by its own waste."
-const CONTROLS := "WASD / arrows: move    E / Space: interact    M: mute"
+const CONTROLS := "WASD move   E act   Q quests   M mute"
 
 var _start: Button
 
@@ -21,17 +21,7 @@ func _on_start_pressed() -> void:
 
 
 func _build() -> void:
-	var background := ColorRect.new()
-	background.color = Color("#0d1c24")
-	background.set_anchors_preset(Control.PRESET_FULL_RECT)
-	add_child(background)
-
-	var horizon := ColorRect.new()
-	horizon.color = Color("#3a2418")
-	horizon.anchor_top = 0.72
-	horizon.anchor_right = 1.0
-	horizon.anchor_bottom = 1.0
-	add_child(horizon)
+	add_child(TitleBackdrop.new())
 
 	var column := VBoxContainer.new()
 	column.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -74,4 +64,6 @@ func _label(text: String, font_size: int, color: Color) -> Label:
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.add_theme_font_size_override("font_size", font_size)
 	label.add_theme_color_override("font_color", color)
+	label.add_theme_color_override("font_outline_color", Color("#120a18"))
+	label.add_theme_constant_override("outline_size", 3)
 	return label

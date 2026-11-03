@@ -16,6 +16,8 @@ Open `game/` in Godot and press F5, or run the web build (see Export).
 | WASD / arrows | Move |
 | E / Space | Interact, continue dialogue |
 | 1 / 2 / 3 / 4 or click | Choose a bin while sorting (4 is compost, shown only when a pile has organic waste) |
+| Q | Journal: main goal and side quests |
+| Esc | Leave a puzzle |
 | M | Mute |
 
 ## The loop
@@ -31,12 +33,19 @@ Open `game/` in Godot and press F5, or run the web build (see Export).
    carefully you sorted. The ending triggers at the last chapter marked `built` in
    `data/chapters.json`, so it moves on as chapters are added.
 
+## Fun layer
+
+- **Field Check quizzes:** after each sorted pile, one multiple-choice question about what you just handled (`data/quizzes.json`). A right answer restores water; a wrong one only teaches.
+- **Side quests:** `data/quests.json`, shown in the journal (Q). Progress comes from counters and flags, so a quest is data; finishing one pays out water or health.
+- **Terminal puzzles:** ordering puzzles (`data/puzzles.json`) guard the archive terminals: the safe route for hazardous waste, and the waste hierarchy.
+- **Hidden finds:** pickups lying around the dump, tracked by the Scavenger quest.
+
 ## Project layout
 
 | Folder | Contents |
 |---|---|
 | `autoload/` | `EventBus` (signals), `ItemDB`, `Content` (lessons, dialogue, repairs, objectives, areas), `Chapters` (campaign order, ending trigger), `GameState` (flags, counters), `Inventory`, `Survival`, `SceneManager`, `AudioManager`, `Polish` (vignette, hurt feedback), `Juicee` (game-feel addon) |
-| `systems/` | Pure logic, no scene dependencies: `SortingRules`, `SortingSession`, `RepairRules`, `ObjectivesTracker`, `EndingRules`, `DataLoader` |
+| `systems/` | Pure logic, no scene dependencies: `SortingRules`, `SortingSession`, `RepairRules`, `ObjectivesTracker`, `EndingRules`, `QuizRules`, `OrderPuzzle`, `QuestRules`, `DataLoader` |
 | `world/` | `GameArea` (builds a level from data), `MapBuilder`, and the interactable objects |
 | `interaction/` | `Interactable` and `Interactor` |
 | `player/` | Player, sprite animation |

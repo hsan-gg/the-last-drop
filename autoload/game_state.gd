@@ -22,6 +22,7 @@ func has_flag(key: String) -> bool:
 
 func add_to_counter(key: String, amount: int = 1) -> void:
 	_counters = _counters.merged({key: get_counter(key) + amount}, true)
+	EventBus.counter_changed.emit(key, _counters[key])
 
 
 func get_counter(key: String) -> int:

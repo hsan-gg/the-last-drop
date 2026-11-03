@@ -8,6 +8,8 @@ const ENDING_SCENE := "res://ui/ending.tscn"
 const OFF := preload("res://assets/sprites/terminal_off.png")
 const ON := preload("res://assets/sprites/terminal_on.png")
 
+## An ordering puzzle to solve before the records unlock; empty for none.
+@export var puzzle_id: String = ""
 @export var chapter_id: String = "factory"
 @export var required_flag: String = "power_restored"
 @export var read_flag: String = "archive_read"
@@ -24,6 +26,7 @@ func _ready() -> void:
 	interacted.connect(_on_interacted)
 	EventBus.flag_changed.connect(_refresh.unbind(2))
 	EventBus.dialogue_finished.connect(_on_dialogue_finished)
+	EventBus.puzzle_finished.connect(_on_puzzle_finished)
 	_refresh()
 
 
@@ -31,9 +34,21 @@ func _on_interacted(_by: Node) -> void:
 	if not GameState.has_flag(required_flag):
 		EventBus.dialogue_requested.emit("terminal_locked")
 		return
+	if not puzzle_id.is_empty() and not GameState.has_flag(PuzzlePanel.SOLVED_FLAG_FORMAT % puzzle_id):
+		EventBus.puzzle_requested.emit(puzzle_id)
+		return
+	_read_records()
+
+
+func _read_records() -> void:
 	GameState.set_flag(read_flag)
 	EventBus.sfx_requested.emit("reveal")
 	EventBus.dialogue_requested.emit(_dialogue_to_play())
+
+
+func _on_puzzle_finished(finished_id: String, solved: bool) -> void:
+	if solved and finished_id == puzzle_id:
+		_read_records()
 
 
 func _dialogue_to_play() -> String:

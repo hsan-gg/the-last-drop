@@ -7,12 +7,18 @@ const DIALOGUE_PATH := "res://data/dialogue.json"
 const REPAIRS_PATH := "res://data/repairs.json"
 const OBJECTIVES_PATH := "res://data/objectives.json"
 const AREAS_PATH := "res://data/areas.json"
+const QUIZZES_PATH := "res://data/quizzes.json"
+const PUZZLES_PATH := "res://data/puzzles.json"
+const QUESTS_PATH := "res://data/quests.json"
 
 var _areas: Dictionary = {}
 var _lessons: Dictionary = {}
 var _dialogue: Dictionary = {}
 var _repairs: Dictionary = {}
 var _objectives: Array = []
+var _quizzes: Array = []
+var _puzzles: Dictionary = {}
+var _quests: Array = []
 
 
 func _ready() -> void:
@@ -22,6 +28,11 @@ func _ready() -> void:
 	_repairs = DataLoader.index_by_id(REPAIRS_PATH)
 	var objectives: Variant = DataLoader.load_json(OBJECTIVES_PATH)
 	_objectives = objectives if typeof(objectives) == TYPE_ARRAY else []
+	var quizzes: Variant = DataLoader.load_json(QUIZZES_PATH)
+	_quizzes = quizzes if typeof(quizzes) == TYPE_ARRAY else []
+	var quests: Variant = DataLoader.load_json(QUESTS_PATH)
+	_quests = quests if typeof(quests) == TYPE_ARRAY else []
+	_puzzles = DataLoader.index_by_id(PUZZLES_PATH)
 
 
 func area(area_id: String) -> Dictionary:
@@ -45,3 +56,15 @@ func repair(repair_id: String) -> Dictionary:
 
 func objectives() -> Array:
 	return _objectives.duplicate(true)
+
+
+func quizzes() -> Array:
+	return _quizzes.duplicate(true)
+
+
+func puzzle(puzzle_id: String) -> Dictionary:
+	return _puzzles.get(puzzle_id, {}).duplicate(true)
+
+
+func quests() -> Array:
+	return _quests.duplicate(true)

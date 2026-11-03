@@ -1,0 +1,124 @@
+[
+	{
+		"id": "sharp_eye",
+		"area": "outpost",
+		"title": "Sharp Eye",
+		"text": "Sort 6 items into the right bin.",
+		"goal": {
+			"type": "counter",
+			"key": "sort_correct",
+			"target": 6
+		},
+		"reward": {
+			"water": 15,
+			"health": 0
+		}
+	},
+	{
+		"id": "clean_hands",
+		"area": "outpost",
+		"title": "Clean Hands",
+		"text": "Finish a whole pile without a single mistake.",
+		"goal": {
+			"type": "counter",
+			"key": "perfect_piles",
+			"target": 1
+		},
+		"reward": {
+			"water": 0,
+			"health": 20
+		}
+	},
+	{
+		"id": "quick_learner",
+		"area": "outpost",
+		"title": "Quick Learner",
+		"text": "Answer 2 Field Checks correctly.",
+		"goal": {
+			"type": "counter",
+			"key": "quiz_correct",
+			"target": 2
+		},
+		"reward": {
+			"water": 15,
+			"health": 0
+		}
+	},
+	{
+		"id": "hazard_handler",
+		"area": "factory",
+		"title": "Hazard Handler",
+		"text": "Put 4 hazardous items in the hazardous bin.",
+		"goal": {
+			"type": "counter",
+			"key": "hazard_correct",
+			"target": 4
+		},
+		"reward": {
+			"water": 0,
+			"health": 20
+		}
+	},
+	{
+		"id": "safe_route",
+		"area": "factory",
+		"title": "Safe Route",
+		"text": "Solve the archive terminal's hazard route.",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"puzzle_hazard_route_solved"
+			]
+		},
+		"reward": {
+			"water": 10,
+			"health": 10
+		}
+	},
+	{
+		"id": "compost_keeper",
+		"area": "dump",
+		"title": "Compost Keeper",
+		"text": "Put 2 food scraps in the compost bin.",
+		"goal": {
+			"type": "counter",
+			"key": "compost_correct",
+			"target": 2
+		},
+		"reward": {
+			"water": 10,
+			"health": 0
+		}
+	},
+	{
+		"id": "scavenger",
+		"area": "dump",
+		"title": "Scavenger",
+		"text": "Find 3 hidden items lying around the dump.",
+		"goal": {
+			"type": "counter",
+			"key": "pickups",
+			"target": 3
+		},
+		"reward": {
+			"water": 15,
+			"health": 10
+		}
+	},
+	{
+		"id": "waste_wizard",
+		"area": "dump",
+		"title": "Waste Wizard",
+		"text": "Unlock the municipal records with the waste hierarchy.",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"puzzle_waste_hierarchy_solved"
+			]
+		},
+		"reward": {
+			"water": 10,
+			"health": 10
+		}
+	}
+]
