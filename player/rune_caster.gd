@@ -83,6 +83,9 @@ func _breathe_fire(delta: float) -> bool:
 		for enemy in _enemies_in_cone(FLAME_RANGE, FLAME_HALF_ANGLE):
 			enemy.burn_damage(FLAME_DAMAGE)
 			enemy.ignite(BURN_SECONDS)
+		for hazard: GroundHazard in get_tree().get_nodes_in_group("ground_hazards"):
+			if hazard.kind == "spores" and CombatRules.in_arc(global_position, _player.facing, hazard.global_position, FLAME_RANGE + 10.0, FLAME_HALF_ANGLE + 10.0):
+				hazard.clear()
 		if int(Time.get_ticks_msec() / 150) % 2 == 0:
 			EventBus.sfx_requested.emit("flame")
 	return true
@@ -177,6 +180,9 @@ func cast_tide() -> bool:
 		if enemy != null and not enemy.is_dead() and enemy.global_position.distance_to(global_position) <= TIDE_RADIUS:
 			enemy.take_hit(4.0, global_position, TIDE_KNOCKBACK)
 			enemy.extinguish()
+	for hazard: GroundHazard in get_tree().get_nodes_in_group("ground_hazards"):
+		if hazard.global_position.distance_to(global_position) <= TIDE_RADIUS:
+			hazard.clear()
 	for wave in 3:
 		_rings.append({"radius": 4.0 + wave * 6.0, "age": -wave * 0.08, "color": Color("#7fe0ff"), "grow": TIDE_RADIUS * 1.6, "life": 0.5, "at": Vector2.ZERO})
 	return true

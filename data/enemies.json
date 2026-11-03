@@ -90,5 +90,145 @@
 				"chance": 0.4
 			}
 		]
+	},
+	{
+		"id": "husk",
+		"name": "Blight Husk",
+		"sprite": "walker",
+		"tint": "#c8b070",
+		"hp": 60,
+		"speed": 26,
+		"damage": 16,
+		"reach": 18,
+		"windup": 0.6,
+		"cooldown": 1.1,
+		"aggro": 100,
+		"leash": 220,
+		"xp": 16,
+		"poise": false,
+		"special": "spores",
+		"drops": [
+			{
+				"item": "food_scraps",
+				"chance": 0.3
+			},
+			{
+				"item": "bandage",
+				"chance": 0.15
+			}
+		]
+	},
+	{
+		"id": "wraith",
+		"name": "Smog Wraith",
+		"sprite": "runner",
+		"tint": "#7a8a90",
+		"hp": 40,
+		"speed": 74,
+		"damage": 14,
+		"reach": 15,
+		"windup": 0.3,
+		"cooldown": 0.8,
+		"aggro": 140,
+		"leash": 260,
+		"xp": 18,
+		"poise": false,
+		"special": "fade",
+		"drops": [
+			{
+				"item": "copper_wire",
+				"chance": 0.25
+			},
+			{
+				"item": "energy_bar",
+				"chance": 0.15
+			}
+		]
+	},
+	{
+		"id": "rust_brute",
+		"name": "Rust Brute",
+		"sprite": "brute",
+		"tint": "#d08050",
+		"hp": 180,
+		"speed": 24,
+		"damage": 34,
+		"reach": 24,
+		"windup": 0.9,
+		"cooldown": 1.5,
+		"aggro": 96,
+		"leash": 200,
+		"xp": 50,
+		"poise": true,
+		"armour": 8.0,
+		"burn_factor": 1.5,
+		"drops": [
+			{
+				"item": "scrap_metal",
+				"chance": 0.7
+			},
+			{
+				"gear": "riot_jacket",
+				"chance": 0.15
+			},
+			{
+				"item": "bandage",
+				"chance": 0.5
+			}
+		]
+	},
+	{
+		"id": "golem",
+		"name": "Slag Golem",
+		"sprite": "brute",
+		"tint": "#ff9a5a",
+		"scale": 1.8,
+		"hp": 900,
+		"speed": 22,
+		"damage": 40,
+		"reach": 34,
+		"windup": 1.1,
+		"cooldown": 1.6,
+		"aggro": 170,
+		"leash": 600,
+		"xp": 300,
+		"poise": true,
+		"armour": 6.0,
+		"special": "boss",
+		"slam_radius": 48.0,
+		"knockback_factor": 0.25,
+		"drops": [
+			{
+				"gear": "solar_saber",
+				"chance": 1.0
+			},
+			{
+				"item": "purified_water",
+				"chance": 1.0
+			}
+		]
+	},
+	{
+		"id": "sentinel",
+		"name": "Moss Sentinel",
+		"sprite": "walker",
+		"tint": "#7ac08a",
+		"hp": 90,
+		"speed": 30,
+		"damage": 18,
+		"reach": 18,
+		"windup": 0.5,
+		"cooldown": 1.0,
+		"aggro": 110,
+		"leash": 200,
+		"xp": 24,
+		"poise": false,
+		"special": "sentinel",
+		"drops": [
+			{
+				"item": "bandage",
+				"chance": 0.3
+			}
+		]
 	}
 ]

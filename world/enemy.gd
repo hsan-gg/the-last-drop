@@ -45,7 +45,8 @@ var _fire: CPUParticles2D
 
 
 func _ready() -> void:
-	if not Combat.enemies_enabled or (not spawn_key.is_empty() and GameState.has_flag(_slain_flag())):
+	if not Combat.enemies_enabled or (not spawn_key.is_empty() and GameState.has_flag(_slain_flag())) \
+			or (enemy_id == "sentinel" and GameState.has_flag("sanctuary_powered")):
 		queue_free()
 		return
 	_def = Content.enemy(enemy_id)
@@ -113,8 +114,9 @@ func _slain_flag() -> String:
 func take_hit(damage: float, from_position: Vector2, knockback: float) -> void:
 	if is_dead():
 		return
+	damage = damage_taken(damage)
 	_hp -= damage
-	_knockback = (global_position - from_position).normalized() * knockback
+	_knockback = (global_position - from_position).normalized() * knockback * float(_def.get("knockback_factor", 1.0))
 	FloatingText.spawn(get_parent(), str(roundi(damage)), global_position, Color("#ffe27a"))
 	_flash_white()
 	_update_bar()
@@ -124,6 +126,65 @@ func take_hit(damage: float, from_position: Vector2, knockback: float) -> void:
 	var poise: bool = _def.get("poise", false)
 	if not poise or damage >= POISE_BREAK_DAMAGE:
 		_enter(State.STAGGER, HIT_STAGGER_SECONDS)
+
+
+# ---------------------------------------------------------------- specials
+
+var _special_time := 0.0
+var _phase_two := false
+
+
+## Per-type behaviour: wraiths fade in and out of the smog, sentinels stand
+## down once the Sanctuary has power, the boss reports its health.
+func _tick_special(delta: float) -> void:
+	_special_time += delta
+	match _def.get("special", ""):
+		"fade":
+			_sprite.self_modulate.a = 0.25 + 0.75 * (0.5 + 0.5 * sin(_special_time * 1.6))
+		"sentinel":
+			if GameState.has_flag("sanctuary_powered"):
+				_state = State.IDLE
+				_sprite.self_modulate = Color("#9affd0")
+		"boss":
+			EventBus.boss_changed.emit(_def.get("name", "Boss"), _hp / float(_def["hp"]))
+			if not _phase_two and _hp < float(_def["hp"]) * 0.5:
+				_phase_two = true
+				_def["speed"] = float(_def["speed"]) * 1.35
+				_def["windup"] = float(_def["windup"]) * 0.75
+				FloatingText.spawn(get_parent(), "ENRAGED", global_position + Vector2(0, -40), Color("#ff6a3a"))
+
+
+## How much of a blow lands: a wraith deep in the smog is hard to hit,
+## armour soaks some of it until fire melts it.
+func damage_taken(amount: float) -> float:
+	var dealt := amount
+	if _def.get("special", "") == "fade" and _sprite.self_modulate.a < 0.5:
+		dealt *= 0.3
+	var armour := float(_def.get("armour", 0.0)) * (0.3 if is_burning() else 1.0)
+	return maxf(dealt - armour, amount * 0.2)
+
+
+## The Slag Golem's slam: everything close is hit, and burning slag is left behind.
+func _slam() -> void:
+	EventBus.sfx_requested.emit("hit")
+	Juicee.shake_camera(self, 3.0, 0.25)
+	var radius := float(_def.get("slam_radius", 44.0))
+	if _player != null and _distance() <= radius and _player.has_method("receive_hit"):
+		_player.receive_hit(float(_def["damage"]) * 0.6, global_position)
+	for index in 3:
+		var hazard := GroundHazard.new()
+		hazard.kind = "slag"
+		hazard.position = position + Vector2.from_angle(randf() * TAU) * randf_range(10.0, radius)
+		get_parent().add_child(hazard)
+
+
+func _drop_spores() -> void:
+	if _def.get("special", "") != "spores" or is_burning():
+		return  # fire burns the spores away before they can spread
+	var cloud := GroundHazard.new()
+	cloud.kind = "spores"
+	cloud.position = position
+	get_parent().add_child.call_deferred(cloud)
 
 
 ## Fire: sets the zombie burning for `seconds` (refreshing a shorter burn).
@@ -179,8 +240,12 @@ func _die() -> void:
 	collision_layer = 0
 	if _alert != null:
 		_alert.visible = false
+	_drop_spores()
 	if _fire != null:
 		_fire.emitting = false
+	if _def.get("special", "") == "boss":
+		EventBus.boss_changed.emit("", 0.0)
+		GameState.set_flag("boss_%s_defeated" % enemy_id)
 	EventBus.sfx_requested.emit("enemy_die")
 	if not spawn_key.is_empty():
 		GameState.set_flag(_slain_flag())
@@ -220,6 +285,7 @@ func _physics_process(delta: float) -> void:
 	_tick_burn(delta)
 	if _state == State.DEAD:
 		return
+	_tick_special(delta)
 	_timer -= delta
 	match _state:
 		State.IDLE:
@@ -272,6 +338,8 @@ func _strike() -> void:
 	_set_alert(false)
 	_sprite.modulate = Color.WHITE
 	var outcome := "whiff"
+	if _def.get("special", "") == "boss":
+		_slam()
 	if _player != null and _distance() <= float(_def["reach"]) + STRIKE_FORGIVENESS and _player.has_method("receive_hit"):
 		outcome = _player.receive_hit(float(_def["damage"]), global_position).get("outcome", "hit")
 	if outcome == CombatRules.OUTCOME_PARRIED:
@@ -330,11 +398,16 @@ func _face_player() -> void:
 # ---------------------------------------------------------------- body
 
 func _build_body() -> void:
-	var data := _data_for(enemy_id)
+	var look: String = _def.get("sprite", enemy_id)
+	var data := _data_for(look)
 	var canvas: Array = data["canvas"]
+	var body_scale := float(_def.get("scale", 1.0))
 	_sprite = AnimatedSprite2D.new()
-	_sprite.sprite_frames = _frames_for(enemy_id)
-	_sprite.position = Vector2(0, -float(canvas[1]) / 2.0)
+	_sprite.sprite_frames = _frames_for(look)
+	_sprite.scale = Vector2(body_scale, body_scale)
+	_sprite.position = Vector2(0, -float(canvas[1]) * body_scale / 2.0)
+	if _def.has("tint"):
+		_sprite.self_modulate = Color(_def["tint"])
 	add_child(_sprite)
 	_play("idle")
 

@@ -86,3 +86,6 @@ signal npc_talked(npc_id: String, talk_id: String)
 
 signal runes_changed
 signal energy_changed(value: float, maximum: float)
+
+## A boss's health for the HUD bar; an empty name hides the bar.
+signal boss_changed(boss_name: String, ratio: float)
