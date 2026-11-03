@@ -134,7 +134,13 @@ func _on_dialogue_finished(dialogue_id: String) -> void:
 
 func _show_final() -> void:
 	_reset_content()
-	var quote := _label(FINAL_QUOTE, 16, UiTheme.COLOR_ORANGE)
+	# The drop moves up and shrinks so it sits above the quote instead of behind it.
+	_drop.custom_minimum_size = Vector2(30, 36)
+	_drop.offset_left = -15.0
+	_drop.offset_right = 15.0
+	_drop.offset_top = 8.0
+	_drop.offset_bottom = 44.0
+	var quote := _label(FINAL_QUOTE, 14, UiTheme.COLOR_ORANGE)
 	quote.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	quote.custom_minimum_size = Vector2(420, 0)
 	quote.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
