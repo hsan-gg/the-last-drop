@@ -666,6 +666,9 @@ def main():
         import restyle_art
 
         restyle_art.build()
+        import assets_redraw
+
+        assets_redraw.build()
     print("assets written to", ROOT / "assets")
 
 
