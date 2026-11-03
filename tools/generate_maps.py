@@ -8,19 +8,21 @@ Tile characters (see world/map_builder.gd):
   . ground   , dead grass   # wall   ~ water    : concrete   = path
   r rubble   C crate        F fence  P pipe     M metal floor D dark floor
   T toxic    t dead tree    B barrel S rack
+  b plastic bags (walkable)   H garbage heap
 Marker characters (entities, placed by data/areas.json; the floor shows beneath):
   @ spawn  $ scrap pile  W water  U treatment unit  V recording
-  ^ gate   G generator   K terminal
+  ^ gate   G generator   K terminal  1 2 3 numbered scrap piles
 """
 import random
+import sys
 from collections import deque
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 MAPS = ROOT / "data" / "maps"
 
-BLOCKING = set("#~CFPtBS")
-MARKERS = set("@$WUV^GK")
+BLOCKING = set("#~CFPtBSH")
+MARKERS = set("@$WUV^GK123")
 # Markers that block movement; the spawn marker does not.
 BLOCKING_MARKERS = MARKERS - {"@"}
 
@@ -175,6 +177,7 @@ def build_factory():
     grid.put(10, 13, "$")
     grid.put(27, 12, "G")
     grid.put(18, 3, "K")
+    grid.put(33, 2, "^")
 
     # Scuffed floor so the hall does not look tiled.
     for y in range(8, 23):
@@ -184,9 +187,61 @@ def build_factory():
     return grid
 
 
+def build_dump():
+    """The Great Dump: three heap-ringed yards joined by lanes, the shelter site
+    in the middle, a recording tucked in the north-west and the records terminal
+    in the north-east. Spawn is south-west, where the factory gate lets out."""
+    grid = Grid(46, 30, ".")
+    rng = random.Random(21)
+    grid.box(0, 0, 45, 29, "H")
+    grid.box(1, 1, 44, 28, "H")
+
+    # Heap ridges that divide the dump into yards, each with a gap to walk through.
+    grid.fill(2, 17, 16, 18, "H")
+    grid.fill(7, 17, 9, 18, ".")
+    grid.fill(17, 11, 18, 27, "H")
+    grid.fill(17, 21, 18, 22, ".")
+    grid.fill(17, 11, 31, 12, "H")
+    grid.fill(24, 11, 26, 12, ".")
+    grid.fill(31, 2, 32, 12, "H")
+    grid.fill(31, 7, 32, 8, ".")
+    grid.fill(2, 8, 12, 9, "H")
+    grid.fill(5, 8, 7, 9, ".")
+
+    # Walked lanes so the way through reads at a glance.
+    grid.fill(8, 19, 8, 27, "=")
+    grid.fill(8, 20, 21, 21, "=")
+    grid.fill(21, 14, 22, 21, "=")
+    grid.fill(22, 13, 25, 14, "=")
+    grid.fill(25, 5, 26, 13, "=")
+    grid.fill(25, 5, 36, 6, "=")
+    grid.fill(6, 10, 7, 16, "=")
+
+    grid.put(4, 26, "@")
+    grid.put(11, 23, "1")
+    grid.put(22, 17, "2")
+    grid.put(36, 9, "3")
+    grid.put(24, 8, "U")
+    grid.put(4, 4, "V")
+    grid.put(40, 4, "K")
+
+    reserved = set()
+    for marker in "@123UVK":
+        for x, y in grid.find(marker):
+            reserved |= rect_cells(x, y, x, y, 2)
+    for x0, y0, x1, y1 in ((8, 19, 8, 27), (8, 20, 21, 21), (21, 14, 22, 21), (22, 13, 25, 14), (25, 5, 26, 13), (25, 5, 36, 6), (6, 10, 7, 16)):
+        reserved |= rect_cells(x0, y0, x1, y1, 1)
+    scatter(grid, rng, reserved, [("b", 0.14), ("r", 0.07), ("H", 0.035), (",", 0.02)])
+    return grid
+
+
 def main():
     MAPS.mkdir(parents=True, exist_ok=True)
-    for name, builder in (("outpost", build_outpost), ("factory", build_factory)):
+    names = set(sys.argv[1:])
+    builders = (("outpost", build_outpost), ("factory", build_factory), ("dump", build_dump))
+    for name, builder in builders:
+        if names and name not in names:
+            continue
         grid = builder()
         check_reachable(name, grid)
         (MAPS / f"{name}.txt").write_text(grid.text())

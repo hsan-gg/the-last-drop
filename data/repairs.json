@@ -19,5 +19,16 @@
 		},
 		"sets_flag": "power_restored",
 		"dialogue": "generator_repaired"
+	},
+	{
+		"id": "shelter_roof",
+		"name": "Shelter Roof",
+		"requires": {
+			"scrap_metal": 1,
+			"cardboard": 1,
+			"textile_scrap": 1
+		},
+		"sets_flag": "shelter_built",
+		"dialogue": "shelter_repaired"
 	}
 ]

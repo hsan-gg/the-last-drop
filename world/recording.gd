@@ -1,6 +1,10 @@
 class_name Recording
 extends Interactable
-## The old recording: the first fragment of the world's history.
+## An old recording: a fragment of the world's history. Each chapter places one,
+## configured from data/areas.json.
+
+@export var dialogue_id: String = "recording_1"
+@export var found_flag: String = "recording_found"
 
 
 func _ready() -> void:
@@ -11,11 +15,11 @@ func _ready() -> void:
 
 
 func _on_interacted(_by: Node) -> void:
-	GameState.set_flag("recording_found")
+	GameState.set_flag(found_flag)
 	EventBus.sfx_requested.emit("reveal")
 	EventBus.celebrate.emit(global_position)
-	EventBus.dialogue_requested.emit("recording_1")
+	EventBus.dialogue_requested.emit(dialogue_id)
 
 
 func _refresh() -> void:
-	set_prompt("Play the recording again" if GameState.has_flag("recording_found") else "Pick up the old recorder")
+	set_prompt("Play the recording again" if GameState.has_flag(found_flag) else "Pick up the old recorder")

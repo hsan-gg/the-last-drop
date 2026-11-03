@@ -15,7 +15,7 @@ func before_each() -> void:
 func test_chapters_load_in_order() -> void:
 	assert_gt(_chapters.size(), 0)
 	for index in _chapters.size():
-		assert_eq(_chapters[index]["number"], index, "chapter %s out of order" % _chapters[index]["id"])
+		assert_eq(int(_chapters[index]["number"]), index, "chapter %s out of order" % _chapters[index]["id"])
 
 
 func test_every_chapter_dialogue_resolves() -> void:
@@ -48,3 +48,11 @@ func test_dialogue_lines_stay_short() -> void:
 		for dialogue_id: String in [chapter["arrival"], chapter["recording"]]:
 			for line in Content.dialogue(dialogue_id):
 				assert_lt(line.length(), 200, "%s line too long" % dialogue_id)
+
+
+func test_the_ending_triggers_at_the_last_built_chapter() -> void:
+	assert_true(Chapters.is_built("dump"))
+	assert_true(Chapters.is_final_built("dump"))
+	assert_false(Chapters.is_final_built("factory"), "factory leads on to the dump")
+	assert_false(Chapters.is_final_built("river"), "unbuilt chapters never end the game")
+	assert_false(Chapters.is_final_built("nope"))

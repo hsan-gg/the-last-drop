@@ -19,6 +19,7 @@ func test_a_completed_area_has_no_current_objective() -> void:
 		GameState.set_flag(objective["done_flag"])
 	assert_eq(ObjectivesTracker.current("outpost"), {})
 	assert_eq(ObjectivesTracker.current("factory"), {})
+	assert_eq(ObjectivesTracker.current("dump"), {})
 
 
 func test_objectives_are_scoped_to_their_area() -> void:

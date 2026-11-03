@@ -1,12 +1,20 @@
 class_name ArchiveTerminal
 extends Interactable
-## The factory terminal. With power restored it links to the Last Sanctuary's
-## archive, delivers the truth, then hands over to the ending.
+## A records terminal. Once its repair is done it plays its dialogue. In the last
+## built chapter that dialogue is followed by the ending; earlier chapters just
+## record the archive as read and let the player continue.
 
 const ENDING_SCENE := "res://ui/ending.tscn"
-const TRUTH_DIALOGUE := "archive_truth"
 const OFF := preload("res://assets/sprites/terminal_off.png")
 const ON := preload("res://assets/sprites/terminal_on.png")
+
+@export var chapter_id: String = "factory"
+@export var required_flag: String = "power_restored"
+@export var read_flag: String = "archive_read"
+## Played when this is the last built chapter.
+@export var final_dialogue: String = "archive_truth"
+## Played when the story continues to another chapter.
+@export var continue_dialogue: String = "archive_partial"
 
 @onready var _sprite: Sprite2D = $Sprite
 
@@ -20,20 +28,24 @@ func _ready() -> void:
 
 
 func _on_interacted(_by: Node) -> void:
-	if not GameState.has_flag("power_restored"):
+	if not GameState.has_flag(required_flag):
 		EventBus.dialogue_requested.emit("terminal_locked")
 		return
-	GameState.set_flag("archive_read")
+	GameState.set_flag(read_flag)
 	EventBus.sfx_requested.emit("reveal")
-	EventBus.dialogue_requested.emit(TRUTH_DIALOGUE)
+	EventBus.dialogue_requested.emit(_dialogue_to_play())
+
+
+func _dialogue_to_play() -> String:
+	return final_dialogue if Chapters.is_final_built(chapter_id) else continue_dialogue
 
 
 func _on_dialogue_finished(dialogue_id: String) -> void:
-	if dialogue_id == TRUTH_DIALOGUE:
+	if dialogue_id == final_dialogue and Chapters.is_final_built(chapter_id):
 		SceneManager.change_scene(ENDING_SCENE)
 
 
 func _refresh() -> void:
-	var powered := GameState.has_flag("power_restored")
+	var powered := GameState.has_flag(required_flag)
 	_sprite.texture = ON if powered else OFF
 	set_prompt("Read the archive" if powered else "Check the terminal")

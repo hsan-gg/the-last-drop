@@ -656,6 +656,9 @@ def main():
     build_bins()
     build_props()
     build_ui()
+    import assets_chapter2
+
+    assets_chapter2.build()
     print("assets written to", ROOT / "assets")
 
 

@@ -41,3 +41,19 @@ func test_evaluate_wrong_choice_reports_the_right_bin() -> void:
 func test_evaluate_unknown_item_is_never_correct() -> void:
 	assert_false(SortingRules.evaluate("nope", SortingRules.BIN_GENERAL)["correct"])
 	assert_false(SortingRules.evaluate("nope", "")["correct"])
+
+
+func test_organic_waste_goes_in_the_compost_bin() -> void:
+	assert_eq(SortingRules.correct_bin("food_scraps"), SortingRules.BIN_COMPOST)
+
+
+func test_compost_bin_is_offered_only_when_a_pile_needs_it() -> void:
+	assert_eq(SortingRules.bins_for(["battery", "scrap_metal"] as Array[String]), SortingRules.BINS)
+	var with_food := SortingRules.bins_for(["battery", "food_scraps"] as Array[String])
+	assert_true(with_food.has(SortingRules.BIN_COMPOST))
+	assert_eq(with_food.size(), SortingRules.BINS.size() + 1)
+
+
+func test_greasy_cardboard_is_general_waste_but_clean_cardboard_is_recovered() -> void:
+	assert_eq(SortingRules.correct_bin("greasy_pizza_box"), SortingRules.BIN_GENERAL)
+	assert_eq(SortingRules.correct_bin("cardboard"), SortingRules.BIN_RECOVERY)

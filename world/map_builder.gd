@@ -9,10 +9,11 @@ const ATLAS := preload("res://assets/tilesets/outpost_tiles.png")
 const GROUND_CHAR := "."
 const SPAWN_MARKER := "@"
 const GROUND_TILES: Array[int] = [0, 1, 2]
-const SOLID_TILES: Array[int] = [4, 5, 9, 10, 11, 15, 16, 17]
+const SOLID_TILES: Array[int] = [4, 5, 9, 10, 11, 15, 16, 17, 19]
 const TILE_FOR_CHAR := {
 	",": 6, "#": 4, "~": 5, ":": 7, "=": 8, "r": 3, "C": 9, "F": 10,
 	"P": 11, "M": 12, "D": 13, "T": 14, "t": 15, "B": 16, "S": 17,
+	"b": 18, "H": 19,
 }
 
 

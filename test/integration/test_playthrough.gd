@@ -5,6 +5,7 @@ extends GutTest
 
 const OUTPOST := preload("res://world/outpost.tscn")
 const FACTORY := preload("res://world/factory.tscn")
+const DUMP := preload("res://world/dump.tscn")
 const OUTPOST_ITEMS: Array[String] = ["battery", "plastic_bottle", "chemical_can", "scrap_metal", "glass_shard", "pipe_section"]
 
 var _area: Node
@@ -206,3 +207,44 @@ func test_a_collapse_returns_the_player_to_their_start() -> void:
 	Survival.damage(1000.0)
 	assert_eq(player.global_position, start)
 	assert_eq(Survival.health(), Survival.COLLAPSE_RECOVERY_HEALTH)
+
+
+func test_dump_loop_from_the_gate_to_the_records() -> void:
+	await _enter(DUMP)
+	var piles: Array = _area.find_children("*", "ScrapPile", true, false)
+	var shelter: RepairStation = _find("RepairStation")
+	var recording: Recording = _find("Recording")
+	var terminal: ArchiveTerminal = _find("ArchiveTerminal")
+	assert_eq(piles.size(), 3)
+
+	terminal.interact(null)
+	assert_false(GameState.has_flag("dump_records_read"), "the terminal needs the shelter's solar cell")
+	shelter.interact(null)
+	assert_false(GameState.has_flag("shelter_built"), "no materials yet")
+
+	for pile: ScrapPile in piles:
+		await _sort_pile_correctly(pile)
+	assert_eq(GameState.get_counter("sort_mistakes"), 0)
+	assert_eq(Inventory.snapshot(), {"cardboard": 2, "tin_can": 2, "glass_jar": 2, "textile_scrap": 2, "scrap_metal": 1})
+	assert_eq(ObjectivesTracker.current("dump")["id"], "repair_shelter")
+
+	shelter.interact(null)
+	assert_true(GameState.has_flag("shelter_built"))
+	assert_eq(Inventory.snapshot(), {"cardboard": 1, "tin_can": 2, "glass_jar": 2, "textile_scrap": 1})
+
+	recording.interact(null)
+	assert_true(GameState.has_flag("recording_2_found"))
+	assert_false(GameState.has_flag("recording_found"), "chapter 2 must not reuse the outpost flag")
+
+	terminal.interact(null)
+	assert_true(GameState.has_flag("dump_records_read"))
+	assert_eq(ObjectivesTracker.current("dump"), {})
+
+
+func test_dump_gate_in_the_factory_opens_only_after_the_archive() -> void:
+	await _enter(FACTORY)
+	var gate: AreaExit = _find("AreaExit")
+	assert_false(gate.is_open())
+	GameState.set_flag("archive_read")
+	assert_true(gate.is_open())
+	assert_eq(gate.target_scene, "res://world/dump.tscn")

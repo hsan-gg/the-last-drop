@@ -22,3 +22,6 @@ mono_crash.*.json
 # E2E
 test/e2e/node_modules/
 test/e2e/out/
+
+# Python
+__pycache__/

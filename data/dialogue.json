@@ -262,5 +262,30 @@
 			"You open the channels and send everything out.",
 			"Some will answer. Some may misuse it. Nothing is certain, but the door is open."
 		]
+	},
+	{
+		"id": "archive_partial",
+		"lines": [
+			"ARCHIVE LINK UNSTABLE. Most records are corrupted.",
+			"One fragment survives: a municipal waste report. Sorting plants closed. Collection stopped.",
+			"A line of coordinates points to the Great Dump, beyond the north gate."
+		]
+	},
+	{
+		"id": "shelter_repaired",
+		"lines": [
+			"The roof panel locks in. Rain will stay out and warmth will stay in.",
+			"Cardboard for insulation, cloth for the seals, metal for the frame. Three kinds of waste, one shelter.",
+			"A small solar cell on the roof hums. Somewhere in the dump, a terminal wakes."
+		]
+	},
+	{
+		"id": "dump_records",
+		"lines": [
+			"A municipal terminal wakes on the shelter's solar cell.",
+			"Waste routes, closure dates, budget notes. Every plant that closed has a signature, and every signature has a reason.",
+			"Nobody here was a villain. Everyone expected someone else to act.",
+			"One last file names a river and a treatment plant that never got its filters. Where the dump drains, the river begins."
+		]
 	}
 ]

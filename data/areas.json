@@ -10,12 +10,28 @@
 				"scene": "scrap_pile",
 				"props": {
 					"pile_id": "outpost",
-					"item_ids": ["battery", "plastic_bottle", "chemical_can", "scrap_metal", "glass_shard", "pipe_section"]
+					"item_ids": [
+						"battery",
+						"plastic_bottle",
+						"chemical_can",
+						"scrap_metal",
+						"glass_shard",
+						"pipe_section"
+					]
 				}
 			},
-			"W": { "scene": "water_source" },
-			"U": { "scene": "repair_station", "props": { "repair_id": "treatment_unit" } },
-			"V": { "scene": "recording" },
+			"W": {
+				"scene": "water_source"
+			},
+			"U": {
+				"scene": "repair_station",
+				"props": {
+					"repair_id": "treatment_unit"
+				}
+			},
+			"V": {
+				"scene": "recording"
+			},
 			"^": {
 				"scene": "area_exit",
 				"props": {
@@ -37,11 +53,112 @@
 				"scene": "scrap_pile",
 				"props": {
 					"pile_id": "factory",
-					"item_ids": ["battery", "copper_wire", "chemical_can", "battery", "scrap_metal"]
+					"item_ids": [
+						"battery",
+						"copper_wire",
+						"chemical_can",
+						"battery",
+						"scrap_metal"
+					]
 				}
 			},
-			"G": { "scene": "repair_station", "props": { "repair_id": "generator" } },
-			"K": { "scene": "archive_terminal" }
+			"G": {
+				"scene": "repair_station",
+				"props": {
+					"repair_id": "generator"
+				}
+			},
+			"K": {
+				"scene": "archive_terminal",
+				"props": {
+					"chapter_id": "factory",
+					"required_flag": "power_restored",
+					"read_flag": "archive_read",
+					"final_dialogue": "archive_truth",
+					"continue_dialogue": "archive_partial"
+				}
+			},
+			"^": {
+				"scene": "area_exit",
+				"props": {
+					"target_scene": "res://world/dump.tscn",
+					"required_flag": "archive_read",
+					"prompt": "Take the gate to the Great Dump"
+				}
+			}
+		}
+	},
+	{
+		"id": "dump",
+		"layout": "res://data/maps/dump.txt",
+		"floor": ".",
+		"tint": "#e6dccb",
+		"arrival_dialogue": "dump_arrival",
+		"entities": {
+			"1": {
+				"scene": "scrap_pile",
+				"props": {
+					"pile_id": "dump_west",
+					"item_ids": [
+						"food_scraps",
+						"cardboard",
+						"tin_can",
+						"greasy_pizza_box",
+						"phone"
+					]
+				}
+			},
+			"2": {
+				"scene": "scrap_pile",
+				"props": {
+					"pile_id": "dump_centre",
+					"item_ids": [
+						"fluorescent_tube",
+						"glass_jar",
+						"textile_scrap",
+						"scrap_metal",
+						"food_scraps",
+						"tin_can"
+					]
+				}
+			},
+			"3": {
+				"scene": "scrap_pile",
+				"props": {
+					"pile_id": "dump_east",
+					"item_ids": [
+						"phone",
+						"cardboard",
+						"textile_scrap",
+						"glass_jar",
+						"greasy_pizza_box",
+						"fluorescent_tube"
+					]
+				}
+			},
+			"U": {
+				"scene": "repair_station",
+				"props": {
+					"repair_id": "shelter_roof"
+				}
+			},
+			"V": {
+				"scene": "recording",
+				"props": {
+					"dialogue_id": "recording_2",
+					"found_flag": "recording_2_found"
+				}
+			},
+			"K": {
+				"scene": "archive_terminal",
+				"props": {
+					"chapter_id": "dump",
+					"required_flag": "shelter_built",
+					"read_flag": "dump_records_read",
+					"final_dialogue": "dump_records",
+					"continue_dialogue": "dump_records"
+				}
+			}
 		}
 	}
 ]

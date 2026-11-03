@@ -45,3 +45,21 @@ func test_objectives_have_the_required_fields() -> void:
 	for objective: Dictionary in Content.objectives():
 		for key in ["id", "area", "text", "done_flag"]:
 			assert_true(objective.has(key), "%s missing %s" % [objective.get("id", "?"), key])
+
+
+func test_every_catalogue_item_has_a_lesson_and_an_icon() -> void:
+	var items: Variant = DataLoader.load_json("res://data/items.json")
+	assert_gt(items.size(), 0)
+	for item: Dictionary in items:
+		var lesson := Content.lesson(item["lesson_id"])
+		assert_false(lesson.is_empty(), "%s has no lesson" % item["id"])
+		assert_not_null(ItemDB.icon(item["id"]), "%s has no icon" % item["id"])
+
+
+func test_every_repair_dialogue_and_requirement_resolves() -> void:
+	var repairs: Variant = DataLoader.load_json("res://data/repairs.json")
+	for repair: Dictionary in repairs:
+		assert_false(Content.dialogue(repair["dialogue"]).is_empty(), repair["id"])
+		for item_id: String in repair["requires"]:
+			assert_true(ItemDB.has_item(item_id), "%s requires unknown %s" % [repair["id"], item_id])
+			assert_false(ItemDB.is_hazardous(item_id), "%s requires a hazardous item" % repair["id"])

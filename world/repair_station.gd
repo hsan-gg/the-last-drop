@@ -7,6 +7,10 @@ const SPRITES := {
 		"broken": preload("res://assets/sprites/treatment_unit_broken.png"),
 		"fixed": preload("res://assets/sprites/treatment_unit_fixed.png"),
 	},
+	"shelter_roof": {
+		"broken": preload("res://assets/sprites/shelter_broken.png"),
+		"fixed": preload("res://assets/sprites/shelter_fixed.png"),
+	},
 	"generator": {
 		"broken": preload("res://assets/sprites/generator_broken.png"),
 		"fixed": preload("res://assets/sprites/generator_fixed.png"),

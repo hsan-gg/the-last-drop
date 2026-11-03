@@ -40,5 +40,53 @@
 		"name": "Glass Shard",
 		"category": "general",
 		"lesson_id": "glass_general"
+	},
+	{
+		"id": "phone",
+		"name": "Old Phone",
+		"category": "hazardous",
+		"lesson_id": "ewaste_phone"
+	},
+	{
+		"id": "fluorescent_tube",
+		"name": "Fluorescent Tube",
+		"category": "hazardous",
+		"lesson_id": "tube_mercury"
+	},
+	{
+		"id": "food_scraps",
+		"name": "Food Scraps",
+		"category": "organic",
+		"lesson_id": "food_compost"
+	},
+	{
+		"id": "cardboard",
+		"name": "Cardboard",
+		"category": "recyclable",
+		"lesson_id": "paper_recycle"
+	},
+	{
+		"id": "glass_jar",
+		"name": "Glass Jar",
+		"category": "recyclable",
+		"lesson_id": "glass_infinite"
+	},
+	{
+		"id": "textile_scrap",
+		"name": "Textile Scrap",
+		"category": "reusable",
+		"lesson_id": "textile_reuse"
+	},
+	{
+		"id": "tin_can",
+		"name": "Tin Can",
+		"category": "recyclable",
+		"lesson_id": "metal_recycle"
+	},
+	{
+		"id": "greasy_pizza_box",
+		"name": "Greasy Pizza Box",
+		"category": "general",
+		"lesson_id": "contamination_ruins"
 	}
 ]

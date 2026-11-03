@@ -12,11 +12,13 @@ const BIN_LABELS := {
 	SortingRules.BIN_GENERAL: "1 General",
 	SortingRules.BIN_HAZARDOUS: "2 Hazardous",
 	SortingRules.BIN_RECOVERY: "3 Recover",
+	SortingRules.BIN_COMPOST: "4 Compost",
 }
 const BIN_KEYS := {
 	KEY_1: SortingRules.BIN_GENERAL,
 	KEY_2: SortingRules.BIN_HAZARDOUS,
 	KEY_3: SortingRules.BIN_RECOVERY,
+	KEY_4: SortingRules.BIN_COMPOST,
 }
 
 ## Tests turn this off so the tree keeps running.
@@ -57,6 +59,7 @@ func open(pile_id: String, item_ids: Array[String]) -> void:
 	_pile_id = pile_id
 	_session = SortingSession.new(item_ids)
 	_total = item_ids.size()
+	_show_bins(SortingRules.bins_for(item_ids))
 	_opened_on_frame = Engine.get_process_frames()
 	visible = true
 	if pauses_game:
@@ -133,6 +136,11 @@ func _set_feedback(next_phase: Phase, bbcode: String) -> void:
 	_hint.text = "[E] %s" % _continue.text
 
 
+func _show_bins(bin_ids: Array[String]) -> void:
+	for bin_id: String in _bin_buttons:
+		_bin_buttons[bin_id].visible = bin_ids.has(bin_id)
+
+
 func _set_bins_enabled(enabled: bool) -> void:
 	for button: Button in _bin_buttons.values():
 		button.disabled = not enabled
@@ -152,7 +160,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not visible or Engine.get_process_frames() == _opened_on_frame:
 		return
 	var key := event as InputEventKey
-	if _phase == Phase.CHOOSING and key != null and key.pressed and not key.echo and BIN_KEYS.has(key.keycode):
+	if _phase == Phase.CHOOSING and key != null and key.pressed and not key.echo and BIN_KEYS.has(key.keycode) and _bin_buttons[BIN_KEYS[key.keycode]].visible:
 		get_viewport().set_input_as_handled()
 		choose_bin(BIN_KEYS[key.keycode])
 	elif _phase != Phase.CHOOSING and (event.is_action_pressed("interact") or event.is_action_pressed("ui_accept")):
@@ -216,7 +224,7 @@ func _build() -> void:
 	var bins := HBoxContainer.new()
 	bins.add_theme_constant_override("separation", 6)
 	box.add_child(bins)
-	for bin_id: String in SortingRules.BINS:
+	for bin_id: String in BIN_LABELS:
 		var button := Button.new()
 		button.text = BIN_LABELS[bin_id]
 		button.icon = load(BIN_PATH_FORMAT % bin_id)
