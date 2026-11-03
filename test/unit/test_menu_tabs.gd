@@ -179,6 +179,17 @@ func test_the_map_scales_to_fit_its_space() -> void:
 	var tab := MapTab.new()
 	add_child_autofree(tab)
 	assert_eq(tab.cell_size(Vector2i(46, 30), Vector2(330, 170)), 5)
+
+
+func test_the_map_has_an_area_page_and_a_world_page() -> void:
+	var tab := MapTab.new()
+	add_child_autofree(tab)
+	assert_eq(tab.page, MapTab.Page.AREA)
+	var right := InputEventAction.new()
+	right.action = "ui_right"
+	right.pressed = true
+	assert_true(tab.tab_input(right))
+	assert_eq(tab.page, MapTab.Page.WORLD)
 	assert_eq(tab.cell_size(Vector2i(0, 0), Vector2(330, 170)), 1)
 
 
