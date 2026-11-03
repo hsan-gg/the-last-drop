@@ -1,0 +1,111 @@
+[
+	{
+		"id": "fists",
+		"name": "Bare Fists",
+		"slot": "weapon",
+		"rarity": "common",
+		"color": "#c8a890",
+		"description": "Better than nothing.",
+		"damage": 3,
+		"hidden": true
+	},
+	{
+		"id": "rusty_sword",
+		"name": "Rusty Sword",
+		"slot": "weapon",
+		"rarity": "common",
+		"color": "#b08060",
+		"description": "Pitted, but it has an edge.",
+		"damage": 8
+	},
+	{
+		"id": "scrap_blade",
+		"name": "Scrap Blade",
+		"slot": "weapon",
+		"rarity": "uncommon",
+		"color": "#9fc8d0",
+		"description": "Ground from a sheet of salvaged steel.",
+		"damage": 12
+	},
+	{
+		"id": "recycled_edge",
+		"name": "Recycled Edge",
+		"slot": "weapon",
+		"rarity": "rare",
+		"color": "#7fd0ff",
+		"description": "Folded from a hundred discarded cans.",
+		"damage": 17
+	},
+	{
+		"id": "solar_saber",
+		"name": "Solar Saber",
+		"slot": "weapon",
+		"rarity": "epic",
+		"color": "#ffd060",
+		"description": "Hums with stored sunlight.",
+		"damage": 24
+	},
+	{
+		"id": "hard_hat",
+		"name": "Hard Hat",
+		"slot": "head",
+		"rarity": "common",
+		"color": "#e0c040",
+		"description": "Site-issue, still sound.",
+		"armor": 2
+	},
+	{
+		"id": "welding_mask",
+		"name": "Welding Mask",
+		"slot": "head",
+		"rarity": "uncommon",
+		"color": "#a0a0b0",
+		"description": "Blocks sparks and the worst bites.",
+		"armor": 4
+	},
+	{
+		"id": "crash_helmet",
+		"name": "Crash Helmet",
+		"slot": "head",
+		"rarity": "rare",
+		"color": "#e06060",
+		"description": "Built to take a hit.",
+		"armor": 6
+	},
+	{
+		"id": "cloth_wrap",
+		"name": "Cloth Wrap",
+		"slot": "body",
+		"rarity": "common",
+		"color": "#c8a870",
+		"description": "Layers of old fabric.",
+		"armor": 2
+	},
+	{
+		"id": "tire_vest",
+		"name": "Tire Vest",
+		"slot": "body",
+		"rarity": "uncommon",
+		"color": "#606070",
+		"description": "Cut from a truck tire.",
+		"armor": 5
+	},
+	{
+		"id": "scrap_plate",
+		"name": "Scrap Plate",
+		"slot": "body",
+		"rarity": "rare",
+		"color": "#9090a8",
+		"description": "Riveted plates from the factory.",
+		"armor": 8
+	},
+	{
+		"id": "riot_jacket",
+		"name": "Riot Jacket",
+		"slot": "body",
+		"rarity": "epic",
+		"color": "#5090d0",
+		"description": "Padded, plated and almost new.",
+		"armor": 11
+	}
+]

@@ -1,0 +1,314 @@
+{
+	"walker": {
+		"animations": {
+			"idle_down": {
+				"file": "res://assets/sprites/enemies/walker/idle_down.png",
+				"frames": 6,
+				"frame_w": 13,
+				"frame_h": 18
+			},
+			"idle_up": {
+				"file": "res://assets/sprites/enemies/walker/idle_up.png",
+				"frames": 6,
+				"frame_w": 12,
+				"frame_h": 23
+			},
+			"idle_right": {
+				"file": "res://assets/sprites/enemies/walker/idle_right.png",
+				"frames": 6,
+				"frame_w": 22,
+				"frame_h": 18
+			},
+			"idle_left": {
+				"file": "res://assets/sprites/enemies/walker/idle_left.png",
+				"frames": 6,
+				"frame_w": 22,
+				"frame_h": 18
+			},
+			"walk_down": {
+				"file": "res://assets/sprites/enemies/walker/walk_down.png",
+				"frames": 8,
+				"frame_w": 12,
+				"frame_h": 20
+			},
+			"walk_up": {
+				"file": "res://assets/sprites/enemies/walker/walk_up.png",
+				"frames": 8,
+				"frame_w": 12,
+				"frame_h": 23
+			},
+			"walk_right": {
+				"file": "res://assets/sprites/enemies/walker/walk_right.png",
+				"frames": 8,
+				"frame_w": 21,
+				"frame_h": 19
+			},
+			"walk_left": {
+				"file": "res://assets/sprites/enemies/walker/walk_left.png",
+				"frames": 8,
+				"frame_w": 21,
+				"frame_h": 19
+			},
+			"attack_down": {
+				"file": "res://assets/sprites/enemies/walker/attack_down.png",
+				"frames": 7,
+				"frame_w": 15,
+				"frame_h": 21
+			},
+			"attack_up": {
+				"file": "res://assets/sprites/enemies/walker/attack_up.png",
+				"frames": 7,
+				"frame_w": 13,
+				"frame_h": 25
+			},
+			"attack_right": {
+				"file": "res://assets/sprites/enemies/walker/attack_right.png",
+				"frames": 7,
+				"frame_w": 25,
+				"frame_h": 19
+			},
+			"attack_left": {
+				"file": "res://assets/sprites/enemies/walker/attack_left.png",
+				"frames": 7,
+				"frame_w": 25,
+				"frame_h": 19
+			},
+			"death_down": {
+				"file": "res://assets/sprites/enemies/walker/death_down.png",
+				"frames": 6,
+				"frame_w": 27,
+				"frame_h": 18
+			},
+			"death_up": {
+				"file": "res://assets/sprites/enemies/walker/death_up.png",
+				"frames": 6,
+				"frame_w": 27,
+				"frame_h": 18
+			},
+			"death_right": {
+				"file": "res://assets/sprites/enemies/walker/death_right.png",
+				"frames": 6,
+				"frame_w": 27,
+				"frame_h": 18
+			},
+			"death_left": {
+				"file": "res://assets/sprites/enemies/walker/death_left.png",
+				"frames": 6,
+				"frame_w": 27,
+				"frame_h": 18
+			}
+		},
+		"canvas": [
+			27,
+			25
+		]
+	},
+	"runner": {
+		"animations": {
+			"idle_down": {
+				"file": "res://assets/sprites/enemies/runner/idle_down.png",
+				"frames": 6,
+				"frame_w": 13,
+				"frame_h": 16
+			},
+			"idle_up": {
+				"file": "res://assets/sprites/enemies/runner/idle_up.png",
+				"frames": 6,
+				"frame_w": 13,
+				"frame_h": 15
+			},
+			"idle_right": {
+				"file": "res://assets/sprites/enemies/runner/idle_right.png",
+				"frames": 6,
+				"frame_w": 11,
+				"frame_h": 15
+			},
+			"idle_left": {
+				"file": "res://assets/sprites/enemies/runner/idle_left.png",
+				"frames": 6,
+				"frame_w": 11,
+				"frame_h": 15
+			},
+			"walk_down": {
+				"file": "res://assets/sprites/enemies/runner/walk_down.png",
+				"frames": 6,
+				"frame_w": 12,
+				"frame_h": 16
+			},
+			"walk_up": {
+				"file": "res://assets/sprites/enemies/runner/walk_up.png",
+				"frames": 6,
+				"frame_w": 13,
+				"frame_h": 16
+			},
+			"walk_right": {
+				"file": "res://assets/sprites/enemies/runner/walk_right.png",
+				"frames": 6,
+				"frame_w": 13,
+				"frame_h": 15
+			},
+			"walk_left": {
+				"file": "res://assets/sprites/enemies/runner/walk_left.png",
+				"frames": 6,
+				"frame_w": 13,
+				"frame_h": 15
+			},
+			"attack_down": {
+				"file": "res://assets/sprites/enemies/runner/attack_down.png",
+				"frames": 4,
+				"frame_w": 13,
+				"frame_h": 16
+			},
+			"attack_up": {
+				"file": "res://assets/sprites/enemies/runner/attack_up.png",
+				"frames": 4,
+				"frame_w": 14,
+				"frame_h": 15
+			},
+			"attack_right": {
+				"file": "res://assets/sprites/enemies/runner/attack_right.png",
+				"frames": 4,
+				"frame_w": 11,
+				"frame_h": 14
+			},
+			"attack_left": {
+				"file": "res://assets/sprites/enemies/runner/attack_left.png",
+				"frames": 4,
+				"frame_w": 11,
+				"frame_h": 14
+			},
+			"death_down": {
+				"file": "res://assets/sprites/enemies/runner/death_down.png",
+				"frames": 6,
+				"frame_w": 16,
+				"frame_h": 14
+			},
+			"death_up": {
+				"file": "res://assets/sprites/enemies/runner/death_up.png",
+				"frames": 6,
+				"frame_w": 16,
+				"frame_h": 14
+			},
+			"death_right": {
+				"file": "res://assets/sprites/enemies/runner/death_right.png",
+				"frames": 6,
+				"frame_w": 16,
+				"frame_h": 14
+			},
+			"death_left": {
+				"file": "res://assets/sprites/enemies/runner/death_left.png",
+				"frames": 6,
+				"frame_w": 16,
+				"frame_h": 14
+			}
+		},
+		"canvas": [
+			16,
+			16
+		]
+	},
+	"brute": {
+		"animations": {
+			"idle_down": {
+				"file": "res://assets/sprites/enemies/brute/idle_down.png",
+				"frames": 6,
+				"frame_w": 16,
+				"frame_h": 23
+			},
+			"idle_up": {
+				"file": "res://assets/sprites/enemies/brute/idle_up.png",
+				"frames": 6,
+				"frame_w": 16,
+				"frame_h": 22
+			},
+			"idle_right": {
+				"file": "res://assets/sprites/enemies/brute/idle_right.png",
+				"frames": 6,
+				"frame_w": 16,
+				"frame_h": 22
+			},
+			"idle_left": {
+				"file": "res://assets/sprites/enemies/brute/idle_left.png",
+				"frames": 6,
+				"frame_w": 16,
+				"frame_h": 22
+			},
+			"walk_down": {
+				"file": "res://assets/sprites/enemies/brute/walk_down.png",
+				"frames": 8,
+				"frame_w": 16,
+				"frame_h": 24
+			},
+			"walk_up": {
+				"file": "res://assets/sprites/enemies/brute/walk_up.png",
+				"frames": 8,
+				"frame_w": 16,
+				"frame_h": 24
+			},
+			"walk_right": {
+				"file": "res://assets/sprites/enemies/brute/walk_right.png",
+				"frames": 8,
+				"frame_w": 16,
+				"frame_h": 24
+			},
+			"walk_left": {
+				"file": "res://assets/sprites/enemies/brute/walk_left.png",
+				"frames": 8,
+				"frame_w": 16,
+				"frame_h": 24
+			},
+			"attack_down": {
+				"file": "res://assets/sprites/enemies/brute/attack_down.png",
+				"frames": 8,
+				"frame_w": 20,
+				"frame_h": 25
+			},
+			"attack_up": {
+				"file": "res://assets/sprites/enemies/brute/attack_up.png",
+				"frames": 8,
+				"frame_w": 18,
+				"frame_h": 24
+			},
+			"attack_right": {
+				"file": "res://assets/sprites/enemies/brute/attack_right.png",
+				"frames": 8,
+				"frame_w": 23,
+				"frame_h": 23
+			},
+			"attack_left": {
+				"file": "res://assets/sprites/enemies/brute/attack_left.png",
+				"frames": 8,
+				"frame_w": 23,
+				"frame_h": 23
+			},
+			"death_down": {
+				"file": "res://assets/sprites/enemies/brute/death_down.png",
+				"frames": 7,
+				"frame_w": 29,
+				"frame_h": 23
+			},
+			"death_up": {
+				"file": "res://assets/sprites/enemies/brute/death_up.png",
+				"frames": 7,
+				"frame_w": 29,
+				"frame_h": 23
+			},
+			"death_right": {
+				"file": "res://assets/sprites/enemies/brute/death_right.png",
+				"frames": 7,
+				"frame_w": 29,
+				"frame_h": 23
+			},
+			"death_left": {
+				"file": "res://assets/sprites/enemies/brute/death_left.png",
+				"frames": 7,
+				"frame_w": 29,
+				"frame_h": 23
+			}
+		},
+		"canvas": [
+			29,
+			25
+		]
+	}
+}

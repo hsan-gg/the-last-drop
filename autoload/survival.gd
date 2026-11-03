@@ -11,6 +11,7 @@ const EXHAUSTED_SPEED_FACTOR := 0.6
 
 var _water := MAX_VALUE
 var _health := MAX_VALUE
+var _max_health := MAX_VALUE
 
 
 func _process(delta: float) -> void:
@@ -25,6 +26,17 @@ func health() -> float:
 	return _health
 
 
+func max_health() -> float:
+	return _max_health
+
+
+## Raises or lowers the health cap (levels do this); health never exceeds it.
+func set_max_health(value: float) -> void:
+	_max_health = value
+	_apply(_water, minf(_health, _max_health))
+	EventBus.survival_changed.emit(_water, _health)
+
+
 func is_exhausted() -> bool:
 	return _water <= 0.0
 
@@ -37,7 +49,7 @@ func tick(seconds: float) -> void:
 	var next_water := maxf(_water - WATER_DECAY_PER_SECOND * seconds, 0.0)
 	var next_health := _health
 	if next_water >= REGEN_MIN_WATER:
-		next_health = minf(_health + HEALTH_REGEN_PER_SECOND * seconds, MAX_VALUE)
+		next_health = minf(_health + HEALTH_REGEN_PER_SECOND * seconds, _max_health)
 	_apply(next_water, next_health)
 
 
@@ -46,7 +58,7 @@ func drink(amount: float) -> void:
 
 
 func heal(amount: float) -> void:
-	_apply(_water, minf(_health + amount, MAX_VALUE))
+	_apply(_water, minf(_health + amount, _max_health))
 
 
 func damage(amount: float) -> void:
@@ -55,11 +67,12 @@ func damage(amount: float) -> void:
 	if next_health > 0.0:
 		_apply(_water, next_health)
 		return
-	_apply(_water, COLLAPSE_RECOVERY_HEALTH)
+	_apply(_water, minf(COLLAPSE_RECOVERY_HEALTH, _max_health))
 	EventBus.player_collapsed.emit()
 
 
 func reset() -> void:
+	_max_health = MAX_VALUE
 	_apply(MAX_VALUE, MAX_VALUE)
 
 

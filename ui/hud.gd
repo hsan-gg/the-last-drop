@@ -74,7 +74,7 @@ func _on_prompt_changed(text: String) -> void:
 
 func _on_survival_changed(water: float, health: float) -> void:
 	_water_meter.ratio = water / Survival.MAX_VALUE
-	_health_meter.ratio = health / Survival.MAX_VALUE
+	_health_meter.ratio = health / Survival.max_health()
 	_water_meter.fill_color = UiTheme.COLOR_RED if _water_meter.ratio < LOW_THRESHOLD else UiTheme.COLOR_WATER
 	_health_meter.fill_color = UiTheme.COLOR_RED if _health_meter.ratio < LOW_THRESHOLD else UiTheme.COLOR_GREEN
 

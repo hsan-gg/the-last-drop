@@ -10,6 +10,8 @@ const AREAS_PATH := "res://data/areas.json"
 const QUIZZES_PATH := "res://data/quizzes.json"
 const PUZZLES_PATH := "res://data/puzzles.json"
 const QUESTS_PATH := "res://data/quests.json"
+const ENEMIES_PATH := "res://data/enemies.json"
+const GEAR_PATH := "res://data/gear.json"
 
 var _areas: Dictionary = {}
 var _lessons: Dictionary = {}
@@ -19,6 +21,8 @@ var _objectives: Array = []
 var _quizzes: Array = []
 var _puzzles: Dictionary = {}
 var _quests: Array = []
+var _enemies: Dictionary = {}
+var _gear: Dictionary = {}
 
 
 func _ready() -> void:
@@ -33,6 +37,8 @@ func _ready() -> void:
 	var quests: Variant = DataLoader.load_json(QUESTS_PATH)
 	_quests = quests if typeof(quests) == TYPE_ARRAY else []
 	_puzzles = DataLoader.index_by_id(PUZZLES_PATH)
+	_enemies = DataLoader.index_by_id(ENEMIES_PATH)
+	_gear = DataLoader.index_by_id(GEAR_PATH)
 
 
 func area(area_id: String) -> Dictionary:
@@ -68,3 +74,15 @@ func puzzle(puzzle_id: String) -> Dictionary:
 
 func quests() -> Array:
 	return _quests.duplicate(true)
+
+
+func enemy(enemy_id: String) -> Dictionary:
+	return _enemies.get(enemy_id, {}).duplicate(true)
+
+
+func gear_item(gear_id: String) -> Dictionary:
+	return _gear.get(gear_id, {}).duplicate(true)
+
+
+func all_gear() -> Array:
+	return _gear.values().duplicate(true)

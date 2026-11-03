@@ -36,3 +36,11 @@ signal puzzle_requested(puzzle_id: String)
 signal puzzle_finished(puzzle_id: String, solved: bool)
 
 signal quest_completed(quest_id: String)
+
+signal xp_changed(level: int, xp: int, needed: int)
+signal level_up(level: int)
+signal gear_changed
+## A line for the loot toast: "Found: Rusty Sword".
+signal loot_found(text: String)
+signal enemy_killed(enemy_id: String)
+signal player_hit(outcome: String, damage: int)

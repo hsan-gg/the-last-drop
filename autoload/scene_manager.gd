@@ -36,6 +36,7 @@ func change_scene(path: String) -> void:
 
 func new_game() -> void:
 	reset_run()
+	Combat.enemies_enabled = true
 	change_scene(FIRST_AREA)
 
 
@@ -47,6 +48,8 @@ func reset_run() -> void:
 	GameState.reset()
 	Inventory.clear()
 	Survival.reset()
+	Gear.reset()
+	Progress.reset()
 
 
 func _fade_to(alpha: float) -> void:
