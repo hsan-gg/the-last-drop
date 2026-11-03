@@ -46,3 +46,11 @@ func test_hunters_start_combat_music_and_calm_ends_it() -> void:
 func test_the_music_plays_on_its_own_bus() -> void:
 	Music.play("title")
 	assert_eq(Music._players[0].bus, Settings.MUSIC_BUS)
+
+
+func test_music_streams_through_the_mixer_so_fades_and_volume_work_on_the_web() -> void:
+	# Regression: with the web default ("sample" playback) the crossfade from
+	# silence never reached the browser and music stayed inaudible.
+	for player: AudioStreamPlayer in Music.find_children("*", "AudioStreamPlayer", false, false):
+		assert_eq(player.playback_type, AudioServer.PLAYBACK_TYPE_STREAM)
+		assert_eq(player.bus, Settings.MUSIC_BUS)

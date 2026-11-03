@@ -71,12 +71,26 @@ func _goto(argument: String) -> bool:
 	return true
 
 
+func _audio_state() -> Dictionary:
+	var players := Music.find_children("*", "AudioStreamPlayer", false, false)
+	var info := {"players": []}
+	for player: AudioStreamPlayer in players:
+		info["players"].append({"playing": player.playing, "pos": player.get_playback_position(), "db": player.volume_db, "bus": player.bus, "stream": player.stream != null})
+	for bus in ["Master", "Music", "SFX"]:
+		var index := AudioServer.get_bus_index(bus)
+		info[bus] = {"index": index, "db": AudioServer.get_bus_volume_db(index) if index >= 0 else -999.0, "mute": AudioServer.is_bus_mute(index) if index >= 0 else true, "peak": AudioServer.get_bus_peak_volume_left_db(index, 0) if index >= 0 else -999.0}
+	info["mix_rate"] = AudioServer.get_mix_rate()
+	info["driver"] = AudioServer.get_driver_name() if AudioServer.has_method("get_driver_name") else ""
+	return info
+
+
 func _state() -> Dictionary:
 	var scene := get_tree().current_scene
 	var state := {
 		"scene": scene.name,
 		"area": scene.get("area_id") if scene is GameArea else "",
 		"music": Music.current(),
+		"audio": _audio_state(),
 		"difficulty": Difficulty.current_id,
 		"flags": GameState.get("_flags"),
 		"counters": GameState.get("_counters"),

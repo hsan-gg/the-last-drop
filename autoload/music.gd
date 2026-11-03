@@ -5,7 +5,7 @@ extends Node
 
 const PATH_FORMAT := "res://assets/audio/music/%s.ogg"
 const FADE_SECONDS := 1.4
-const PLAYING_DB := -7.0
+const PLAYING_DB := -3.0
 const SILENT_DB := -60.0
 const COMBAT_TRACK := "combat"
 ## Seconds of calm before leaving the combat track.
@@ -25,6 +25,11 @@ func _ready() -> void:
 	for _i in 2:
 		var player := AudioStreamPlayer.new()
 		player.bus = Settings.MUSIC_BUS
+		# Web builds default to "sample" playback, which hands the sound straight
+		# to the browser: later volume changes (our crossfade) and bus volumes
+		# never reach it, so music faded in from silence stayed silent. Streamed
+		# playback goes through Godot's own mixer, where fades and buses work.
+		player.playback_type = AudioServer.PLAYBACK_TYPE_STREAM
 		player.volume_db = SILENT_DB
 		add_child(player)
 		_players.append(player)
