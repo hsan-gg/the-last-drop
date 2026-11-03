@@ -3,7 +3,7 @@
 		"id": "outpost",
 		"layout": "res://data/maps/outpost.txt",
 		"floor": ".",
-		"tint": "#c9ab9a",
+		"tint": "#8a7468",
 		"arrival_dialogue": "intro",
 		"entities": {
 			"$": {
@@ -118,7 +118,7 @@
 		"id": "factory",
 		"layout": "res://data/maps/factory.txt",
 		"floor": "M",
-		"tint": "#8f9ab8",
+		"tint": "#5f6a88",
 		"arrival_dialogue": "factory_arrival",
 		"entities": {
 			"$": {
@@ -215,7 +215,7 @@
 		"id": "dump",
 		"layout": "res://data/maps/dump.txt",
 		"floor": ".",
-		"tint": "#bfae9f",
+		"tint": "#85766a",
 		"arrival_dialogue": "dump_arrival",
 		"entities": {
 			"1": {
@@ -390,7 +390,7 @@
 		"id": "river",
 		"layout": "res://data/maps/river.txt",
 		"floor": ".",
-		"tint": "#a8b4b8",
+		"tint": "#6f7e86",
 		"arrival_dialogue": "river_arrival",
 		"entities": {
 			"1": {

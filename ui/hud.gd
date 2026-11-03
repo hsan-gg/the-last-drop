@@ -21,13 +21,19 @@ var _objective_label: Label
 var _prompt_panel: PanelContainer
 var _prompt_label: Label
 var _damage_flash: ColorRect
+var _objective_panel: PanelContainer
+var _banner: Label
+var _last_objective_text := ""
+var _banner_tween: Tween
 
 
 func _ready() -> void:
 	layer = 10
 	_build()
+	_start_objective_pulse()
 	add_child(DIALOGUE_SCENE.instantiate())
 	add_child(SORTING_SCENE.instantiate())
+	add_child(ObjectiveBeacon.new())
 	add_child(QuizPanel.new())
 	add_child(PuzzlePanel.new())
 	add_child(QuestJournal.new())
@@ -42,6 +48,12 @@ func _ready() -> void:
 	_refresh_inventory()
 	_refresh_objective()
 	_on_survival_changed(Survival.water(), Survival.health())
+
+
+func _start_objective_pulse() -> void:
+	var pulse := create_tween().set_loops()
+	pulse.tween_property(_objective_panel, "self_modulate", Color(1.35, 1.15, 0.85), 0.9).set_trans(Tween.TRANS_SINE)
+	pulse.tween_property(_objective_panel, "self_modulate", Color.WHITE, 0.9).set_trans(Tween.TRANS_SINE)
 
 
 func set_area(new_area_id: String) -> void:
@@ -69,7 +81,28 @@ func _on_survival_changed(water: float, health: float) -> void:
 
 func _refresh_objective() -> void:
 	var objective := ObjectivesTracker.current(area_id)
-	_objective_label.text = objective.get("text", "Explore, and decide what to do with what you learned.")
+	var text: String = objective.get("text", "Explore, and decide what to do with what you learned.")
+	_objective_label.text = text
+	if text != _last_objective_text and not _last_objective_text.is_empty() and not objective.is_empty():
+		_announce(text)
+	_last_objective_text = text
+
+
+## A short banner and a bright pulse so a new goal is noticed without reading.
+func _announce(text: String) -> void:
+	_banner.text = "NEW OBJECTIVE\n%s" % text
+	_banner.visible = true
+	_banner.modulate.a = 1.0
+	EventBus.sfx_requested.emit("reveal")
+	if _banner_tween != null:
+		_banner_tween.kill()
+	_banner_tween = create_tween()
+	_banner_tween.tween_interval(2.4)
+	_banner_tween.tween_property(_banner, "modulate:a", 0.0, 0.6)
+	_banner_tween.tween_callback(func() -> void: _banner.visible = false)
+	var flash := create_tween()
+	_objective_panel.modulate = Color(2.2, 1.8, 1.2)
+	flash.tween_property(_objective_panel, "modulate", Color.WHITE, 0.8)
 
 
 func _refresh_inventory() -> void:
@@ -119,6 +152,8 @@ func _build() -> void:
 	left.add_child(_inventory_box)
 
 	var objective_panel := PanelContainer.new()
+	_objective_panel = objective_panel
+	objective_panel.add_theme_stylebox_override("panel", UiTheme.panel_style(UiTheme.COLOR_ORANGE))
 	objective_panel.anchor_left = 1.0
 	objective_panel.anchor_right = 1.0
 	objective_panel.offset_left = -176.0
@@ -138,6 +173,19 @@ func _build() -> void:
 	_objective_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_objective_label.custom_minimum_size = Vector2(150, 0)
 	objective_box.add_child(_objective_label)
+
+	_banner = Label.new()
+	_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_banner.add_theme_color_override("font_color", UiTheme.COLOR_YELLOW)
+	_banner.add_theme_color_override("font_outline_color", Color("#1a1008"))
+	_banner.add_theme_constant_override("outline_size", 4)
+	_banner.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	_banner.offset_left = -120.0
+	_banner.offset_right = 120.0
+	_banner.offset_top = 40.0
+	_banner.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_banner.visible = false
+	root.add_child(_banner)
 
 	_prompt_panel = PanelContainer.new()
 	_prompt_panel.anchor_left = 0.5

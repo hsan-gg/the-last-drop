@@ -3,144 +3,245 @@
 		"id": "find_water",
 		"area": "outpost",
 		"text": "Find a water source",
-		"done_flag": "water_tested"
+		"done_flag": "water_tested",
+		"target": {
+			"scene": "water_source"
+		}
 	},
 	{
 		"id": "sort_outpost",
 		"area": "outpost",
 		"text": "Sort the scrap pile",
-		"done_flag": "pile_sorted_outpost"
+		"done_flag": "pile_sorted_outpost",
+		"target": {
+			"scene": "scrap_pile",
+			"props": {
+				"pile_id": "outpost"
+			}
+		}
 	},
 	{
 		"id": "repair_treatment",
 		"area": "outpost",
 		"text": "Repair the water treatment unit",
-		"done_flag": "treatment_repaired"
+		"done_flag": "treatment_repaired",
+		"target": {
+			"scene": "repair_station",
+			"props": {
+				"repair_id": "treatment_unit"
+			}
+		}
 	},
 	{
 		"id": "drink",
 		"area": "outpost",
 		"text": "Drink clean water",
-		"done_flag": "water_secure"
+		"done_flag": "water_secure",
+		"target": {
+			"scene": "water_source"
+		}
 	},
 	{
 		"id": "recording",
 		"area": "outpost",
 		"text": "Find the old recording",
-		"done_flag": "recording_found"
+		"done_flag": "recording_found",
+		"target": {
+			"scene": "recording"
+		}
 	},
 	{
 		"id": "go_factory",
 		"area": "outpost",
 		"text": "Head north to the battery factory",
-		"done_flag": "area_factory_reached"
+		"done_flag": "area_factory_reached",
+		"target": {
+			"scene": "area_exit"
+		}
 	},
 	{
 		"id": "sort_factory",
 		"area": "factory",
 		"text": "Sort the factory waste safely",
-		"done_flag": "pile_sorted_factory"
+		"done_flag": "pile_sorted_factory",
+		"target": {
+			"scene": "scrap_pile",
+			"props": {
+				"pile_id": "factory"
+			}
+		}
 	},
 	{
 		"id": "repair_generator",
 		"area": "factory",
 		"text": "Restore power with the generator",
-		"done_flag": "power_restored"
+		"done_flag": "power_restored",
+		"target": {
+			"scene": "repair_station",
+			"props": {
+				"repair_id": "generator"
+			}
+		}
 	},
 	{
 		"id": "read_archive",
 		"area": "factory",
 		"text": "Read the archive terminal",
-		"done_flag": "archive_read"
+		"done_flag": "archive_read",
+		"target": {
+			"scene": "archive_terminal"
+		}
 	},
 	{
 		"id": "go_dump",
 		"area": "factory",
 		"text": "Take the gate to the Great Dump",
-		"done_flag": "area_dump_reached"
+		"done_flag": "area_dump_reached",
+		"target": {
+			"scene": "area_exit"
+		}
 	},
 	{
 		"id": "sort_dump_west",
 		"area": "dump",
 		"text": "Sort the western heap",
-		"done_flag": "pile_sorted_dump_west"
+		"done_flag": "pile_sorted_dump_west",
+		"target": {
+			"scene": "scrap_pile",
+			"props": {
+				"pile_id": "dump_west"
+			}
+		}
 	},
 	{
 		"id": "sort_dump_centre",
 		"area": "dump",
 		"text": "Sort the central heap",
-		"done_flag": "pile_sorted_dump_centre"
+		"done_flag": "pile_sorted_dump_centre",
+		"target": {
+			"scene": "scrap_pile",
+			"props": {
+				"pile_id": "dump_centre"
+			}
+		}
 	},
 	{
 		"id": "sort_dump_east",
 		"area": "dump",
 		"text": "Sort the eastern heap",
-		"done_flag": "pile_sorted_dump_east"
+		"done_flag": "pile_sorted_dump_east",
+		"target": {
+			"scene": "scrap_pile",
+			"props": {
+				"pile_id": "dump_east"
+			}
+		}
 	},
 	{
 		"id": "repair_shelter",
 		"area": "dump",
 		"text": "Rebuild the shelter roof",
-		"done_flag": "shelter_built"
+		"done_flag": "shelter_built",
+		"target": {
+			"scene": "repair_station"
+		}
 	},
 	{
 		"id": "find_recording_2",
 		"area": "dump",
 		"text": "Find the second recording",
-		"done_flag": "recording_2_found"
+		"done_flag": "recording_2_found",
+		"target": {
+			"scene": "recording"
+		}
 	},
 	{
 		"id": "read_records",
 		"area": "dump",
 		"text": "Read the municipal records",
-		"done_flag": "dump_records_read"
+		"done_flag": "dump_records_read",
+		"target": {
+			"scene": "archive_terminal"
+		}
 	},
 	{
 		"id": "go_river",
 		"area": "dump",
 		"text": "Follow the drain to the river",
-		"done_flag": "area_river_reached"
+		"done_flag": "area_river_reached",
+		"target": {
+			"scene": "area_exit"
+		}
 	},
 	{
 		"id": "sort_river_bank",
 		"area": "river",
 		"text": "Sort the riverbank heap",
-		"done_flag": "pile_sorted_river_bank"
+		"done_flag": "pile_sorted_river_bank",
+		"target": {
+			"scene": "scrap_pile",
+			"props": {
+				"pile_id": "river_bank"
+			}
+		}
 	},
 	{
 		"id": "sort_river_camp",
 		"area": "river",
 		"text": "Sort the abandoned camp",
-		"done_flag": "pile_sorted_river_camp"
+		"done_flag": "pile_sorted_river_camp",
+		"target": {
+			"scene": "scrap_pile",
+			"props": {
+				"pile_id": "river_camp"
+			}
+		}
 	},
 	{
 		"id": "test_samples",
 		"area": "river",
 		"text": "Test the water at all three points",
-		"done_flag": "samples_done"
+		"done_flag": "samples_done",
+		"target": {
+			"scene": "sample_point",
+			"untested_flag": "sample_%s",
+			"flag_prop": "sample_id"
+		}
 	},
 	{
 		"id": "install_filter",
 		"area": "river",
 		"text": "Install the river filter",
-		"done_flag": "filter_installed"
+		"done_flag": "filter_installed",
+		"target": {
+			"scene": "repair_station"
+		}
 	},
 	{
 		"id": "run_treatment",
 		"area": "river",
 		"text": "Start the treatment cycle at the console",
-		"done_flag": "river_clean"
+		"done_flag": "river_clean",
+		"target": {
+			"scene": "archive_terminal"
+		}
 	},
 	{
 		"id": "drink_river",
 		"area": "river",
 		"text": "Drink clean river water",
-		"done_flag": "river_water_secure"
+		"done_flag": "river_water_secure",
+		"target": {
+			"scene": "water_source"
+		}
 	},
 	{
 		"id": "find_recording_3",
 		"area": "river",
 		"text": "Find the third recording",
-		"done_flag": "recording_3_found"
+		"done_flag": "recording_3_found",
+		"target": {
+			"scene": "recording"
+		}
 	}
 ]

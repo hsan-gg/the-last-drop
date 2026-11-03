@@ -75,6 +75,8 @@ func _place_entities(layout: PackedStringArray, definitions: Dictionary, marker_
 		var properties: Dictionary = definition.get("props", {})
 		for key: String in properties:
 			entity.set(key, _typed(properties[key], entity.get(key)))
+		entity.add_to_group("scene_%s" % definition.get("scene", ""))
+		entity.set_meta("props", properties)
 		_entities.add_child(entity)
 		AreaLighting.decorate(entity, definition.get("scene", ""))
 

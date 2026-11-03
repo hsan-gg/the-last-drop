@@ -4,13 +4,13 @@ extends RefCounted
 ## walking to, set against each area's darker ambient tint.
 
 const TEXTURE_SIZE := 128
-const PLAYER_LANTERN := {"color": "#ffd9a0", "energy": 0.85, "radius": 72.0}
+const PLAYER_LANTERN := {"color": "#ffd9a0", "energy": 1.35, "radius": 86.0}
 const ENTITY_LIGHTS := {
-	"repair_station": {"color": "#ffb36b", "energy": 0.7, "radius": 46.0},
-	"archive_terminal": {"color": "#5fe0d0", "energy": 0.8, "radius": 44.0},
-	"recording": {"color": "#ffd27a", "energy": 0.55, "radius": 28.0},
-	"area_exit": {"color": "#ffb36b", "energy": 0.8, "radius": 40.0},
-	"water_source": {"color": "#6fb8e8", "energy": 0.5, "radius": 38.0},
+	"repair_station": {"color": "#ffb36b", "energy": 1.1, "radius": 52.0},
+	"archive_terminal": {"color": "#5fe0d0", "energy": 1.2, "radius": 50.0},
+	"recording": {"color": "#ffd27a", "energy": 0.9, "radius": 32.0},
+	"area_exit": {"color": "#ffb36b", "energy": 1.2, "radius": 46.0},
+	"water_source": {"color": "#6fb8e8", "energy": 0.9, "radius": 42.0},
 }
 
 static var _texture: GradientTexture2D

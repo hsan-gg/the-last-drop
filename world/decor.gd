@@ -4,7 +4,7 @@ extends StaticBody2D
 ## its map cell, optionally solid and optionally giving off light.
 
 const SPRITE_PATH_FORMAT := "res://assets/sprites/decor/%s.png"
-const FIRE_ENERGY := 0.85
+const FIRE_ENERGY := 1.3
 
 @export var sprite_name: String = ""
 ## Collision footprint in pixels; zero means the player can walk over it.
