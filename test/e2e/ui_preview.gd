@@ -8,6 +8,7 @@ var _menu := GameMenu.new()
 var _step := 0
 var _tracker: ObjectiveTracker
 var _banners: BannerQueue
+var _feed: NotificationFeed
 
 
 func _ready() -> void:
@@ -19,6 +20,9 @@ func _ready() -> void:
 	layer.add_child(_tracker)
 	_banners = BannerQueue.new()
 	layer.add_child(_banners)
+	_feed = NotificationFeed.new()
+	layer.add_child(_feed)
+	layer.add_child(RewardCard.new())
 	for area_id in ["outpost", "factory", "dump"]:
 		GameState.set_flag("area_%s_reached" % area_id)
 	GameState.add_to_counter("sort_correct", 4)
@@ -58,7 +62,13 @@ func _advance() -> void:
 			_menu.open(GameMenu.CODEX)
 		5:
 			_menu.close()
+			_tracker.mark_new()
+			_feed.notify("objective_done", "Done!", "Find a water source")
+			_feed.notify("objective_new", "New objective", "Sort the scrap pile")
+			_feed.notify("quest", "Quest complete", "Sharp Eye")
+			_feed.add_xp(12)
+			_feed.add_xp(30)
+			EventBus.reward_requested.emit("level", "LEVEL 3", "Max health +8, sword damage +1, stamina +4. You feel restored.")
+		6:
 			_tracker.toggle()
-			_banners.push("OBJECTIVE COMPLETE", "Find a water source", UiTheme.COLOR_GREEN, 5.0)
-			_banners.push("NEW OBJECTIVE", "Sort the scrap pile", UiTheme.COLOR_ORANGE, 5.0)
 	_step += 1

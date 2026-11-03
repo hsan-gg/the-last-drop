@@ -57,6 +57,10 @@ func is_open() -> bool:
 	return visible
 
 
+func current_text() -> String:
+	return _text.text if _text != null else ""
+
+
 ## A scene change with a conversation open must not leave notices held back forever.
 func _exit_tree() -> void:
 	if visible:

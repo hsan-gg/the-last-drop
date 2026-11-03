@@ -9,7 +9,7 @@ extends Control
 const SHOW_SECONDS := 4.2
 const XP_SHOW_SECONDS := 2.6
 const MAX_ENTRIES := 4
-const WIDTH := 178.0
+const WIDTH := 212.0
 const SLIDE := 24.0
 const XP_SOUND_GAP := 0.6
 const PAPER := Color(0.13, 0.11, 0.15, 0.93)
@@ -135,10 +135,9 @@ func _make_entry(spec: Dictionary, headline: String, line: String) -> Control:
 	var card := PanelContainer.new()
 	var style := StyleBoxFlat.new()
 	style.bg_color = PAPER
-	style.border_color = (spec["color"] as Color).darkened(0.35)
-	style.set_border_width_all(1)
-	style.border_width_left = 3
 	style.border_color = spec["color"]
+	style.set_border_width_all(0)
+	style.border_width_left = 3
 	style.set_corner_radius_all(3)
 	style.content_margin_left = 6
 	style.content_margin_right = 7

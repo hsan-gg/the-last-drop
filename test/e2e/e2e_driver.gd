@@ -90,6 +90,10 @@ func _state() -> Dictionary:
 	}
 	var dialogue := _first_visible("DialogueBox")
 	state["dialogue_open"] = dialogue != null
+	state["menu_open"] = _first_visible("GameMenu") != null
+	state["paused"] = get_tree().paused
+	if dialogue != null:
+		state["dialogue_text"] = (dialogue as DialogueBox).current_text()
 	var sorting := _first_visible("SortingChallenge") as SortingChallenge
 	if sorting != null:
 		state["sorting"] = _sorting_state(sorting)

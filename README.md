@@ -44,7 +44,8 @@ Every key except the menu and fixed shortcuts can be rebound in Menu > Controls.
 
 - **Three lives:** collapsing costs one and returns you to the area start; with none left the run restarts after a game over screen.
 - **Story cutscenes:** an opening overview of the regions, a short scene at each gate, and a finale. Esc skips.
-- **Dialogue does not pause the world.** Zombies still come, and being hit cuts a conversation short.
+- **Dialogue does not pause the world.** Zombies still come; being hit or walking away ends a conversation.
+- **Esc leaves a scrap pile** part-way; what you recovered is kept and the rest waits on the pile.
 - **A wrong Field Check costs 12 health** and draws a zombie, so the quiz matters.
 - **Inventory board:** your character, worn weapon, head and body gear, and a backpack grid with consumables and materials.
 - **Map with fog of war;** quests as cards sorted by difficulty; options for audio, display, gameplay and accessibility (saved).
@@ -75,7 +76,8 @@ one life, packs of fast zombies that hit very hard, a tiny parry window and fier
 - **Randomised piles:** what a scrap pile holds changes every run (the materials a repair needs are always in it, plus at least one hazard). Wrong bins hurt, and two in a row draw a zombie; a streak of right ones pays bonus XP.
 - **Codex:** a field guide that fills in as you meet each lesson, with quests for discovering them.
 - **Tips:** short, rebinding-aware hints teach moving, interacting, the inventory, attacking, blocking and stamina the first time they matter (Options > Show tips).
-- **Cutscenes:** animated pixel postcards with a drifting camera, a title slam and auto-advance; E is faster, Esc skips.
+- **Cutscenes:** animated pixel postcards acted by the game's own sprites, with a drifting camera, page-wipe transitions and a title slam. Each beat waits for E; Esc skips.
+- **Notifications:** Stardew-style messages slide in at the bottom-left with an icon and a soft chime (objectives, quests, loot, a running XP total). Level ups and restored regions get a calm card. Nothing appears while you talk; the task list never pops open, the T chip shows a quiet "!" instead.
 - **Music:** a generated track per area plus a combat track, and a title theme (`tools/generate_music.py`).
 - **Field Check quizzes:** after each sorted pile, one multiple-choice question about what you just handled (`data/quizzes.json`). A right answer restores water; a wrong one only teaches.
 - **Side quests:** `data/quests.json`, shown in the journal (Q). Progress comes from counters and flags, so a quest is data; finishing one pays out water or health.

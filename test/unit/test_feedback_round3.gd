@@ -78,3 +78,10 @@ func test_the_player_cannot_shove_a_zombie() -> void:
 		player.move_and_slide()
 		await wait_physics_frames(1)
 	assert_lt(enemy.global_position.distance_to(start), 3.0, "the zombie was not pushed")
+
+
+func test_keys_pressed_while_a_scene_fades_in_are_ignored() -> void:
+	SceneManager._settle_until = Time.get_ticks_msec() / 1000.0 + 0.3
+	assert_true(SceneManager.is_settling(), "an Esc mashed to skip a cutscene must not open the menu")
+	SceneManager._settle_until = 0.0
+	assert_false(SceneManager.is_settling())
