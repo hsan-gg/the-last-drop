@@ -18,6 +18,7 @@ func _init() -> void:
 
 ## Builds the backdrop and panel. Call from _ready of the subclass.
 func _build_shell(panel_size: Vector2, border: Color = UiTheme.COLOR_BORDER) -> void:
+	add_to_group("modal")
 	_root = Control.new()
 	_root.theme = UiTheme.get_theme()
 	_root.set_anchors_preset(Control.PRESET_FULL_RECT)

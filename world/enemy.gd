@@ -39,6 +39,9 @@ var _sprite: AnimatedSprite2D
 var _bar_back: ColorRect
 var _bar_fill: ColorRect
 var _alert: Label
+var _burn := 0.0
+var _burn_tick := 0.0
+var _fire: CPUParticles2D
 
 
 func _ready() -> void:
@@ -123,11 +126,61 @@ func take_hit(damage: float, from_position: Vector2, knockback: float) -> void:
 		_enter(State.STAGGER, HIT_STAGGER_SECONDS)
 
 
+## Fire: sets the zombie burning for `seconds` (refreshing a shorter burn).
+func ignite(seconds: float) -> void:
+	if is_dead():
+		return
+	_burn = maxf(_burn, seconds * float(_def.get("burn_factor", 1.0)))
+	if _fire != null:
+		_fire.emitting = _burn > 0.0
+
+
+func is_burning() -> bool:
+	return _burn > 0.0
+
+
+func extinguish() -> void:
+	_burn = 0.0
+	if _fire != null:
+		_fire.emitting = false
+
+
+## Damage that does not push or stagger (fire, poison).
+func burn_damage(amount: float) -> void:
+	if is_dead():
+		return
+	var armour := float(_def.get("armour", 0.0)) * (0.3 if is_burning() else 1.0)  # fire melts armour
+	var dealt := maxf(amount - armour * 0.25, amount * 0.3)
+	_hp -= dealt
+	FloatingText.spawn(get_parent(), str(maxi(roundi(dealt), 1)), global_position + Vector2(randf_range(-4, 4), -8), Color("#ffa040"))
+	_update_bar()
+	if _hp <= 0.0:
+		_die()
+
+
+func _tick_burn(delta: float) -> void:
+	if _burn <= 0.0:
+		return
+	_burn -= delta
+	_burn_tick -= delta
+	if _burn_tick <= 0.0:
+		_burn_tick = 0.4
+		burn_damage(3.0)
+		for node in get_tree().get_nodes_in_group("enemies"):  # the fire spreads
+			var other := node as Enemy
+			if other != null and other != self and not other.is_burning() and other.global_position.distance_to(global_position) < 18.0:
+				other.ignite(maxf(_burn * 0.6, 1.0))
+	if _burn <= 0.0 and _fire != null:
+		_fire.emitting = false
+
+
 func _die() -> void:
 	_state = State.DEAD
 	collision_layer = 0
 	if _alert != null:
 		_alert.visible = false
+	if _fire != null:
+		_fire.emitting = false
 	EventBus.sfx_requested.emit("enemy_die")
 	if not spawn_key.is_empty():
 		GameState.set_flag(_slain_flag())
@@ -164,6 +217,9 @@ func _physics_process(delta: float) -> void:
 		return
 	_player = get_tree().get_first_node_in_group("player") as Node2D
 	_knockback = _knockback.move_toward(Vector2.ZERO, KNOCKBACK_DRAG * delta)
+	_tick_burn(delta)
+	if _state == State.DEAD:
+		return
 	_timer -= delta
 	match _state:
 		State.IDLE:
@@ -301,6 +357,27 @@ func _build_body() -> void:
 	_bar_fill.size = Vector2(HEALTH_BAR_WIDTH, 2)
 	_bar_fill.position = Vector2(1, 1)
 	_bar_back.add_child(_bar_fill)
+
+	_fire = CPUParticles2D.new()
+	_fire.emitting = false
+	_fire.amount = 24
+	_fire.lifetime = 0.6
+	_fire.position = Vector2(0, -float(canvas[1]) * 0.45)
+	_fire.emission_shape = CPUParticles2D.EMISSION_SHAPE_RECTANGLE
+	_fire.emission_rect_extents = Vector2(5, float(canvas[1]) * 0.35)
+	_fire.direction = Vector2.UP
+	_fire.spread = 20.0
+	_fire.gravity = Vector2(0, -60)
+	_fire.initial_velocity_min = 10.0
+	_fire.initial_velocity_max = 30.0
+	_fire.scale_amount_min = 1.0
+	_fire.scale_amount_max = 3.0
+	var ramp := Gradient.new()
+	ramp.colors = PackedColorArray([Color("#fff0a0"), Color("#ff9a30"), Color("#e04a1a"), Color(0.2, 0.15, 0.15, 0.0)])
+	ramp.offsets = PackedFloat32Array([0.0, 0.3, 0.65, 1.0])
+	_fire.color_ramp = ramp
+	_fire.z_index = 3
+	add_child(_fire)
 
 	_alert = Label.new()
 	_alert.text = "!"

@@ -7,7 +7,7 @@ const ACTION_NAMES := {
 	"move_up": "Move up", "move_down": "Move down", "move_left": "Move left", "move_right": "Move right",
 	"attack": "Attack", "block": "Block / parry", "interact": "Interact",
 	"tracker": "Tasks", "equipment": "Inventory", "journal": "Quests", "map": "Map",
-	"quick_heal": "Bandage", "quick_drink": "Drink water",
+	"quick_heal": "Bandage", "quick_drink": "Drink water", "rune_1": "Rune 1", "rune_2": "Rune 2", "rune_3": "Rune 3",
 }
 const FIXED_KEYS := [
 	["Menu / back", "Esc"],

@@ -33,6 +33,11 @@ synth enemy_die 0.4 sawtooth 160:30 lowpass 900 fade h 0.01 0.4 0.3 vol 0.4
 synth level_up 0.7 sine 523 sine 659 sine 784 fade h 0.02 0.7 0.5 vol 0.3
 synth loot 0.25 sine 700:1400 sine 1050 fade h 0.01 0.25 0.15 vol 0.3
 
+# Runes
+synth flame 0.18 brownnoise lowpass 1800 fade h 0.02 0.18 0.08 vol 0.35
+synth shotgun 0.35 whitenoise lowpass 2500 fade h 0.002 0.35 0.3 vol 0.6
+synth tide 0.8 pinknoise lowpass 1200 tremolo 6 50 fade h 0.08 0.8 0.5 vol 0.45
+
 # Notifications: soft plucked notes, like a music box, so good news sounds gentle.
 chord() {
 	local name="$1" length="$2" gap="$3"

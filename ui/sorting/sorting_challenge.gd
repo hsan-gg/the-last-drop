@@ -52,6 +52,7 @@ var _hint: Label
 
 func _ready() -> void:
 	layer = 15
+	add_to_group("modal")
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_build()
 	visible = false

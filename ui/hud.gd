@@ -284,6 +284,7 @@ func _build() -> void:
 		_lives_icons.append(heart)
 		_lives_row.add_child(heart)
 	left.add_child(_lives_row)
+	left.add_child(RuneBar.new())
 
 	_tip_panel = PanelContainer.new()
 	_tip_panel.add_theme_stylebox_override("panel", UiTheme.banner_style())

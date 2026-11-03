@@ -30,7 +30,7 @@ const SFX_BUS := "SFX"
 ## Actions the player can rebind, in the order the controls tab lists them.
 const REBINDABLE: Array[String] = [
 	"move_up", "move_down", "move_left", "move_right", "attack", "block",
-	"interact", "tracker", "equipment", "journal", "map", "quick_heal", "quick_drink",
+	"interact", "tracker", "equipment", "journal", "map", "quick_heal", "quick_drink", "rune_1", "rune_2", "rune_3",
 ]
 
 var path := DEFAULT_PATH

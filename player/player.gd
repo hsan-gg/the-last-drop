@@ -32,6 +32,9 @@ func _ready() -> void:
 	combat = PlayerCombat.new()
 	combat.name = "Combat"
 	add_child(combat)
+	var caster := RuneCaster.new()
+	caster.name = "RuneCaster"
+	add_child(caster)
 	var guard_meter := GuardMeter.new()
 	guard_meter.name = "GuardMeter"
 	add_child(guard_meter)
