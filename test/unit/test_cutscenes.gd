@@ -134,3 +134,15 @@ func test_every_scene_draws_without_error() -> void:
 		stage.show_beat({"visual": kind, "focus": ["outpost", "factory"]})
 		await wait_frames(2)
 		assert_eq(stage.mode, kind)
+
+
+func test_scenes_are_acted_by_the_game_sprites() -> void:
+	var actors := CutsceneActors.new()
+	add_child_autofree(actors)
+	actors.stage("dump")
+	assert_eq(actors.actor_count(), 3, "the player and two zombies")
+	actors.stage("black")
+	assert_eq(actors.actor_count(), 0)
+	for kind in CutsceneScenes.SCENES:
+		actors.stage(kind)
+		assert_gt(actors.actor_count(), 0, "%s has a cast" % kind)

@@ -38,6 +38,7 @@ var route_progress := 0.0:
 var zoom := 1.0
 var pan := 0.0
 
+var _actors: CutsceneActors
 var _backdrop: TitleBackdrop
 var _time := 0.0
 
@@ -45,6 +46,8 @@ var _time := 0.0
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_actors = CutsceneActors.new()
+	add_child(_actors)
 
 
 func show_beat(beat: Dictionary) -> void:
@@ -57,6 +60,8 @@ func show_beat(beat: Dictionary) -> void:
 		_backdrop = TitleBackdrop.new()
 		add_child(_backdrop)
 	_time = 0.0
+	if _actors != null:
+		_actors.stage(mode if CutsceneScenes.has_scene(mode) else "")
 	queue_redraw()
 
 
@@ -73,6 +78,10 @@ func _process(delta: float) -> void:
 	_time += delta
 	if mode == "map" or CutsceneScenes.has_scene(mode):
 		queue_redraw()
+	if _actors != null:  # the cast moves with the camera
+		var stage := get_viewport_rect().size
+		_actors.position = Vector2(pan, 0.0) - stage * 0.5 * (zoom - 1.0)
+		_actors.scale = Vector2(zoom, zoom)
 
 
 func _draw() -> void:

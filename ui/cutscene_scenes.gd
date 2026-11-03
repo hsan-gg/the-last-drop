@@ -31,7 +31,6 @@ static func draw(canvas: CanvasItem, kind: String, size: Vector2, t: float) -> v
 			_pipeline(canvas, size, t)
 			_hut(canvas, Vector2(size.x * 0.3, size.y * 0.72))
 			_campfire(canvas, Vector2(size.x * 0.52, size.y * 0.76), t)
-			_sleeper(canvas, Vector2(size.x * 0.62, size.y * 0.78), t)
 			_embers(canvas, Vector2(size.x * 0.52, size.y * 0.74), t, Color("#ffb050"))
 		"factory":
 			_sky(canvas, size, Color("#46503e"), Color("#161c18"), 0.8)
@@ -139,15 +138,6 @@ static func _campfire(canvas: CanvasItem, at: Vector2, t: float) -> void:
 	var flick := 6.0 + 2.0 * sin(t * 13.0) + sin(t * 7.0)
 	canvas.draw_colored_polygon(PackedVector2Array([at + Vector2(-5, 0), at + Vector2(0, -flick - 6.0), at + Vector2(5, 0)]), Color("#ff7a20"))
 	canvas.draw_colored_polygon(PackedVector2Array([at + Vector2(-3, 0), at + Vector2(0, -flick), at + Vector2(3, 0)]), Color("#ffd060"))
-
-
-## The player, curled up by the fire; they stir and sit up as the beat goes on.
-static func _sleeper(canvas: CanvasItem, at: Vector2, t: float) -> void:
-	var rise := clampf((t - 1.2) * 0.6, 0.0, 1.0) * 7.0
-	canvas.draw_rect(Rect2(at + Vector2(-9, -4 - rise), Vector2(18, 5 + rise)), Color("#3a5a6a"))
-	canvas.draw_rect(Rect2(at + Vector2(-12, -8 - rise), Vector2(7, 7)), Color("#e0b890"))
-	if fposmod(t, 3.0) < 2.8:
-		canvas.draw_rect(Rect2(at + Vector2(-10, -6 - rise), Vector2(1, 1)), Color("#1a1218"))
 
 
 static func _embers(canvas: CanvasItem, at: Vector2, t: float, color: Color) -> void:

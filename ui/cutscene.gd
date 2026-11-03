@@ -24,6 +24,7 @@ var _veil: ColorRect
 var _bar: ColorRect
 var _pips: Label
 var _drift: Tween
+var _breathe: Tween
 var _done := false
 
 
@@ -82,6 +83,8 @@ func _show_beat() -> void:
 		finish()
 		return
 	var beat: Dictionary = _beats[_index]
+	if _breathe != null:
+		_breathe.kill()
 	_stage.show_beat(beat)
 	_title.text = beat.get("title", "")
 	_title.visible = not _title.text.is_empty()
@@ -90,14 +93,14 @@ func _show_beat() -> void:
 	var last := _index >= _beats.size() - 1
 	_hint.text = "[E] begin   [Esc] skip" if last else "[E] next   [Esc] skip"
 	_pips.text = "".join(PackedStringArray(range(_beats.size()).map(func(i: int) -> String: return "o" if i == _index else ".")))
-	var fade := create_tween()
-	_veil.modulate.a = 1.0
-	fade.tween_property(_veil, "modulate:a", 0.0, FADE_SECONDS)
+	_wipe()
 	if _typing != null:
 		_typing.kill()
 	_typing = create_tween()
 	_typing.tween_interval(FADE_SECONDS * 0.6)
 	_typing.tween_method(func(count: Variant) -> void: _text.visible_characters = int(count), 0, _text.text.length(), maxf(_text.text.length() / CHARS_PER_SECOND, 0.1))
+	_typing.tween_callback(_invite_next)
+	_hint.modulate.a = 0.35
 	_start_camera_drift()
 	_slam_title()
 	if beat.get("visual", "") == "map":
@@ -108,6 +111,26 @@ func _show_beat() -> void:
 ## Seconds a beat stays after its words are out, before it moves on by itself.
 static func hold_seconds(text: String) -> float:
 	return MIN_HOLD_SECONDS + text.length() * HOLD_PER_CHARACTER
+
+
+## A wipe from right to left reveals the next beat, like turning a page.
+func _wipe() -> void:
+	_veil.modulate.a = 1.0
+	_veil.offset_right = 0.0
+	var wipe := create_tween()
+	wipe.tween_property(_veil, "offset_right", -get_viewport_rect().size.x, FADE_SECONDS + 0.15).set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_IN_OUT)
+
+
+## Once the words are out, the "[E] next" hint brightens and breathes, since
+## the scene now waits for the player.
+func _invite_next() -> void:
+	_text.visible_characters = -1
+	var breathe := create_tween().set_loops(0)
+	breathe.bind_node(_hint)
+	_hint.modulate.a = 1.0
+	breathe.tween_property(_hint, "modulate:a", 0.45, 0.7).set_trans(Tween.TRANS_SINE)
+	breathe.tween_property(_hint, "modulate:a", 1.0, 0.7).set_trans(Tween.TRANS_SINE)
+	_breathe = breathe
 
 
 ## A slow push-in with a sideways drift, like a camera moving over a painting.
