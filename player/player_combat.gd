@@ -133,7 +133,7 @@ func receive_hit(raw_damage: float, from_position: Vector2) -> Dictionary:
 	if _clock < _invulnerable_until:
 		return {"outcome": "ignored", "damage": 0}
 	var covers := CombatRules.guard_covers(_player.facing, _player.global_position, from_position)
-	var result := CombatRules.resolve_hit(raw_damage, Gear.armor(), is_blocking(), covers, seconds_since_block_started())
+	var result := CombatRules.resolve_hit(raw_damage, Gear.armor(), is_blocking(), covers, seconds_since_block_started(), Difficulty.value("parry_window"))
 	match result["outcome"]:
 		CombatRules.OUTCOME_PARRIED:
 			_invulnerable_until = _clock + PARRY_INVULNERABLE_SECONDS

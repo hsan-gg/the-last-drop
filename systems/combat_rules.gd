@@ -28,10 +28,10 @@ static func player_damage(weapon_damage: int, level: int) -> int:
 
 
 ## What happens when an enemy strike lands: {"outcome", "damage"}.
-static func resolve_hit(raw_damage: float, armor: float, blocking: bool, guard_covers: bool, seconds_since_block: float) -> Dictionary:
+static func resolve_hit(raw_damage: float, armor: float, blocking: bool, guard_covers: bool, seconds_since_block: float, parry_window: float = PARRY_WINDOW) -> Dictionary:
 	var through := raw_damage * armor_multiplier(armor)
 	if blocking and guard_covers:
-		if seconds_since_block <= PARRY_WINDOW:
+		if seconds_since_block <= parry_window:
 			return {"outcome": OUTCOME_PARRIED, "damage": 0}
 		return {"outcome": OUTCOME_BLOCKED, "damage": maxi(MIN_DAMAGE, roundi(through * (1.0 - BLOCK_REDUCTION)))}
 	return {"outcome": OUTCOME_HIT, "damage": maxi(MIN_DAMAGE, roundi(through))}

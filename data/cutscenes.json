@@ -3,7 +3,7 @@
 		{
 			"visual": "sky",
 			"title": "THE LAST DROP",
-			"text": "The world was not destroyed in a day.\\nIt was buried, one thrown-away thing at a time.",
+			"text": "The world was not destroyed in a day.\nIt was buried, one thrown-away thing at a time.",
 			"focus": []
 		},
 		{
@@ -73,7 +73,7 @@
 		{
 			"visual": "black",
 			"title": "SURVIVE",
-			"text": "Sort what you find. Fight what stalks the ruins. Learn what the old world refused to.\\n\\nJ attack   K block   E act   Esc menu",
+			"text": "Sort what you find. Fight what stalks the ruins. Learn what the old world refused to.\n\nJ attack   K block   E act   Esc menu",
 			"focus": []
 		}
 	],

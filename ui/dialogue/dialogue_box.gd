@@ -51,6 +51,12 @@ func is_open() -> bool:
 	return visible
 
 
+## A scene change with a conversation open must not leave notices held back forever.
+func _exit_tree() -> void:
+	if visible:
+		EventBus.dialogue_interrupted.emit()
+
+
 ## Who speaks a dialogue: {"name", "tag", "color", "icon"}. Narration has no name.
 static func speaker_for(dialogue_id: String) -> Dictionary:
 	for speaker in SPEAKERS:
@@ -69,6 +75,7 @@ func show_lines(lines: Array[String], dialogue_id: String = "") -> void:
 	_opened_on_frame = Engine.get_process_frames()
 	_apply_speaker(speaker_for(dialogue_id))
 	visible = true
+	EventBus.dialogue_opened.emit()
 	if pauses_game:
 		get_tree().paused = true
 	_show_line()

@@ -17,6 +17,9 @@ const DEFAULTS := {
 	"damage_numbers": true,
 	"objective_hints": 1,
 	"text_speed": 1,
+	"difficulty": "medium",
+	"tips": true,
+	"tips_seen": "",
 }
 const HINTS_OFF := 0
 const HINTS_SUBTLE := 1

@@ -11,6 +11,7 @@ const WIDTH := 156.0
 
 var _queue: Array[Dictionary] = []
 var _active := false
+var _deferred := 0
 var _panel: PanelContainer
 var _stripe: ColorRect
 var _title: Label
@@ -25,10 +26,17 @@ func _ready() -> void:
 
 
 func pending() -> int:
-	return _queue.size() + (1 if _active else 0)
+	return _queue.size() + (1 if _active else 0) + _deferred
 
 
+## Queues a banner. While a conversation is open it waits and appears after it.
 func push(title: String, text: String, color: Color = UiTheme.COLOR_ORANGE, seconds: float = SHOW_SECONDS) -> void:
+	_deferred += 1
+	Notices.run(_enqueue.bind(title, text, color, seconds))
+
+
+func _enqueue(title: String, text: String, color: Color, seconds: float) -> void:
+	_deferred = maxi(_deferred - 1, 0)
 	_queue.append({"title": title, "text": text, "color": color, "seconds": seconds})
 	if not _active:
 		_show_next()

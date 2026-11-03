@@ -12,6 +12,8 @@ signal dialogue_requested(dialogue_id: String)
 ## Ad-hoc text (e.g. "the unit needs: ..."); reported back with an empty id.
 signal text_requested(lines: Array[String])
 signal dialogue_finished(dialogue_id: String)
+## A conversation opened (it holds notices until it ends).
+signal dialogue_opened
 signal sorting_requested(pile_id: String, item_ids: Array[String])
 signal sorting_finished(pile_id: String)
 

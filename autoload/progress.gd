@@ -17,7 +17,7 @@ func max_health() -> float:
 func add_xp(amount: int) -> void:
 	if amount <= 0:
 		return
-	var result := ProgressionRules.apply_xp(level, xp, amount)
+	var result := ProgressionRules.apply_xp(level, xp, maxi(roundi(amount * Difficulty.value("xp")), 1))
 	level = result["level"]
 	xp = result["xp"]
 	if result["levels_gained"] > 0:

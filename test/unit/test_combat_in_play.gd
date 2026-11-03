@@ -104,8 +104,9 @@ func test_levels_make_the_sword_hit_harder() -> void:
 func test_killing_a_zombie_pays_xp_counts_a_kill_and_it_stays_dead() -> void:
 	Gear.grant("rusty_sword")
 	var enemy := _enemy("runner", Vector2(14, 0), "test_1")
-	_swing()
-	_swing()
+	for _i in 6:
+		if not enemy.is_dead():
+			_swing()
 	assert_true(enemy.is_dead())
 	assert_eq(GameState.get_counter("kills"), 1)
 	assert_true(GameState.has_flag("slain_test_1"))

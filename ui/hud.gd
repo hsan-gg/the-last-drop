@@ -108,7 +108,11 @@ func _refresh_stats() -> void:
 
 
 func _on_level_up(level: int) -> void:
-	_show_toast("LEVEL UP!  You are level %d" % level, UiTheme.COLOR_YELLOW)
+	Notices.run(_celebrate_level.bind(level))
+
+
+func _celebrate_level(level: int) -> void:
+	_display_toast("LEVEL UP!  You are level %d" % level, UiTheme.COLOR_YELLOW)
 	var flash := create_tween()
 	_damage_flash.color = UiTheme.COLOR_YELLOW
 	_damage_flash.modulate.a = 0.45
@@ -118,6 +122,10 @@ func _on_level_up(level: int) -> void:
 
 ## A line of text that appears under the banner and fades: loot, level ups.
 func _show_toast(text: String, color: Color) -> void:
+	Notices.run(_display_toast.bind(text, color))
+
+
+func _display_toast(text: String, color: Color) -> void:
 	_toast_label.text = text
 	_toast_label.add_theme_color_override("font_color", color)
 	_toast_label.visible = true
@@ -151,7 +159,7 @@ func _announce_change(new_text: String) -> void:
 		EventBus.sfx_requested.emit("sort_ok")
 	if not new_text.is_empty():
 		_banners.push("NEW OBJECTIVE", new_text, UiTheme.COLOR_ORANGE, 2.6)
-	_tracker.flash()
+	Notices.run(_tracker.flash)
 
 
 func _on_lives_changed(lives: int) -> void:
@@ -238,7 +246,7 @@ func _build() -> void:
 	_lives_row = HBoxContainer.new()
 	_lives_row.add_theme_constant_override("separation", 2)
 	_lives_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	for _i in Lives.MAX_LIVES:
+	for _i in Lives.max_lives:
 		var heart := TextureRect.new()
 		heart.texture = HEART_ICON
 		heart.stretch_mode = TextureRect.STRETCH_KEEP

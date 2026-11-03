@@ -8,6 +8,8 @@ enum Phase { IDLE, SOLVING, SOLVED }
 const OPTION_KEYS := [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5]
 const MAX_OPTIONS := 5
 const SOLVED_FLAG_FORMAT := "puzzle_%s_solved"
+## A wrong step costs health, so guessing is not free.
+const WRONG_DAMAGE := 9.0
 
 var _phase := Phase.IDLE
 var _puzzle_id := ""
@@ -15,7 +17,6 @@ var _data: Dictionary = {}
 var _puzzle: OrderPuzzle
 var _title: Label
 var _prompt: Label
-var _placed: RichTextLabel
 var _option_buttons: Array[Button] = []
 var _feedback: RichTextLabel
 var _continue: Button
@@ -23,7 +24,7 @@ var _hint: Label
 
 
 func _ready() -> void:
-	_build_shell(Vector2(440, 220), UiTheme.COLOR_TEAL)
+	_build_shell(Vector2(452, 230), UiTheme.COLOR_TEAL)
 	_build_contents()
 	EventBus.puzzle_requested.connect(_on_puzzle_requested)
 
@@ -50,7 +51,7 @@ func open_puzzle(puzzle_id: String, shuffle_seed: int = 0) -> void:
 	_prompt.text = data["prompt"]
 	_feedback.text = ""
 	_continue.visible = false
-	_hint.text = "Press 1 to %d. Esc leaves." % steps.size()
+	_hint.text = "Press 1 to %d. A wrong step costs health. Esc leaves." % steps.size()
 	_refresh()
 	_show_panel()
 
@@ -72,7 +73,9 @@ func choose(option: String) -> void:
 	else:
 		GameState.add_to_counter("puzzle_mistakes")
 		EventBus.sfx_requested.emit("sort_bad")
-		_feedback.text = "[color=#e0584a]NOT THAT ONE[/color]  Start again from the first step."
+		var damage := WRONG_DAMAGE * Difficulty.value("penalty")
+		Survival.damage(damage)
+		_feedback.text = "[color=#e0584a]NOT THAT ONE  -%d health[/color]\nStart again from the first step." % int(round(damage))
 	_refresh()
 
 
@@ -96,17 +99,22 @@ func _close(solved: bool) -> void:
 
 func _refresh() -> void:
 	var done := _puzzle.placed()
-	var lines: Array[String] = []
-	for index in done.size():
-		lines.append("%d. %s" % [index + 1, done[index]])
-	_placed.text = "[color=#5fd0c4]%s[/color]" % ("\n".join(lines) if not lines.is_empty() else "Nothing placed yet.")
 	var choices := _puzzle.options()
 	for index in _option_buttons.size():
 		var button := _option_buttons[index]
 		button.visible = index < choices.size()
-		button.disabled = _phase != Phase.SOLVING
-		if index < choices.size():
+		if index >= choices.size():
+			continue
+		var order := done.find(choices[index])
+		button.disabled = _phase != Phase.SOLVING or order >= 0
+		if order >= 0:
+			button.text = "%d.  %s" % [order + 1, choices[index]]
+			button.add_theme_color_override("font_color", UiTheme.COLOR_TEAL)
+			button.add_theme_color_override("font_disabled_color", UiTheme.COLOR_TEAL)
+		else:
 			button.text = "%d  %s" % [index + 1, choices[index]]
+			button.remove_theme_color_override("font_color")
+			button.remove_theme_color_override("font_disabled_color")
 
 
 func _on_puzzle_requested(puzzle_id: String) -> void:
@@ -136,15 +144,13 @@ func _build_contents() -> void:
 	_title = _label("", UiTheme.COLOR_TEAL)
 	_box.add_child(_title)
 	_prompt = _label("", UiTheme.COLOR_TEXT)
-	_prompt.custom_minimum_size = Vector2(0, 18)
+	_prompt.custom_minimum_size = Vector2(0, 20)
 	_box.add_child(_prompt)
-	_placed = _rich(34)
-	_box.add_child(_placed)
 	for index in MAX_OPTIONS:
 		var button := _button("", _on_option_pressed.bind(index))
 		_option_buttons.append(button)
 		_box.add_child(button)
-	_feedback = _rich(24)
+	_feedback = _rich(42)
 	_box.add_child(_feedback)
 	var footer := HBoxContainer.new()
 	_box.add_child(footer)

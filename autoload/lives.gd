@@ -2,11 +2,12 @@ extends Node
 ## Three lives per run. Collapsing (health reaching zero) costs one and sends
 ## the player back to the area's start; with none left the run is over.
 
-const MAX_LIVES := 3
+const DEFAULT_LIVES := 3
 
 ## Off until a real run starts, so tests that knock the player out stay peaceful.
 var active := false
-var lives := MAX_LIVES
+var max_lives := DEFAULT_LIVES
+var lives := DEFAULT_LIVES
 
 
 func _ready() -> void:
@@ -14,13 +15,16 @@ func _ready() -> void:
 
 
 func start_run() -> void:
-	lives = MAX_LIVES
+	Difficulty.begin_run()
+	max_lives = int(Difficulty.value("lives"))
+	lives = max_lives
 	active = true
 	EventBus.lives_changed.emit(lives)
 
 
 func reset() -> void:
-	lives = MAX_LIVES
+	max_lives = DEFAULT_LIVES
+	lives = DEFAULT_LIVES
 	active = false
 	EventBus.lives_changed.emit(lives)
 

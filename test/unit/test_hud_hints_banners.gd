@@ -5,6 +5,8 @@ const HUD_SCENE := preload("res://world/outpost.tscn")
 
 
 func before_each() -> void:
+	Notices._holding = false
+	Notices._waiting.clear()
 	GameState.reset()
 	Survival.set_process(false)
 	Survival.reset()
@@ -99,3 +101,26 @@ func test_purified_water_restores_water() -> void:
 
 func test_nothing_happens_with_no_supplies() -> void:
 	assert_false(Consumables.use_first(Consumables.HEAL_ORDER))
+
+
+func test_notices_wait_for_a_conversation_to_end() -> void:
+	var banners := BannerQueue.new()
+	add_child_autofree(banners)
+	EventBus.dialogue_opened.emit()
+	banners.push("QUEST COMPLETE", "Sharp Eye")
+	assert_true(Notices.is_holding())
+	assert_eq(Notices.waiting(), 1, "held back while talking")
+	EventBus.dialogue_finished.emit("x")
+	assert_false(Notices.is_holding())
+	assert_eq(Notices.waiting(), 0)
+	assert_eq(banners.pending(), 1, "shown once the talk is over")
+
+
+func test_a_cut_short_conversation_also_releases_notices() -> void:
+	var banners := BannerQueue.new()
+	add_child_autofree(banners)
+	EventBus.dialogue_opened.emit()
+	banners.push("NEW OBJECTIVE", "Sort the pile")
+	EventBus.dialogue_interrupted.emit()
+	assert_eq(Notices.waiting(), 0)
+	assert_eq(banners.pending(), 1)

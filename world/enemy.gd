@@ -47,6 +47,7 @@ func _ready() -> void:
 		push_error("Enemy: no data for '%s' in data/enemies.json" % enemy_id)
 		queue_free()
 		return
+	_apply_difficulty()
 	_hp = float(_def["hp"])
 	collision_layer = 4
 	collision_mask = 1
@@ -59,6 +60,16 @@ func reset_aggro() -> void:
 	if _state != State.DEAD:
 		_state = State.IDLE
 		_set_alert(false)
+
+
+## Scales this zombie's stats by the run's difficulty (Medium changes nothing).
+func _apply_difficulty() -> void:
+	_def["hp"] = float(_def["hp"]) * Difficulty.value("enemy_hp")
+	_def["damage"] = float(_def["damage"]) * Difficulty.value("enemy_damage")
+	_def["speed"] = float(_def["speed"]) * Difficulty.value("enemy_speed")
+	_def["windup"] = float(_def["windup"]) * Difficulty.value("enemy_windup")
+	_def["aggro"] = float(_def["aggro"]) * Difficulty.value("enemy_aggro")
+	_def["leash"] = float(_def["leash"]) * Difficulty.value("enemy_aggro")
 
 
 func is_dead() -> bool:
@@ -124,7 +135,7 @@ func _die() -> void:
 
 func _roll_drops() -> void:
 	for drop: Dictionary in _def.get("drops", []):
-		if randf() > float(drop["chance"]):
+		if randf() > float(drop["chance"]) * Difficulty.value("drops"):
 			continue
 		if drop.has("gear"):
 			if Gear.grant(drop["gear"]):

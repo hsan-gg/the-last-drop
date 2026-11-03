@@ -66,8 +66,9 @@ func answer(index: int) -> void:
 	else:
 		EventBus.sfx_requested.emit("sort_bad")
 		var correct_text: String = _quiz["options"][int(_quiz["answer"])]
-		Survival.damage(WRONG_DAMAGE)
-		_feedback.text = "[color=#e0584a]NOT QUITE  -%d health[/color]\nThe answer: %s\n%s" % [int(WRONG_DAMAGE), correct_text, _quiz["explanation"]]
+		var damage := WRONG_DAMAGE * Difficulty.value("penalty")
+		Survival.damage(damage)
+		_feedback.text = "[color=#e0584a]NOT QUITE  -%d health[/color]\nThe answer: %s\n%s" % [int(round(damage)), correct_text, _quiz["explanation"]]
 	# Counters last, so a quest that completes on this answer fires after the feedback is set.
 	GameState.add_to_counter("quiz_correct" if _was_correct else "quiz_wrong")
 	_continue.visible = true

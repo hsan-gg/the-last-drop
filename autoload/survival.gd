@@ -46,10 +46,10 @@ func speed_multiplier() -> float:
 
 
 func tick(seconds: float) -> void:
-	var next_water := maxf(_water - WATER_DECAY_PER_SECOND * seconds, 0.0)
+	var next_water := maxf(_water - WATER_DECAY_PER_SECOND * Difficulty.value("water_decay") * seconds, 0.0)
 	var next_health := _health
 	if next_water >= REGEN_MIN_WATER:
-		next_health = minf(_health + HEALTH_REGEN_PER_SECOND * seconds, _max_health)
+		next_health = minf(_health + HEALTH_REGEN_PER_SECOND * Difficulty.value("regen") * seconds, _max_health)
 	_apply(next_water, next_health)
 
 
