@@ -7,14 +7,16 @@ extends OverlayPanel
 const INVENTORY := "inventory"
 const QUESTS := "quests"
 const MAP := "map"
+const CODEX := "codex"
 const OPTIONS := "options"
 const CONTROLS := "controls"
 const ALL_TABS: Array[Dictionary] = [
-	{"id": INVENTORY, "label": "INVENTORY"},
+	{"id": INVENTORY, "label": "ITEMS"},
 	{"id": QUESTS, "label": "QUESTS"},
+	{"id": CODEX, "label": "CODEX"},
 	{"id": MAP, "label": "MAP"},
 	{"id": OPTIONS, "label": "OPTIONS"},
-	{"id": CONTROLS, "label": "CONTROLS"},
+	{"id": CONTROLS, "label": "KEYS"},
 ]
 
 ## The title screen shows Options and Controls only, and never pauses.
@@ -137,6 +139,8 @@ func _make_tab(tab_id: String) -> MenuTab:
 			return InventoryTab.new()
 		QUESTS:
 			return QuestsTab.new()
+		CODEX:
+			return CodexTab.new()
 		MAP:
 			return MapTab.new()
 		OPTIONS:

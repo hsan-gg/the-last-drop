@@ -22,6 +22,9 @@ static func progress(quest: Dictionary) -> Dictionary:
 		"counter":
 			current = GameState.get_counter(goal["key"])
 			target = int(goal["target"])
+		"codex":
+			current = GameState.count_flags_with_prefix("lesson_seen_")
+			target = int(goal["target"])
 		"clear":
 			current = GameState.count_flags_with_prefix("slain_%s_" % goal["area"])
 			var spawned := GameState.get_counter("spawned_%s" % goal["area"])

@@ -46,6 +46,10 @@ func area(area_id: String) -> Dictionary:
 	return _areas.get(area_id, {}).duplicate(true)
 
 
+func all_lessons() -> Array:
+	return _lessons.values().duplicate(true)
+
+
 func lesson(lesson_id: String) -> Dictionary:
 	return _lessons.get(lesson_id, {}).duplicate()
 

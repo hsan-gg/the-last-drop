@@ -315,10 +315,10 @@ func test_tab_cycles_through_every_page() -> void:
 	var menu := _menu()
 	menu.open(GameMenu.INVENTORY)
 	var seen: Array[String] = []
-	for _i in 5:
+	for _i in 6:
 		seen.append(menu.current_tab_id())
 		menu.next_tab()
-	assert_eq(seen, ["inventory", "quests", "map", "options", "controls"] as Array[String])
+	assert_eq(seen, ["inventory", "quests", "codex", "map", "options", "controls"] as Array[String])
 	assert_eq(menu.current_tab_id(), GameMenu.INVENTORY, "wraps around")
 
 
@@ -328,3 +328,36 @@ func test_the_title_menu_has_only_options_and_controls() -> void:
 	assert_eq(menu.current_tab_id(), GameMenu.OPTIONS)
 	assert_null(menu.tab(GameMenu.INVENTORY))
 	assert_not_null(menu.tab(GameMenu.CONTROLS))
+
+
+# ------------------------------------------------------------- codex
+
+func test_lessons_unlock_as_they_are_met() -> void:
+	var tab := CodexTab.new()
+	add_child_autofree(tab)
+	assert_eq(CodexTab.discovered_count(), 0)
+	GameState.set_flag("lesson_seen_battery_leak")
+	assert_true(CodexTab.is_discovered("battery_leak"))
+	assert_eq(CodexTab.discovered_count(), 1)
+	assert_eq(tab.lesson_ids()[0], "battery_leak", "discovered lessons come first")
+
+
+func test_the_codex_has_a_card_for_every_lesson() -> void:
+	var tab := CodexTab.new()
+	add_child_autofree(tab)
+	assert_eq(tab.lesson_ids().size(), Content.all_lessons().size())
+
+
+func test_testing_water_teaches_lessons() -> void:
+	var point: SamplePoint = preload("res://world/sample_point.tscn").instantiate()
+	point.sample_id = "b"
+	point.dialogue_id = "sample_b"
+	add_child_autofree(point)
+	point.interact(null)
+	assert_true(CodexTab.is_discovered("runoff"))
+
+
+func test_discovering_lessons_completes_the_student_quest() -> void:
+	for lesson_id in ["battery_leak", "chemical_leak", "plastic_reuse", "material_reuse", "glass_general"]:
+		GameState.set_flag("lesson_seen_%s" % lesson_id)
+	assert_true(QuestRules.is_done("student"))

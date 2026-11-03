@@ -441,5 +441,53 @@
 		"reward": {
 			"xp": 120
 		}
+	},
+	{
+		"id": "student",
+		"area": "outpost",
+		"title": "Student",
+		"text": "Discover 5 lessons for your field guide.",
+		"difficulty": "easy",
+		"category": "learn",
+		"goal": {
+			"type": "codex",
+			"target": 5
+		},
+		"reward": {
+			"xp": 35,
+			"water": 10
+		}
+	},
+	{
+		"id": "scholar",
+		"area": "factory",
+		"title": "Scholar",
+		"text": "Discover 10 lessons for your field guide.",
+		"difficulty": "medium",
+		"category": "learn",
+		"goal": {
+			"type": "codex",
+			"target": 10
+		},
+		"reward": {
+			"xp": 90,
+			"health": 20
+		}
+	},
+	{
+		"id": "professor",
+		"area": "river",
+		"title": "Professor",
+		"text": "Discover 15 lessons for your field guide.",
+		"difficulty": "hard",
+		"category": "learn",
+		"goal": {
+			"type": "codex",
+			"target": 15
+		},
+		"reward": {
+			"xp": 150,
+			"gear": "recycled_edge"
+		}
 	}
 ]

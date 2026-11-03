@@ -5,6 +5,8 @@ extends Interactable
 
 const SAMPLES_NEEDED := 3
 const ALL_DONE_FLAG := "samples_done"
+## Each strip teaches a lesson, which goes in the codex.
+const LESSONS := {"a": "clear_not_safe", "b": "runoff", "c": "boil_limits"}
 
 @export var sample_id: String = ""
 @export var dialogue_id: String = ""
@@ -27,6 +29,8 @@ func _on_interacted(_by: Node) -> void:
 		GameState.set_flag(_flag())
 		EventBus.sfx_requested.emit("reveal")
 		GameState.add_to_counter("samples")
+		if LESSONS.has(sample_id):
+			GameState.set_flag("lesson_seen_%s" % LESSONS[sample_id])
 		if GameState.get_counter("samples") >= SAMPLES_NEEDED:
 			GameState.set_flag(ALL_DONE_FLAG)
 		_refresh()
