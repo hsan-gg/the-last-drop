@@ -659,6 +659,10 @@ def main():
     import assets_chapter2
 
     assets_chapter2.build()
+    import import_art
+
+    if import_art.PACK.exists():  # third-party world art overrides the generated placeholders
+        import_art.build_all()
     print("assets written to", ROOT / "assets")
 
 

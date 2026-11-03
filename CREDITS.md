@@ -10,3 +10,17 @@
 
 MIT licence, (c) 2026 kelpekk | frogy. Runtime files only, in `addons/juicee/`.
 Source: https://github.com/Kelpekk/Juicee
+
+## Post-Apocalypse Pixel Art Asset Pack (world art)
+
+By TheLazyStone, https://thelazystone.itch.io/post-apocalypse-pixel-art-asset-pack
+Free for non-commercial use; commercial use requires paying the author at least
+$2 USD; the files may not be redistributed, original or modified. Credit is
+optional. The raw pack lives in `art_src/` (not in git); the derived tileset,
+player sheet and scrap pile in `assets/` come from `tools/import_art.py`.
+Keep this repository private while those files are in it.
+
+## CraftPix Urban Zombie Survival Pixel Art Minigame Kit
+
+Downloaded to `art_src/craftpix_zombie/` under the CraftPix free licence
+(https://craftpix.net/file-licenses/). Not used in the game yet.
