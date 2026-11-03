@@ -31,6 +31,14 @@ func _on_command(args: Array) -> void:
 		"peace":
 			_peace()
 			_publish({"peace": true})
+		"rune":
+			_publish({"granted": Runes.grant(argument)})
+		"flag":
+			GameState.set_flag(argument)
+			_publish({"flag": argument})
+		"scene":
+			SceneManager.change_scene("res://world/%s.tscn" % argument)
+			_publish({"scene": argument})
 		_:
 			_publish({"error": "unknown command %s" % command})
 

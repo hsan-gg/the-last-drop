@@ -57,7 +57,7 @@ func _physics_process(delta: float) -> void:
 			elif rune == "tide" and Input.is_action_just_pressed(action):
 				cast_tide()
 	_flames.emitting = breathing
-	_flame_light.energy = lerpf(_flame_light.energy, 1.4 if breathing else 0.0, 0.25)
+	_flame_light.energy = lerpf(_flame_light.energy, 2.2 if breathing else 0.0, 0.25)
 	if breathing:
 		_aim_flames()
 	_age_effects(delta)
@@ -101,16 +101,19 @@ func _aim_flames() -> void:
 func _make_flames() -> CPUParticles2D:
 	var flames := CPUParticles2D.new()
 	flames.emitting = false
-	flames.amount = 90
-	flames.lifetime = 0.45
+	flames.amount = 160
+	flames.lifetime = 0.55
+	var glow := CanvasItemMaterial.new()
+	glow.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+	flames.material = glow
 	flames.spread = FLAME_HALF_ANGLE * 0.7
 	flames.gravity = Vector2(0, -40)
-	flames.initial_velocity_min = 80.0
-	flames.initial_velocity_max = 120.0
+	flames.initial_velocity_min = 100.0
+	flames.initial_velocity_max = 150.0
 	flames.damping_min = 40.0
 	flames.damping_max = 80.0
-	flames.scale_amount_min = 1.5
-	flames.scale_amount_max = 4.0
+	flames.scale_amount_min = 2.0
+	flames.scale_amount_max = 6.0
 	var size_curve := Curve.new()
 	size_curve.add_point(Vector2(0, 0.4))
 	size_curve.add_point(Vector2(0.4, 1.0))
@@ -142,10 +145,10 @@ func fire_scatter() -> bool:
 		if victim != null:
 			end = victim.global_position + BODY_OFFSET
 			hits[victim] = int(hits.get(victim, 0)) + 1
-		_tracers.append({"from": Vector2.ZERO, "to": end - origin, "age": 0.0})
+		_tracers.append({"from": _player.facing * 8.0, "to": end - origin, "age": 0.0})
 	for victim: Enemy in hits:
 		victim.take_hit(SCATTER_DAMAGE * int(hits[victim]), origin, SCATTER_KNOCKBACK)
-	_rings.append({"radius": 6.0, "age": 0.0, "color": Color("#fff2a0"), "grow": 60.0, "life": 0.12, "at": _player.facing * 10.0})
+	_rings.append({"radius": 4.0, "age": 0.0, "color": Color("#fff2a0"), "grow": 14.0, "life": 0.12, "at": _player.facing * 10.0, "fill": true})
 	return true
 
 
@@ -184,8 +187,27 @@ func cast_tide() -> bool:
 		if hazard.global_position.distance_to(global_position) <= TIDE_RADIUS:
 			hazard.clear()
 	for wave in 3:
-		_rings.append({"radius": 4.0 + wave * 6.0, "age": -wave * 0.08, "color": Color("#7fe0ff"), "grow": TIDE_RADIUS * 1.6, "life": 0.5, "at": Vector2.ZERO})
+		_rings.append({"radius": 4.0 + wave * 6.0, "age": -wave * 0.1, "color": Color("#7fe0ff"), "grow": TIDE_RADIUS, "life": 0.75, "at": Vector2.ZERO, "width": 4.0})
+	add_child(_splash())
 	return true
+
+
+func _splash() -> CPUParticles2D:
+	var splash := CPUParticles2D.new()
+	splash.one_shot = true
+	splash.emitting = true
+	splash.amount = 40
+	splash.lifetime = 0.7
+	splash.explosiveness = 0.9
+	splash.spread = 180.0
+	splash.gravity = Vector2(0, 120)
+	splash.initial_velocity_min = 60.0
+	splash.initial_velocity_max = 120.0
+	splash.scale_amount_min = 1.0
+	splash.scale_amount_max = 2.5
+	splash.color = Color("#bff4ff")
+	splash.finished.connect(splash.queue_free)
+	return splash
 
 
 # ------------------------------------------------------------------ shared
@@ -202,7 +224,7 @@ func _enemies_in_cone(reach: float, half_angle: float) -> Array[Enemy]:
 func _age_effects(delta: float) -> void:
 	for tracer in _tracers:
 		tracer["age"] = float(tracer["age"]) + delta
-	_tracers = _tracers.filter(func(tracer: Dictionary) -> bool: return float(tracer["age"]) < 0.1)
+	_tracers = _tracers.filter(func(tracer: Dictionary) -> bool: return float(tracer["age"]) < 0.14)
 	for ring in _rings:
 		ring["age"] = float(ring["age"]) + delta
 	_rings = _rings.filter(func(ring: Dictionary) -> bool: return float(ring["age"]) < float(ring["life"]))
@@ -210,12 +232,18 @@ func _age_effects(delta: float) -> void:
 
 func _draw() -> void:
 	for tracer in _tracers:
-		var fade := 1.0 - float(tracer["age"]) / 0.1
-		draw_line(tracer["from"], tracer["to"], Color(1.0, 0.95, 0.6, fade), 1.0)
+		var fade := 1.0 - float(tracer["age"]) / 0.14
+		draw_line(tracer["from"], tracer["to"], Color(1.0, 0.85, 0.4, fade * 0.5), 3.0)
+		draw_line(tracer["from"], tracer["to"], Color(1.0, 1.0, 0.8, fade), 1.0)
 	for ring in _rings:
 		var age := float(ring["age"])
 		if age < 0.0:
 			continue
 		var progress := age / float(ring["life"])
 		var color: Color = ring["color"]
-		draw_arc(ring["at"], float(ring["radius"]) + float(ring["grow"]) * progress, 0.0, TAU, 32, Color(color.r, color.g, color.b, 1.0 - progress), 2.0)
+		var radius := float(ring["radius"]) + float(ring["grow"]) * progress
+		if ring.get("fill", false):
+			draw_circle(ring["at"], radius, Color(color.r, color.g, color.b, 1.0 - progress))
+		else:
+			draw_arc(ring["at"], radius, 0.0, TAU, 40, Color(color.r, color.g, color.b, (1.0 - progress) * 0.9), float(ring.get("width", 2.0)))
+			draw_circle(ring["at"], radius, Color(color.r, color.g, color.b, (1.0 - progress) * 0.12))

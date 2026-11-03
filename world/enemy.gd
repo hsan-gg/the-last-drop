@@ -145,8 +145,8 @@ func _tick_special(delta: float) -> void:
 			if GameState.has_flag("sanctuary_powered"):
 				_state = State.IDLE
 				_sprite.self_modulate = Color("#9affd0")
-		"boss":
-			EventBus.boss_changed.emit(_def.get("name", "Boss"), _hp / float(_def["hp"]))
+		"boss":  # the bar shows only while it is fighting you
+			EventBus.boss_changed.emit(_def.get("name", "Boss") if _state != State.IDLE else "", _hp / float(_def["hp"]))
 			if not _phase_two and _hp < float(_def["hp"]) * 0.5:
 				_phase_two = true
 				_def["speed"] = float(_def["speed"]) * 1.35
@@ -222,6 +222,8 @@ func burn_damage(amount: float) -> void:
 func _tick_burn(delta: float) -> void:
 	if _burn <= 0.0:
 		return
+	if _state != State.WINDUP:  # a flickering orange glow while it burns
+		_sprite.modulate = Color(1.6, 0.9 + 0.2 * sin(Time.get_ticks_msec() * 0.03), 0.5)
 	_burn -= delta
 	_burn_tick -= delta
 	if _burn_tick <= 0.0:
@@ -231,8 +233,10 @@ func _tick_burn(delta: float) -> void:
 			var other := node as Enemy
 			if other != null and other != self and not other.is_burning() and other.global_position.distance_to(global_position) < 18.0:
 				other.ignite(maxf(_burn * 0.6, 1.0))
-	if _burn <= 0.0 and _fire != null:
-		_fire.emitting = false
+	if _burn <= 0.0:
+		_sprite.modulate = Color.WHITE
+		if _fire != null:
+			_fire.emitting = false
 
 
 func _die() -> void:
@@ -434,8 +438,11 @@ func _build_body() -> void:
 
 	_fire = CPUParticles2D.new()
 	_fire.emitting = false
-	_fire.amount = 24
-	_fire.lifetime = 0.6
+	_fire.amount = 36
+	_fire.lifetime = 0.7
+	var glow := CanvasItemMaterial.new()
+	glow.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+	_fire.material = glow
 	_fire.position = Vector2(0, -float(canvas[1]) * 0.45)
 	_fire.emission_shape = CPUParticles2D.EMISSION_SHAPE_RECTANGLE
 	_fire.emission_rect_extents = Vector2(5, float(canvas[1]) * 0.35)
@@ -444,8 +451,8 @@ func _build_body() -> void:
 	_fire.gravity = Vector2(0, -60)
 	_fire.initial_velocity_min = 10.0
 	_fire.initial_velocity_max = 30.0
-	_fire.scale_amount_min = 1.0
-	_fire.scale_amount_max = 3.0
+	_fire.scale_amount_min = 2.0
+	_fire.scale_amount_max = 4.0
 	var ramp := Gradient.new()
 	ramp.colors = PackedColorArray([Color("#fff0a0"), Color("#ff9a30"), Color("#e04a1a"), Color(0.2, 0.15, 0.15, 0.0)])
 	ramp.offsets = PackedFloat32Array([0.0, 0.3, 0.65, 1.0])

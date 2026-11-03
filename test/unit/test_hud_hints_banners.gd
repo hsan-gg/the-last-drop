@@ -199,3 +199,15 @@ func test_cards_that_have_left_are_forgotten_cleanly() -> void:
 	feed.notify("quest", "Quest complete", "One")
 	await wait_seconds(3.6)
 	assert_eq(feed.showing(), 0)
+
+
+func test_arriving_in_an_area_does_not_announce_an_old_objective_as_done() -> void:
+	var area: Node = add_child_autofree(preload("res://world/industry.tscn").instantiate())
+	await wait_physics_frames(2)
+	var hud: Hud = area.find_children("*", "Hud", true, false)[0]
+	(area.find_children("*", "DialogueBox", true, false)[0] as DialogueBox).interrupt()
+	await wait_seconds(0.7)
+	var shown := ""
+	for label: Label in hud._feed.find_children("*", "Label", true, false):
+		shown += label.text + "|"
+	assert_false("Done!" in shown, "nothing was finished by walking in")

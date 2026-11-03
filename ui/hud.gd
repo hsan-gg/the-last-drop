@@ -94,6 +94,10 @@ func _ready() -> void:
 
 func set_area(new_area_id: String) -> void:
 	area_id = new_area_id
+	# A new area is not an objective change: take its current goal silently.
+	_objective_seen = false
+	_last_objective_id = ""
+	_last_objective_text = ""
 	_refresh_objective()
 
 
