@@ -192,9 +192,32 @@ def build_player():
     print("player sheet written (12 columns: 6 idle, 6 run)")
 
 
+ATTACK_CELL_W = 20
+
+
+def build_player_attack():
+    """Rows: down, up, left, right; 4 punch frames each in 20x18 cells (the side
+    views are 20 px wide). The sword swing is drawn on top by the game."""
+    rows = []
+    for direction in ("down", "up", "side-left", "side"):
+        sheet = load(f"Character/Main/Punch/Character_{direction}_punch-Sheet4.png")
+        frame_h, sheet_w = sheet.shape[:2]
+        frame_w = sheet_w // 4
+        cells = []
+        for index in range(4):
+            cell = np.zeros((CELL_H, ATTACK_CELL_W, 4), np.uint8)
+            x0 = (ATTACK_CELL_W - frame_w) // 2
+            cell[CELL_H - frame_h:, x0:x0 + frame_w] = sheet[:, index * frame_w:(index + 1) * frame_w]
+            cells.append(cell)
+        rows.append(np.concatenate(cells, axis=1))
+    write_png(ROOT / "assets" / "sprites" / "player_attack.png", np.concatenate(rows, axis=0))
+    print("player attack sheet written")
+
+
 def build_all():
     build_tileset()
     build_player()
+    build_player_attack()
     build_props()
     build_decor()
 

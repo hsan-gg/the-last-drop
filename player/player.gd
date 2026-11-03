@@ -10,10 +10,20 @@ const SHAKE_STEP_SECONDS := 0.04
 @onready var _sprite: PlayerSprite = $Sprite
 @onready var _camera: Camera2D = $Camera2D
 
+## The direction the player last moved or aimed; attacks and the guard use it.
+var facing := Vector2.DOWN
+
+var combat: PlayerCombat
+
 var _spawn_position := Vector2.ZERO
 
 
 func _ready() -> void:
+	add_to_group("player")
+	add_child(SwordSwing.new())
+	combat = PlayerCombat.new()
+	combat.name = "Combat"
+	add_child(combat)
 	_spawn_position = global_position
 	EventBus.player_collapsed.connect(respawn)
 	EventBus.damage_taken.connect(_shake.unbind(1))
@@ -39,11 +49,24 @@ func respawn() -> void:
 	velocity = Vector2.ZERO
 
 
+## Plays the swing animation for `seconds` in the given direction.
+func play_attack(direction: Vector2, seconds: float) -> void:
+	_sprite.play_attack(direction, seconds)
+
+
+## An enemy hit. Returns {"outcome", "damage"} from the combat rules.
+func receive_hit(raw_damage: float, from_position: Vector2) -> Dictionary:
+	return combat.receive_hit(raw_damage, from_position)
+
+
 func _physics_process(_delta: float) -> void:
 	var direction := Input.get_vector("move_left", "move_right", "move_up", "move_down")
-	velocity = direction * SPEED * Survival.speed_multiplier()
+	if direction != Vector2.ZERO and not combat.is_busy():
+		facing = direction.normalized()
+	velocity = direction * SPEED * Survival.speed_multiplier() * combat.move_factor()
 	move_and_slide()
-	_sprite.face(direction, direction != Vector2.ZERO)
+	if not combat.is_busy():
+		_sprite.face(facing if combat.is_blocking() else direction, direction != Vector2.ZERO)
 
 
 func _unhandled_input(event: InputEvent) -> void:

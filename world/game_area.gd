@@ -13,6 +13,8 @@ const ENTITY_SCENES := {
 	"item_pickup": preload("res://world/item_pickup.tscn"),
 	"decor": preload("res://world/decor.tscn"),
 	"sample_point": preload("res://world/sample_point.tscn"),
+	"enemy": preload("res://world/enemy.tscn"),
+	"chest": preload("res://world/chest.tscn"),
 }
 const COLLAPSE_LINES: Array[String] = [
 	"You collapse from the strain, and come to at the edge of camp.",
@@ -75,6 +77,8 @@ func _place_entities(layout: PackedStringArray, definitions: Dictionary, marker_
 		var properties: Dictionary = definition.get("props", {})
 		for key: String in properties:
 			entity.set(key, _typed(properties[key], entity.get(key)))
+		if "spawn_key" in entity:
+			entity.spawn_key = "%s_%d_%d" % [area_id, marker["cell"].x, marker["cell"].y]
 		entity.add_to_group("scene_%s" % definition.get("scene", ""))
 		entity.set_meta("props", properties)
 		_entities.add_child(entity)

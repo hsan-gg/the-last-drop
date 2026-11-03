@@ -197,6 +197,34 @@ def sample_kit():
     return c
 
 
+def sword():
+    c = Canvas(16, 5)
+    c.rect(0, 1, 3, 4, hexc("#6a4a34"))  # grip
+    c.rect(3, 0, 5, 5, STEEL_D)  # guard
+    c.rect(5, 1, 15, 4, STEEL_L)  # blade
+    c.rect(5, 1, 15, 2, WHITE)
+    c.px(15, 2, STEEL_L)
+    c.outline(OUT)
+    return c
+
+
+def chest(opened):
+    c = Canvas(16, 14)
+    wood, wood_l, wood_d = hexc("#8a5a34"), hexc("#b0804c"), hexc("#5a3a24")
+    shade(c, 1, 6, 15, 14, wood_d, wood, wood_l)  # body
+    if opened:
+        shade(c, 1, 1, 15, 6, wood_d, wood_d, wood)  # lid thrown back
+        c.rect(3, 6, 13, 8, hexc("#2a2030"))  # dark inside
+        c.rect(5, 6, 11, 7, YELLOW)  # glint of loot
+    else:
+        shade(c, 1, 2, 15, 8, wood_d, wood, wood_l)  # lid
+        c.rect(7, 6, 10, 9, YELLOW)  # lock
+        c.px(8, 7, OUT)
+    c.rect(1, 8, 15, 9, STEEL_D)  # band
+    c.outline(OUT)
+    return c
+
+
 def build():
     named = [OUT, STEEL_D, STEEL, STEEL_L, RUST_D, RUST, RUST_L, BLUE_D, BLUE, BLUE_L, CYAN, WHITE,
              GREEN, GREEN_L, YELLOW, RED, ORANGE, GLASS, GLASS_L, GLASS_D]
@@ -215,6 +243,9 @@ def build():
         "items/kettle": kettle(),
         "items/paint_tin": paint_tin(),
         "sample_kit": sample_kit(),
+        "sword": sword(),
+        "chest_closed": chest(False),
+        "chest_open": chest(True),
     }
     for name, canvas in drawings.items():
         path = SPRITES / f"{name}.png"
