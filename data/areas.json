@@ -123,7 +123,10 @@
 				"props": {
 					"gear": [
 						"rusty_sword"
-					]
+					],
+					"items": {
+						"bandage": 2
+					}
 				}
 			}
 		}
@@ -247,7 +250,10 @@
 					"gear": [
 						"hard_hat",
 						"cloth_wrap"
-					]
+					],
+					"items": {
+						"purified_water": 1
+					}
 				}
 			}
 		}
@@ -448,7 +454,10 @@
 				"props": {
 					"gear": [
 						"scrap_blade"
-					]
+					],
+					"items": {
+						"bandage": 1
+					}
 				}
 			},
 			"l": {
@@ -456,7 +465,10 @@
 				"props": {
 					"gear": [
 						"tire_vest"
-					]
+					],
+					"items": {
+						"energy_bar": 2
+					}
 				}
 			}
 		}
@@ -647,7 +659,10 @@
 				"props": {
 					"gear": [
 						"crash_helmet"
-					]
+					],
+					"items": {
+						"purified_water": 1
+					}
 				}
 			},
 			"l": {
@@ -655,7 +670,10 @@
 				"props": {
 					"gear": [
 						"recycled_edge"
-					]
+					],
+					"items": {
+						"bandage": 2
+					}
 				}
 			}
 		}

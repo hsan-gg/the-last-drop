@@ -26,6 +26,7 @@ const BURST_COLOR := Color("#f2c94c")
 @export var area_id: String = "outpost"
 
 var _camera: Camera2D
+var _reveal_timer := 0.0
 
 @onready var _entities: Node2D = $Entities
 @onready var _player: Player = $Entities/Player
@@ -57,6 +58,13 @@ func _ready() -> void:
 	EventBus.quiz_finished.connect(_on_quiz_finished)
 	EventBus.celebrate.connect(_spawn_burst)
 	_play_arrival_dialogue(config.get("arrival_dialogue", ""))
+
+
+func _process(delta: float) -> void:
+	_reveal_timer -= delta
+	if _reveal_timer <= 0.0 and _player != null:
+		_reveal_timer = 0.25
+		MapMemory.reveal(area_id, Vector2i((_player.global_position / MapBuilder.TILE_SIZE).floor()))
 
 
 func _place_entities(layout: PackedStringArray, definitions: Dictionary, marker_chars: String) -> void:

@@ -35,6 +35,46 @@ static func panel_style(border: Color = COLOR_BORDER) -> StyleBoxFlat:
 	return style
 
 
+## A header strip for popups: darker, with a bright top edge.
+static func banner_style() -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.05, 0.08, 0.11, 0.96)
+	style.set_border_width_all(1)
+	style.border_color = Color("#31505c")
+	style.border_width_top = 2
+	style.set_content_margin_all(5)
+	style.shadow_color = Color(0, 0, 0, 0.45)
+	style.shadow_size = 3
+	return style
+
+
+## An inventory slot: dark well, brighter edge when selected, gold when worn.
+static func slot_style(selected: bool, worn: bool = false) -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color("#0c161c") if not selected else Color("#183444")
+	style.set_border_width_all(1)
+	style.border_color = COLOR_YELLOW if worn else (COLOR_ORANGE if selected else Color("#2a4350"))
+	if selected or worn:
+		style.set_border_width_all(2)
+	style.set_content_margin_all(1)
+	return style
+
+
+## A list card (quests): dark body with a coloured bar down the left edge.
+static func card_style(accent: Color) -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color("#0e1c24")
+	style.set_border_width_all(1)
+	style.border_color = Color("#223844")
+	style.border_width_left = 3
+	style.border_color = Color("#223844")
+	style.set_content_margin_all(5)
+	style.content_margin_left = 8
+	style.shadow_color = Color(0, 0, 0, 0.35)
+	style.shadow_size = 2
+	return style
+
+
 static func button_style(fill: Color, border: Color) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
 	style.bg_color = fill

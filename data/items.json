@@ -112,5 +112,33 @@
 		"name": "Paint Tin",
 		"category": "hazardous",
 		"lesson_id": "runoff"
+	},
+	{
+		"id": "bandage",
+		"name": "Bandage",
+		"category": "consumable",
+		"description": "Restores 30 health. Press H.",
+		"use": {
+			"heal": 30
+		}
+	},
+	{
+		"id": "purified_water",
+		"name": "Purified Water",
+		"category": "consumable",
+		"description": "Restores 50 water. Press G.",
+		"use": {
+			"water": 50
+		}
+	},
+	{
+		"id": "energy_bar",
+		"name": "Energy Bar",
+		"category": "consumable",
+		"description": "Restores 15 health and 15 water.",
+		"use": {
+			"heal": 15,
+			"water": 15
+		}
 	}
 ]

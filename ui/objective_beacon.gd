@@ -1,16 +1,24 @@
 class_name ObjectiveBeacon
 extends CanvasLayer
-## Makes the current objective impossible to miss: a pulsing marker over its
-## target in the world, and an arrow on the screen edge when it is off-screen.
+## A quiet pointer to the current objective: a small marker over its target, and
+## a small arrow on the screen edge when it is off-screen. It stays subtle by
+## default and grows brighter only after the player has been stuck for a while
+## (or if they choose Strong hints in the options).
 
 const COLOR := Color("#ffb347")
 const EDGE_MARGIN := 16.0
 const BOB_PIXELS := 3.0
 const MARKER_LIFT := 26.0
+const SUBTLE_ALPHA := 0.5
+const STRONG_ALPHA := 1.0
+## Seconds without progress before a subtle hint grows stronger.
+const IDLE_BOOST_SECONDS := 30.0
 
 var _canvas: Control
 var _target: Node2D
 var _time := 0.0
+var _idle := 0.0
+var _last_objective_id := ""
 
 
 func _ready() -> void:
@@ -26,6 +34,11 @@ func _process(delta: float) -> void:
 	_time += delta
 	var hud := get_parent() as Hud
 	var objective := ObjectivesTracker.current(hud.area_id) if hud != null else {}
+	var objective_id: String = objective.get("id", "")
+	if objective_id != _last_objective_id:
+		_last_objective_id = objective_id
+		_idle = 0.0
+	_idle += delta
 	_target = pick_target(objective.get("target", {}), get_tree().get_nodes_in_group("scene_%s" % objective.get("target", {}).get("scene", "")), _view_center())
 	_canvas.queue_redraw()
 
@@ -64,33 +77,48 @@ func _view_center() -> Vector2:
 
 
 func _draw_beacon() -> void:
-	if _target == null or not is_instance_valid(_target):
+	var visibility := strength()
+	if visibility <= 0.0 or _target == null or not is_instance_valid(_target):
 		return
 	var screen_size := get_viewport().get_visible_rect().size
 	var point := get_viewport().get_canvas_transform() * _target.global_position
-	var pulse := 0.5 + 0.5 * sin(_time * 4.0)
+	var pulse := 0.5 + 0.5 * sin(_time * 3.0)
 	var inside := Rect2(Vector2.ZERO, screen_size).grow(-EDGE_MARGIN).has_point(point)
 	if inside:
-		_draw_marker(point + Vector2(0, -MARKER_LIFT + sin(_time * 5.0) * BOB_PIXELS), pulse)
+		_draw_marker(point + Vector2(0, -MARKER_LIFT + sin(_time * 4.0) * BOB_PIXELS), pulse, visibility)
 	else:
-		_draw_edge_arrow(point, screen_size, pulse)
+		_draw_edge_arrow(point, screen_size, pulse, visibility)
 
 
-func _draw_marker(tip: Vector2, pulse: float) -> void:
-	var glow := Color(COLOR.r, COLOR.g, COLOR.b, 0.18 + 0.2 * pulse)
-	_canvas.draw_circle(tip + Vector2(0, -6), 9.0 + 2.0 * pulse, glow)
-	var chevron := PackedVector2Array([tip, tip + Vector2(-6, -8), tip + Vector2(0, -5), tip + Vector2(6, -8)])
-	_canvas.draw_colored_polygon(chevron, COLOR)
-	_canvas.draw_polyline(PackedVector2Array([chevron[0], chevron[1], chevron[2], chevron[3], chevron[0]]), Color("#2a1a10"), 1.0)
+func _draw_marker(tip: Vector2, pulse: float, visibility: float) -> void:
+	var color := Color(COLOR.r, COLOR.g, COLOR.b, 0.55 * visibility + 0.2 * pulse * visibility)
+	if visibility > SUBTLE_ALPHA:  # the glow only appears for strong hints
+		_canvas.draw_circle(tip + Vector2(0, -5), 8.0 + 2.0 * pulse, Color(COLOR.r, COLOR.g, COLOR.b, 0.15 + 0.15 * pulse))
+	var size := 4.0 if visibility <= SUBTLE_ALPHA else 6.0
+	var chevron := PackedVector2Array([tip, tip + Vector2(-size, -size * 1.3), tip + Vector2(0, -size * 0.8), tip + Vector2(size, -size * 1.3)])
+	_canvas.draw_colored_polygon(chevron, color)
 
 
-func _draw_edge_arrow(point: Vector2, screen_size: Vector2, pulse: float) -> void:
+func _draw_edge_arrow(point: Vector2, screen_size: Vector2, pulse: float, visibility: float) -> void:
 	var center := screen_size / 2.0
 	var direction := (point - center).normalized()
 	var limit := screen_size / 2.0 - Vector2(EDGE_MARGIN, EDGE_MARGIN)
 	var scale := minf(limit.x / maxf(absf(direction.x), 0.001), limit.y / maxf(absf(direction.y), 0.001))
 	var anchor := center + direction * scale
 	var side := direction.orthogonal()
-	var arrow := PackedVector2Array([anchor + direction * 7.0, anchor - direction * 5.0 + side * 6.0, anchor - direction * 2.0, anchor - direction * 5.0 - side * 6.0])
-	_canvas.draw_circle(anchor, 10.0 + 2.0 * pulse, Color(COLOR.r, COLOR.g, COLOR.b, 0.2 + 0.15 * pulse))
-	_canvas.draw_colored_polygon(arrow, COLOR)
+	var size := 0.6 if visibility <= SUBTLE_ALPHA else 1.0
+	var color := Color(COLOR.r, COLOR.g, COLOR.b, 0.5 * visibility + 0.15 * pulse * visibility)
+	if visibility > SUBTLE_ALPHA:
+		_canvas.draw_circle(anchor, 9.0 + 2.0 * pulse, Color(COLOR.r, COLOR.g, COLOR.b, 0.15 + 0.1 * pulse))
+	var arrow := PackedVector2Array([anchor + direction * 7.0 * size, anchor - direction * 5.0 * size + side * 6.0 * size, anchor - direction * 2.0 * size, anchor - direction * 5.0 * size - side * 6.0 * size])
+	_canvas.draw_colored_polygon(arrow, color)
+
+
+## How visible the hint is, 0 to 1: off, subtle, or strong (chosen, or earned by being stuck).
+func strength() -> float:
+	match int(Settings.value("objective_hints")):
+		Settings.HINTS_OFF:
+			return 0.0
+		Settings.HINTS_STRONG:
+			return STRONG_ALPHA
+	return STRONG_ALPHA if _idle >= IDLE_BOOST_SECONDS else SUBTLE_ALPHA

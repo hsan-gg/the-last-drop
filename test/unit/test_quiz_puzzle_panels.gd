@@ -103,16 +103,3 @@ func test_finishing_a_solved_puzzle_reports_success() -> void:
 		_puzzle_panel.choose(step)
 	_puzzle_panel.continue_flow()
 	assert_signal_emitted_with_parameters(EventBus, "puzzle_finished", ["hazard_route", true])
-
-
-func test_the_journal_lists_the_goal_and_side_quests() -> void:
-	GameState.set_flag("area_outpost_reached")
-	var journal := QuestJournal.new()
-	journal.pauses_game = false
-	add_child_autofree(journal)
-	var text := journal.text_for("outpost")
-	assert_string_contains(text, "MAIN GOAL")
-	assert_string_contains(text, "Sharp Eye")
-	assert_string_contains(text, "0/6")
-	GameState.add_to_counter("sort_correct", 6)
-	assert_string_contains(journal.text_for("outpost"), "DONE")

@@ -20,6 +20,10 @@
 			{
 				"gear": "cloth_wrap",
 				"chance": 0.08
+			},
+			{
+				"item": "bandage",
+				"chance": 0.15
 			}
 		]
 	},
@@ -44,6 +48,10 @@
 			{
 				"item": "tin_can",
 				"chance": 0.2
+			},
+			{
+				"item": "energy_bar",
+				"chance": 0.12
 			}
 		]
 	},
@@ -71,6 +79,14 @@
 			},
 			{
 				"item": "pipe_section",
+				"chance": 0.4
+			},
+			{
+				"item": "bandage",
+				"chance": 0.5
+			},
+			{
+				"item": "purified_water",
 				"chance": 0.4
 			}
 		]

@@ -16,6 +16,7 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	for i in SFX_VOICES:
 		var voice := AudioStreamPlayer.new()
+		voice.bus = Settings.SFX_BUS
 		add_child(voice)
 		_voices.append(voice)
 	EventBus.sfx_requested.connect(play)
@@ -42,12 +43,6 @@ func play(sfx_name: String) -> void:
 			return
 
 
-func _unhandled_input(event: InputEvent) -> void:
-	var key := event as InputEventKey
-	if key != null and key.pressed and not key.echo and key.keycode == KEY_M:
-		set_muted(not _muted)
-
-
 func _stream_for(sfx_name: String) -> AudioStream:
 	if not _streams.has(sfx_name):
 		var path := SFX_PATH_FORMAT % sfx_name
@@ -64,5 +59,6 @@ func _start_ambient() -> void:
 	var ambient := AudioStreamPlayer.new()
 	ambient.stream = stream
 	ambient.volume_db = AMBIENT_VOLUME_DB
+	ambient.bus = Settings.MUSIC_BUS
 	add_child(ambient)
 	ambient.play()

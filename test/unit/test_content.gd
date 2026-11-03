@@ -51,6 +51,9 @@ func test_every_catalogue_item_has_a_lesson_and_an_icon() -> void:
 	var items: Variant = DataLoader.load_json("res://data/items.json")
 	assert_gt(items.size(), 0)
 	for item: Dictionary in items:
+		if item["category"] == "consumable":
+			assert_not_null(ItemDB.icon(item["id"]), "%s has no icon" % item["id"])
+			continue
 		var lesson := Content.lesson(item["lesson_id"])
 		assert_false(lesson.is_empty(), "%s has no lesson" % item["id"])
 		assert_not_null(ItemDB.icon(item["id"]), "%s has no icon" % item["id"])

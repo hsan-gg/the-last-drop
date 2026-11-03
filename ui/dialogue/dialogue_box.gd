@@ -101,7 +101,7 @@ func _show_line() -> void:
 	if _typing != null:
 		_typing.kill()
 	_typing = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
-	_typing.tween_method(_reveal, 0, line.length(), maxf(line.length() / CHARS_PER_SECOND, 0.05))
+	_typing.tween_method(_reveal, 0, line.length(), maxf(line.length() / (CHARS_PER_SECOND * Settings.text_speed_multiplier()), 0.05))
 	_typing.finished.connect(func() -> void: _text.visible_characters = -1)
 
 

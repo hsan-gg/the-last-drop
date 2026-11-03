@@ -9,7 +9,7 @@ const FONT_SIZE := 8
 
 
 static func spawn(host: Node, text: String, world_position: Vector2, color: Color = Color.WHITE) -> void:
-	if host == null or not host.is_inside_tree():
+	if host == null or not host.is_inside_tree() or not Settings.value("damage_numbers"):
 		return
 	var label := Label.new()
 	label.text = text

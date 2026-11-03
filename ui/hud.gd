@@ -16,15 +16,16 @@ const DAMAGE_FLASH_SECONDS := 0.3
 
 var _water_meter: Meter
 var _health_meter: Meter
-var _inventory_box: VBoxContainer
-var _objective_label: Label
 var _prompt_panel: PanelContainer
 var _prompt_label: Label
 var _damage_flash: ColorRect
-var _objective_panel: PanelContainer
-var _banner: Label
+var _last_objective_id := ""
 var _last_objective_text := ""
-var _banner_tween: Tween
+var _objective_seen := false
+var _tracker: ObjectiveTracker
+var _lives_row: HBoxContainer
+var _lives_icons: Array[TextureRect] = []
+var _banners: BannerQueue
 var _level_label: Label
 var _xp_meter: Meter
 var _stats_label: Label
@@ -35,17 +36,18 @@ var _toast_tween: Tween
 func _ready() -> void:
 	layer = 10
 	_build()
-	_start_objective_pulse()
 	add_child(DIALOGUE_SCENE.instantiate())
 	add_child(SORTING_SCENE.instantiate())
 	add_child(ObjectiveBeacon.new())
+	_banners = BannerQueue.new()
+	add_child(_banners)
+	_tracker = ObjectiveTracker.new()
+	add_child(_tracker)
 	add_child(QuizPanel.new())
 	add_child(PuzzlePanel.new())
-	add_child(QuestJournal.new())
-	add_child(EquipmentPanel.new())
+	add_child(GameMenu.new())
 
 	EventBus.prompt_changed.connect(_on_prompt_changed)
-	EventBus.inventory_changed.connect(_refresh_inventory)
 	EventBus.flag_changed.connect(_refresh_objective.unbind(2))
 	EventBus.survival_changed.connect(_on_survival_changed)
 	EventBus.damage_taken.connect(_flash_damage)
@@ -53,19 +55,18 @@ func _ready() -> void:
 	EventBus.level_up.connect(_on_level_up)
 	EventBus.gear_changed.connect(_refresh_stats)
 	EventBus.loot_found.connect(_show_toast.bind(UiTheme.COLOR_GREEN))
+	EventBus.lives_changed.connect(_on_lives_changed)
+	EventBus.life_lost.connect(_on_life_lost)
+	EventBus.game_over.connect(_on_game_over)
+	EventBus.quest_completed.connect(_on_quest_completed)
+	Settings.changed.connect(_on_settings_changed.unbind(1))
 
 	_on_prompt_changed("")
-	_refresh_inventory()
 	_refresh_objective()
 	_on_survival_changed(Survival.water(), Survival.health())
 	_on_xp_changed(Progress.level, Progress.xp, Progress.xp_needed())
 	_refresh_stats()
-
-
-func _start_objective_pulse() -> void:
-	var pulse := create_tween().set_loops()
-	pulse.tween_property(_objective_panel, "self_modulate", Color(1.35, 1.15, 0.85), 0.9).set_trans(Tween.TRANS_SINE)
-	pulse.tween_property(_objective_panel, "self_modulate", Color.WHITE, 0.9).set_trans(Tween.TRANS_SINE)
+	_on_lives_changed(Lives.lives)
 
 
 func set_area(new_area_id: String) -> void:
@@ -128,48 +129,51 @@ func _show_toast(text: String, color: Color) -> void:
 
 func _refresh_objective() -> void:
 	var objective := ObjectivesTracker.current(area_id)
-	var text: String = objective.get("text", "Explore, and decide what to do with what you learned.")
-	_objective_label.text = text
-	if text != _last_objective_text and not _last_objective_text.is_empty() and not objective.is_empty():
-		_announce(text)
-	_last_objective_text = text
+	var objective_id: String = objective.get("id", "")
+	var text: String = objective.get("text", "")
+	if objective_id != _last_objective_id:
+		if _objective_seen:
+			_announce_change(text)
+		_last_objective_id = objective_id
+		_last_objective_text = text
+		_objective_seen = true
+	_tracker.refresh()
 
 
-## A short banner and a bright pulse so a new goal is noticed without reading.
-func _announce(text: String) -> void:
-	_banner.text = "NEW OBJECTIVE\n%s" % text
-	_banner.visible = true
-	_banner.modulate.a = 1.0
-	EventBus.sfx_requested.emit("reveal")
-	if _banner_tween != null:
-		_banner_tween.kill()
-	_banner_tween = create_tween()
-	_banner_tween.tween_interval(2.4)
-	_banner_tween.tween_property(_banner, "modulate:a", 0.0, 0.6)
-	_banner_tween.tween_callback(func() -> void: _banner.visible = false)
-	var flash := create_tween()
-	_objective_panel.modulate = Color(2.2, 1.8, 1.2)
-	flash.tween_property(_objective_panel, "modulate", Color.WHITE, 0.8)
+## "OBJECTIVE COMPLETE" then "NEW OBJECTIVE", each as a banner, and the tracker
+## slides in briefly so the next step is easy to find again.
+func _announce_change(new_text: String) -> void:
+	if not _last_objective_text.is_empty():
+		_banners.push("OBJECTIVE COMPLETE", _last_objective_text, UiTheme.COLOR_GREEN, 2.0)
+		EventBus.sfx_requested.emit("sort_ok")
+	if not new_text.is_empty():
+		_banners.push("NEW OBJECTIVE", new_text, UiTheme.COLOR_ORANGE, 2.6)
+	_tracker.flash()
 
 
-func _refresh_inventory() -> void:
-	for row in _inventory_box.get_children():
-		row.queue_free()
-	var counts := Inventory.snapshot()
-	for item_id: String in counts:
-		var row := HBoxContainer.new()
-		row.add_theme_constant_override("separation", 3)
-		var icon := TextureRect.new()
-		icon.texture = ItemDB.icon(item_id)
-		icon.custom_minimum_size = Vector2(16, 16)
-		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		row.add_child(icon)
-		var label := Label.new()
-		label.text = "%s x%d" % [ItemDB.display_name(item_id), counts[item_id]]
-		label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		row.add_child(label)
-		_inventory_box.add_child(row)
+func _on_lives_changed(lives: int) -> void:
+	for index in _lives_icons.size():
+		_lives_icons[index].modulate = Color.WHITE if index < lives else Color(0.25, 0.2, 0.22, 0.8)
+
+
+func _on_game_over() -> void:
+	SceneManager.go_to_game_over()
+
+
+func _on_life_lost(lives_left: int) -> void:
+	_banners.push("LIFE LOST", "%d %s left. You wake at the start of the area." % [lives_left, "life" if lives_left == 1 else "lives"], UiTheme.COLOR_RED, 3.0)
+
+
+func _on_quest_completed(quest_id: String) -> void:
+	for quest: Dictionary in Content.quests():
+		if quest["id"] == quest_id:
+			var reward: Dictionary = quest.get("reward", {})
+			_banners.push("QUEST COMPLETE", "%s   +%d XP" % [quest["title"], int(reward.get("xp", 0))], UiTheme.COLOR_YELLOW, 3.0)
+	_tracker.refresh()
+
+
+func _on_settings_changed() -> void:
+	_tracker.refresh()
 
 
 func _build() -> void:
@@ -209,46 +213,16 @@ func _build() -> void:
 	_stats_label.add_theme_font_size_override("font_size", 8)
 	_stats_label.add_theme_color_override("font_color", UiTheme.COLOR_MUTED)
 	left.add_child(_stats_label)
-	_inventory_box = VBoxContainer.new()
-	_inventory_box.add_theme_constant_override("separation", 1)
-	_inventory_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	left.add_child(_inventory_box)
-
-	var objective_panel := PanelContainer.new()
-	_objective_panel = objective_panel
-	objective_panel.add_theme_stylebox_override("panel", UiTheme.panel_style(UiTheme.COLOR_ORANGE))
-	objective_panel.anchor_left = 1.0
-	objective_panel.anchor_right = 1.0
-	objective_panel.offset_left = -176.0
-	objective_panel.offset_right = -6.0
-	objective_panel.offset_top = 6.0
-	objective_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	root.add_child(objective_panel)
-	var objective_box := VBoxContainer.new()
-	objective_box.add_theme_constant_override("separation", 3)
-	objective_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	objective_panel.add_child(objective_box)
-	var heading := Label.new()
-	heading.text = "OBJECTIVE"
-	heading.add_theme_color_override("font_color", UiTheme.COLOR_ORANGE)
-	objective_box.add_child(heading)
-	_objective_label = Label.new()
-	_objective_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_objective_label.custom_minimum_size = Vector2(150, 0)
-	objective_box.add_child(_objective_label)
-
-	_banner = Label.new()
-	_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_banner.add_theme_color_override("font_color", UiTheme.COLOR_YELLOW)
-	_banner.add_theme_color_override("font_outline_color", Color("#1a1008"))
-	_banner.add_theme_constant_override("outline_size", 4)
-	_banner.set_anchors_preset(Control.PRESET_CENTER_TOP)
-	_banner.offset_left = -120.0
-	_banner.offset_right = 120.0
-	_banner.offset_top = 40.0
-	_banner.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_banner.visible = false
-	root.add_child(_banner)
+	_lives_row = HBoxContainer.new()
+	_lives_row.add_theme_constant_override("separation", 2)
+	_lives_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	for _i in Lives.MAX_LIVES:
+		var heart := TextureRect.new()
+		heart.texture = HEART_ICON
+		heart.stretch_mode = TextureRect.STRETCH_KEEP
+		_lives_icons.append(heart)
+		_lives_row.add_child(heart)
+	left.add_child(_lives_row)
 
 	_toast_label = Label.new()
 	_toast_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER

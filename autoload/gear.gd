@@ -52,6 +52,20 @@ func equip(gear_id: String) -> bool:
 	return true
 
 
+## Takes off a head or body piece (the weapon slot always keeps something: fists).
+func unequip(slot: String) -> void:
+	if slot == "weapon":
+		_equipped[slot] = FISTS
+	elif _equipped.has(slot):
+		_equipped[slot] = ""
+	EventBus.gear_changed.emit()
+
+
+func icon(gear_id: String) -> Texture2D:
+	var path := "res://assets/sprites/gear/%s.png" % gear_id
+	return load(path) if ResourceLoader.exists(path) else null
+
+
 func weapon_damage() -> int:
 	return int(definition(equipped("weapon")).get("damage", 0))
 

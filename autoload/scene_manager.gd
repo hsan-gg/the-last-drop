@@ -58,6 +58,7 @@ func reset_run() -> void:
 	Gear.reset()
 	Progress.reset()
 	Lives.reset()
+	MapMemory.reset()
 
 
 func _fade_to(alpha: float) -> void:

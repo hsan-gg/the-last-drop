@@ -24,6 +24,14 @@ func display_name(item_id: String) -> String:
 	return _items.get(item_id, {}).get("name", item_id)
 
 
+func is_consumable(item_id: String) -> bool:
+	return _items.get(item_id, {}).get("category", "") == "consumable"
+
+
+func description(item_id: String) -> String:
+	return _items.get(item_id, {}).get("description", "")
+
+
 func is_hazardous(item_id: String) -> bool:
 	return _items.get(item_id, {}).get("category", "") == "hazardous"
 

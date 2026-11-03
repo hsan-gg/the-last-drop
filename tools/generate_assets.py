@@ -669,6 +669,9 @@ def main():
         import assets_redraw
 
         assets_redraw.build()
+        import assets_gear
+
+        assets_gear.build()
     print("assets written to", ROOT / "assets")
 
 
