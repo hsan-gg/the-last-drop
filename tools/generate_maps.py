@@ -200,7 +200,7 @@ def build_factory():
         grid.put(x, y, "T")
 
     grid.put(18, 21, "@")
-    grid.put(16, 22, "J")  # the gate back to the outpost
+    grid.put(10, 22, "J")  # the gate back to the outpost
     grid.put(10, 13, "$")
     grid.put(27, 12, "G")
     grid.put(18, 3, "K")
@@ -253,7 +253,7 @@ def build_dump():
     grid.fill(6, 10, 7, 16, "=")
 
     grid.put(4, 26, "@")
-    grid.put(6, 28, "J")  # back to the factory
+    grid.put(12, 28, "J")  # back to the factory
     grid.put(11, 23, "1")
     grid.put(22, 17, "2")
     grid.put(36, 9, "3")
@@ -295,7 +295,7 @@ def build_river():
     grid.fill(25, 6, 29, 7, "=")
 
     grid.put(4, 26, "@")
-    grid.put(6, 28, "J")  # back to the dump
+    grid.put(12, 28, "J")  # back to the dump
     grid.put(40, 1, "^")  # upstream to the fields
     grid.put(11, 22, "1")
     grid.put(31, 24, "2")
@@ -343,7 +343,7 @@ def build_fields():
     grid.fill(28, 22, 33, 26, "T")  # the blighted corner
     grid.fill(30, 24, 31, 24, ".")
     grid.put(4, 26, "@")
-    grid.put(6, 28, "J")
+    grid.put(12, 28, "J")
     grid.put(44, 1, "^")
     grid.put(9, 23, "1")
     grid.put(22, 10, "2")
@@ -389,7 +389,7 @@ def build_industry():
     for x, y in ((36, 26), (41, 26), (44, 18), (20, 12)):
         grid.fill(x, y, x + 1, y + 1, "T")
     grid.put(3, 13, "@")
-    grid.put(1, 14, "J")
+    grid.put(1, 22, "J")
     grid.put(47, 1, "^")
     grid.put(8, 12, "1")
     grid.put(28, 27, "2")
@@ -434,7 +434,7 @@ def build_sanctuary():
     grid.fill(14, 14, 16, 15, "~")
     grid.fill(27, 14, 29, 15, "~")
     grid.put(21, 26, "@")
-    grid.put(21, 28, "J")
+    grid.put(13, 28, "J")
     grid.put(13, 7, "U")
     grid.put(22, 6, "K")
     grid.put(31, 7, "V")

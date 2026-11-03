@@ -168,3 +168,12 @@ func test_ground_variants_are_deterministic() -> void:
 	assert_eq(MapBuilder.tile_for_char(".", Vector2i(5, 9)), MapBuilder.tile_for_char(".", Vector2i(5, 9)))
 	assert_eq(MapBuilder.tile_for_char("#", Vector2i(0, 0)), 4)
 	assert_eq(MapBuilder.tile_for_char("?", Vector2i(0, 0)), -1)
+
+
+func test_the_gate_back_is_never_right_next_to_where_you_arrive() -> void:
+	# Mashing E through the arrival talk must not walk you straight back out.
+	for area_id in AREA_IDS:
+		var layout := MapBuilder.load_layout(Content.area(area_id)["layout"])
+		var spawn := MapBuilder.markers(layout, "@")
+		for gate in MapBuilder.markers(layout, "J"):
+			assert_gt((gate["cell"] as Vector2i - spawn[0]["cell"] as Vector2i).length(), 5.0, "%s: gate back too close to the start" % area_id)
