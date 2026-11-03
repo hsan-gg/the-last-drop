@@ -41,7 +41,7 @@ func _build() -> void:
 
 	var hero := AtlasTexture.new()
 	hero.atlas = SHEET
-	hero.region = Rect2(0, 0, 16, 16)
+	hero.region = Rect2(0, 0, PlayerSprite.FRAME_WIDTH, SHEET.get_height() / PlayerSprite.DIRECTIONS.size())
 	var portrait := TextureRect.new()
 	portrait.texture = hero
 	portrait.custom_minimum_size = Vector2(48, 48)

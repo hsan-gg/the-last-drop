@@ -154,28 +154,34 @@ def build_decor():
     print("decor:", len(DECOR), "props")
 
 
-def player_frame(sheet_path, index, width):
+CELL_W, CELL_H = 16, 18
+FRAMES = 6
+
+
+def player_cells(sheet_path):
+    """Six frames from a pack sheet, each centred horizontally and bottom-aligned in a 16x18 cell.
+    Frame width differs per sheet (11 to 14 px), so it is derived from the sheet."""
     sheet = load(sheet_path)
-    frame = sheet[:, index * width:(index + 1) * width]
-    cell = np.zeros((TILE, TILE, 4), np.uint8)
-    h = frame.shape[0]
-    if h > TILE:  # run frames are 17px tall: drop the empty top row
-        frame = frame[h - TILE:]
-        h = TILE
-    cell[TILE - h:, (TILE - width) // 2:(TILE - width) // 2 + width] = frame
-    return cell
+    frame_h, sheet_w = sheet.shape[:2]
+    frame_w = sheet_w // FRAMES
+    cells = []
+    for index in range(FRAMES):
+        cell = np.zeros((CELL_H, CELL_W, 4), np.uint8)
+        x0 = (CELL_W - frame_w) // 2
+        cell[CELL_H - frame_h:, x0:x0 + frame_w] = sheet[:, index * frame_w:(index + 1) * frame_w]
+        cells.append(cell)
+    return cells
 
 
 def build_player():
+    """Rows: down, up, left, right. Columns: 6 idle frames, then 6 run frames."""
     rows = []
     for direction in ("down", "up", "side-left", "side"):
-        idle = f"Character/Main/Idle/Character_{direction}_idle-Sheet6.png"
-        run = f"Character/Main/Run/Character_{direction}_run-Sheet6.png"
-        width = 13
-        cells = [player_frame(idle, 0, width), player_frame(run, 1, width), player_frame(run, 4, width)]
-        rows.append(np.concatenate(cells, axis=1))
+        idle = player_cells(f"Character/Main/Idle/Character_{direction}_idle-Sheet6.png")
+        run = player_cells(f"Character/Main/Run/Character_{direction}_run-Sheet6.png")
+        rows.append(np.concatenate(idle + run, axis=1))
     write_png(ROOT / "assets" / "sprites" / "player.png", np.concatenate(rows, axis=0))
-    print("player sheet written")
+    print("player sheet written (12 columns: 6 idle, 6 run)")
 
 
 def build_all():
