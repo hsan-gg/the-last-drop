@@ -53,6 +53,10 @@ func _advance() -> void:
 		3:
 			_menu.open(GameMenu.CONTROLS)
 		4:
+			GameState.set_flag("lesson_seen_battery_leak")
+			GameState.set_flag("lesson_seen_runoff")
+			_menu.open(GameMenu.CODEX)
+		5:
 			_menu.close()
 			_tracker.toggle()
 			_banners.push("OBJECTIVE COMPLETE", "Find a water source", UiTheme.COLOR_GREEN, 5.0)

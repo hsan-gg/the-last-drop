@@ -63,7 +63,8 @@ func _ensure_built() -> void:
 		_tab_buttons.append(button)
 	var footer := HBoxContainer.new()
 	_box.add_child(footer)
-	var hint := _label("Esc: close   Tab or PgDn: next page", UiTheme.COLOR_MUTED)
+	var hint := _label("Esc: close   Tab: next page", UiTheme.COLOR_MUTED)
+	hint.autowrap_mode = TextServer.AUTOWRAP_OFF
 	hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	footer.add_child(hint)
 	if not title_mode:
