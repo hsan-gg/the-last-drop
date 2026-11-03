@@ -25,12 +25,22 @@ func _on_command(args: Array) -> void:
 			_publish(_state())
 		"goto":
 			_publish({"moved": _goto(argument)})
+		"peace":
+			_peace()
+			_publish({"peace": true})
 		_:
 			_publish({"error": "unknown command %s" % command})
 
 
 func _publish(data: Dictionary) -> void:
 	JavaScriptBridge.eval("window.driveResult = " + JSON.stringify(JSON.stringify(data)))
+
+
+## Removes every zombie and stops new ones, so scripted runs are deterministic.
+func _peace() -> void:
+	Combat.enemies_enabled = false
+	for enemy in get_tree().get_nodes_in_group("enemies"):
+		enemy.queue_free()
 
 
 func _find_all(type_name: String) -> Array:
@@ -70,6 +80,8 @@ func _state() -> Dictionary:
 		"sorting": {},
 		"quiz": {},
 		"puzzle": {},
+		"player": _player_state(),
+		"enemies": _enemies_state(),
 	}
 	var dialogue := _first_visible("DialogueBox")
 	state["dialogue_open"] = dialogue != null
@@ -101,3 +113,24 @@ func _puzzle_state(puzzle: PuzzlePanel) -> Dictionary:
 	for step: String in data.get("steps", []):
 		info["keys"].append(str(options.find(step) + 1))
 	return info
+
+
+func _player_state() -> Dictionary:
+	var players := _find_all("Player")
+	var position := (players[0] as Node2D).global_position if not players.is_empty() else Vector2.ZERO
+	return {
+		"x": position.x, "y": position.y,
+		"health": Survival.health(), "max_health": Survival.max_health(),
+		"level": Progress.level, "xp": Progress.xp,
+		"weapon": Gear.equipped("weapon"), "armor": Gear.armor(),
+	}
+
+
+func _enemies_state() -> Array:
+	var list := []
+	for node in get_tree().get_nodes_in_group("enemies"):
+		var enemy := node as Enemy
+		if enemy != null:
+			list.append({"id": enemy.enemy_id, "x": enemy.global_position.x, "y": enemy.global_position.y,
+				"hp": enemy.hp(), "state": Enemy.State.keys()[enemy.state()]})
+	return list

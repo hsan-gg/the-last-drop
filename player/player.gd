@@ -26,14 +26,15 @@ func _ready() -> void:
 	add_child(combat)
 	_spawn_position = global_position
 	EventBus.player_collapsed.connect(respawn)
-	EventBus.damage_taken.connect(_shake.unbind(1))
+	EventBus.damage_taken.connect(_shake)
 
 
-func _shake() -> void:
+func _shake(amount: float) -> void:
+	var weight := clampf(amount / 25.0, 0.2, 1.0)
 	var tween := create_tween()
 	for step in SHAKE_STEPS:
 		var falloff := 1.0 - float(step) / SHAKE_STEPS
-		var jitter := Vector2(randf_range(-1.0, 1.0), randf_range(-1.0, 1.0)) * SHAKE_PIXELS * falloff
+		var jitter := Vector2(randf_range(-1.0, 1.0), randf_range(-1.0, 1.0)) * SHAKE_PIXELS * falloff * weight
 		tween.tween_property(_camera, "offset", jitter, SHAKE_STEP_SECONDS)
 	tween.tween_property(_camera, "offset", Vector2.ZERO, SHAKE_STEP_SECONDS)
 

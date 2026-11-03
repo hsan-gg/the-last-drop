@@ -100,6 +100,7 @@ await shot("1_title");
 await page.mouse.click(480, 270);
 await press("Enter");
 let s = await until((x) => x.area === "outpost", "outpost loaded");
+await drive("peace");
 check("starts in the outpost", s.area === "outpost");
 await closeDialogue();
 await shot("2_outpost");

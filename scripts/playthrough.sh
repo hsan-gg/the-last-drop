@@ -20,4 +20,4 @@ python3 -m http.server "$port" --bind 127.0.0.1 --directory "$work/export/web" >
 server=$!
 sleep 1
 cd test/e2e
-GAME_URL="http://127.0.0.1:$port/index.html" OUT_DIR="$game_dir/test/e2e/out" node playthrough.mjs
+GAME_URL="http://127.0.0.1:$port/index.html" OUT_DIR="$game_dir/test/e2e/out" node "${1:-playthrough.mjs}"

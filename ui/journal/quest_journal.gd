@@ -6,6 +6,7 @@ extends OverlayPanel
 const TOAST_SECONDS := 3.2
 
 var _body: RichTextLabel
+var _show_all := false
 var _toast: PanelContainer
 var _toast_label: Label
 var _toast_tween: Tween
@@ -15,6 +16,7 @@ func _ready() -> void:
 	_build_shell(Vector2(420, 224))
 	_box.add_child(_label("JOURNAL", UiTheme.COLOR_ORANGE))
 	_body = _rich(150)
+	_body.scroll_active = true
 	_box.add_child(_body)
 	_box.add_child(_label("Press Q to close", UiTheme.COLOR_MUTED))
 	_build_toast()
@@ -30,39 +32,46 @@ func toggle() -> void:
 
 
 func refresh() -> void:
-	_body.text = text_for(_area())
+	_body.text = text_for(_area(), _show_all)
 
 
-## The journal text for an area: main goal, then side quests with progress.
-func text_for(area: String) -> String:
+## The journal page: main goal, then side quests easiest first with XP and progress.
+## `show_all` lists unfinished quests from every area reached instead of this area's.
+func text_for(area: String, show_all: bool = false) -> String:
 	var lines: Array[String] = []
 	var goal := ObjectivesTracker.current(area)
 	lines.append("[color=#f08a24]MAIN GOAL[/color]")
 	lines.append(goal.get("text", "Nothing left here. Look for the way on.") if not goal.is_empty() else "Nothing left here. Look for the way on.")
 	lines.append("")
-	lines.append("[color=#5fd0c4]SIDE QUESTS[/color]")
-	var here: Array[Dictionary] = []
+	lines.append("[color=#5fd0c4]SIDE QUESTS[/color]  [color=#9fb0bb](%s)[/color]" % ("all areas" if show_all else "this area"))
+	var shown: Array[Dictionary] = []
 	var done := 0
 	var total := 0
 	for quest in QuestRules.visible_quests():
 		total += 1
 		done += 1 if QuestRules.is_done(quest["id"]) else 0
-		if quest["area"] == area:
-			here.append(quest)
-	if here.is_empty():
+		if show_all:
+			if not QuestRules.is_done(quest["id"]):
+				shown.append(quest)
+		elif quest["area"] == area:
+			shown.append(quest)
+	if shown.is_empty():
 		lines.append("None here.")
-	for quest in here:
+	for quest in QuestRules.sorted_by_difficulty(shown):
 		lines.append(_quest_line(quest))
 	lines.append("")
-	lines.append("[color=#9fb0bb]%d of %d side quests done[/color]" % [done, total])
+	lines.append("[color=#9fb0bb]%d of %d done   Tab: switch page[/color]" % [done, total])
 	return "\n".join(lines)
 
 
 func _quest_line(quest: Dictionary) -> String:
+	var difficulty: String = quest.get("difficulty", "easy")
+	var tag := "[color=%s]%s[/color]" % [QuestRules.DIFFICULTY_COLORS[difficulty], QuestRules.DIFFICULTY_TAGS[difficulty]]
+	var xp := int(quest.get("reward", {}).get("xp", 0))
 	if QuestRules.is_done(quest["id"]):
-		return "[color=#7bc043]DONE[/color]  %s" % quest["title"]
+		return "[color=#7bc043]DONE[/color]  %s %s" % [tag, quest["title"]]
 	var progress := QuestRules.progress(quest)
-	return "[color=#f2c94c]%d/%d[/color]  %s: %s" % [progress["current"], progress["target"], quest["title"], quest["text"]]
+	return "%s [color=#f2c94c]%d/%d[/color] %s  [color=#9be04a]+%dXP[/color]\n   [color=#9fb0bb]%s[/color]" % [tag, progress["current"], progress["target"], quest["title"], xp, quest["text"]]
 
 
 func _area() -> String:
@@ -74,6 +83,14 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("journal"):
 		get_viewport().set_input_as_handled()
 		toggle()
+	elif visible and event.is_action_pressed("ui_focus_next"):
+		get_viewport().set_input_as_handled()
+		_show_all = not _show_all
+		refresh()
+	elif visible and event.is_action_pressed("ui_down"):
+		_body.get_v_scroll_bar().value += 24.0
+	elif visible and event.is_action_pressed("ui_up"):
+		_body.get_v_scroll_bar().value -= 24.0
 
 
 func _build_toast() -> void:
@@ -99,6 +116,8 @@ func _on_quest_completed(quest_id: String) -> void:
 		return
 	var reward: Dictionary = quest.get("reward", {})
 	var parts: Array[String] = []
+	if reward.get("xp", 0) > 0:
+		parts.append("+%d XP" % reward["xp"])
 	if reward.get("water", 0) > 0:
 		parts.append("+%d water" % reward["water"])
 	if reward.get("health", 0) > 0:

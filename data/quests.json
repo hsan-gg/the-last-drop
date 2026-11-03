@@ -4,29 +4,32 @@
 		"area": "outpost",
 		"title": "Sharp Eye",
 		"text": "Sort 6 items into the right bin.",
+		"difficulty": "easy",
+		"category": "sort",
 		"goal": {
 			"type": "counter",
 			"key": "sort_correct",
 			"target": 6
 		},
 		"reward": {
-			"water": 15,
-			"health": 0
+			"xp": 25,
+			"water": 15
 		}
 	},
 	{
-		"id": "clean_hands",
+		"id": "first_blood",
 		"area": "outpost",
-		"title": "Clean Hands",
-		"text": "Finish a whole pile without a single mistake.",
+		"title": "First Blood",
+		"text": "Defeat your first zombie.",
+		"difficulty": "easy",
+		"category": "combat",
 		"goal": {
 			"type": "counter",
-			"key": "perfect_piles",
+			"key": "kills",
 			"target": 1
 		},
 		"reward": {
-			"water": 0,
-			"health": 20
+			"xp": 25
 		}
 	},
 	{
@@ -34,14 +37,49 @@
 		"area": "outpost",
 		"title": "Quick Learner",
 		"text": "Answer 2 Field Checks correctly.",
+		"difficulty": "medium",
+		"category": "learn",
 		"goal": {
 			"type": "counter",
 			"key": "quiz_correct",
 			"target": 2
 		},
 		"reward": {
-			"water": 15,
-			"health": 0
+			"xp": 55,
+			"water": 15
+		}
+	},
+	{
+		"id": "clean_hands",
+		"area": "outpost",
+		"title": "Clean Hands",
+		"text": "Finish a whole pile without a single mistake.",
+		"difficulty": "medium",
+		"category": "sort",
+		"goal": {
+			"type": "counter",
+			"key": "perfect_piles",
+			"target": 1
+		},
+		"reward": {
+			"xp": 60,
+			"health": 20
+		}
+	},
+	{
+		"id": "battle_ready",
+		"area": "outpost",
+		"title": "Battle Ready",
+		"text": "Reach level 3.",
+		"difficulty": "hard",
+		"category": "combat",
+		"goal": {
+			"type": "level",
+			"target": 3
+		},
+		"reward": {
+			"xp": 100,
+			"health": 25
 		}
 	},
 	{
@@ -49,13 +87,15 @@
 		"area": "factory",
 		"title": "Hazard Handler",
 		"text": "Put 4 hazardous items in the hazardous bin.",
+		"difficulty": "easy",
+		"category": "sort",
 		"goal": {
 			"type": "counter",
 			"key": "hazard_correct",
 			"target": 4
 		},
 		"reward": {
-			"water": 0,
+			"xp": 30,
 			"health": 20
 		}
 	},
@@ -64,6 +104,8 @@
 		"area": "factory",
 		"title": "Safe Route",
 		"text": "Solve the archive terminal's hazard route.",
+		"difficulty": "medium",
+		"category": "puzzle",
 		"goal": {
 			"type": "flags",
 			"keys": [
@@ -71,8 +113,42 @@
 			]
 		},
 		"reward": {
+			"xp": 60,
 			"water": 10,
 			"health": 10
+		}
+	},
+	{
+		"id": "zombie_hunter",
+		"area": "factory",
+		"title": "Zombie Hunter",
+		"text": "Defeat 6 zombies.",
+		"difficulty": "medium",
+		"category": "combat",
+		"goal": {
+			"type": "counter",
+			"key": "kills",
+			"target": 6
+		},
+		"reward": {
+			"xp": 70
+		}
+	},
+	{
+		"id": "parry_master",
+		"area": "factory",
+		"title": "Parry Master",
+		"text": "Parry 3 enemy strikes.",
+		"difficulty": "hard",
+		"category": "combat",
+		"goal": {
+			"type": "counter",
+			"key": "parries",
+			"target": 3
+		},
+		"reward": {
+			"xp": 110,
+			"gear": "welding_mask"
 		}
 	},
 	{
@@ -80,14 +156,16 @@
 		"area": "dump",
 		"title": "Compost Keeper",
 		"text": "Put 2 food scraps in the compost bin.",
+		"difficulty": "easy",
+		"category": "sort",
 		"goal": {
 			"type": "counter",
 			"key": "compost_correct",
 			"target": 2
 		},
 		"reward": {
-			"water": 10,
-			"health": 0
+			"xp": 25,
+			"water": 10
 		}
 	},
 	{
@@ -95,12 +173,15 @@
 		"area": "dump",
 		"title": "Scavenger",
 		"text": "Find 3 hidden items lying around the dump.",
+		"difficulty": "medium",
+		"category": "explore",
 		"goal": {
 			"type": "counter",
 			"key": "pickups",
 			"target": 3
 		},
 		"reward": {
+			"xp": 65,
 			"water": 15,
 			"health": 10
 		}
@@ -110,6 +191,8 @@
 		"area": "dump",
 		"title": "Waste Wizard",
 		"text": "Unlock the municipal records with the waste hierarchy.",
+		"difficulty": "medium",
+		"category": "puzzle",
 		"goal": {
 			"type": "flags",
 			"keys": [
@@ -117,8 +200,26 @@
 			]
 		},
 		"reward": {
+			"xp": 60,
 			"water": 10,
 			"health": 10
+		}
+	},
+	{
+		"id": "treasure_hunter",
+		"area": "dump",
+		"title": "Treasure Hunter",
+		"text": "Open 4 chests.",
+		"difficulty": "hard",
+		"category": "explore",
+		"goal": {
+			"type": "counter",
+			"key": "chests_opened",
+			"target": 4
+		},
+		"reward": {
+			"xp": 110,
+			"gear": "riot_jacket"
 		}
 	},
 	{
@@ -126,30 +227,16 @@
 		"area": "river",
 		"title": "Water Detective",
 		"text": "Test the water at all 3 sample points.",
+		"difficulty": "easy",
+		"category": "learn",
 		"goal": {
 			"type": "counter",
 			"key": "samples",
 			"target": 3
 		},
 		"reward": {
-			"water": 15,
-			"health": 0
-		}
-	},
-	{
-		"id": "filter_builder",
-		"area": "river",
-		"title": "Filter Builder",
-		"text": "Set the treatment chain in the right order.",
-		"goal": {
-			"type": "flags",
-			"keys": [
-				"puzzle_treatment_chain_solved"
-			]
-		},
-		"reward": {
-			"water": 10,
-			"health": 10
+			"xp": 30,
+			"water": 15
 		}
 	},
 	{
@@ -157,6 +244,8 @@
 		"area": "river",
 		"title": "River Cleanup",
 		"text": "Sort both heaps on the riverbank.",
+		"difficulty": "medium",
+		"category": "sort",
 		"goal": {
 			"type": "flags",
 			"keys": [
@@ -165,8 +254,60 @@
 			]
 		},
 		"reward": {
-			"water": 0,
+			"xp": 65,
 			"health": 20
+		}
+	},
+	{
+		"id": "gear_up",
+		"area": "river",
+		"title": "Gear Up",
+		"text": "Collect 5 pieces of gear.",
+		"difficulty": "medium",
+		"category": "explore",
+		"goal": {
+			"type": "counter",
+			"key": "gear_found",
+			"target": 5
+		},
+		"reward": {
+			"xp": 70
+		}
+	},
+	{
+		"id": "filter_builder",
+		"area": "river",
+		"title": "Filter Builder",
+		"text": "Set the treatment chain in the right order.",
+		"difficulty": "hard",
+		"category": "puzzle",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"puzzle_treatment_chain_solved"
+			]
+		},
+		"reward": {
+			"xp": 120,
+			"water": 10,
+			"health": 10
+		}
+	},
+	{
+		"id": "brute_breaker",
+		"area": "river",
+		"title": "Brute Breaker",
+		"text": "Defeat 2 Toxic Brutes.",
+		"difficulty": "hard",
+		"category": "combat",
+		"goal": {
+			"type": "counter",
+			"key": "brute_kills",
+			"target": 2
+		},
+		"reward": {
+			"xp": 130,
+			"gear": "solar_saber"
 		}
 	}
 ]

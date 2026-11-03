@@ -8,6 +8,8 @@ const OPEN := preload("res://assets/sprites/chest_open.png")
 
 ## Unique per placed chest.
 @export var chest_id: String = ""
+## Set by GameArea from the map cell; used when no chest_id is given.
+@export var spawn_key: String = ""
 @export var gear: Array[String] = []
 @export var items: Dictionary = {}
 
@@ -44,7 +46,7 @@ func _on_interacted(_by: Node) -> void:
 
 
 func _flag() -> String:
-	return "chest_%s" % chest_id
+	return "chest_%s" % (chest_id if not chest_id.is_empty() else spawn_key)
 
 
 func _refresh() -> void:

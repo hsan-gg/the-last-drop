@@ -4,6 +4,9 @@ extends RefCounted
 ## data, not code. Completing one sets its flag once and pays out a reward.
 
 const DONE_FLAG_FORMAT := "quest_%s_done"
+const DIFFICULTY_ORDER := {"easy": 0, "medium": 1, "hard": 2}
+const DIFFICULTY_COLORS := {"easy": "#7bc043", "medium": "#f2c94c", "hard": "#e0584a"}
+const DIFFICULTY_TAGS := {"easy": "EASY", "medium": "MED", "hard": "HARD"}
 
 
 static func is_done(quest_id: String) -> bool:
@@ -19,6 +22,9 @@ static func progress(quest: Dictionary) -> Dictionary:
 		"counter":
 			current = GameState.get_counter(goal["key"])
 			target = int(goal["target"])
+		"level":
+			current = Progress.level
+			target = int(goal["target"])
 		"flags":
 			var keys: Array = goal["keys"]
 			target = keys.size()
@@ -26,6 +32,19 @@ static func progress(quest: Dictionary) -> Dictionary:
 				if GameState.has_flag(key):
 					current += 1
 	return {"current": mini(current, target), "target": target, "complete": current >= target}
+
+
+## Quests easiest first, then hardest XP last within a difficulty.
+static func sorted_by_difficulty(quests: Array) -> Array[Dictionary]:
+	var sorted_quests: Array[Dictionary] = []
+	sorted_quests.assign(quests)
+	sorted_quests.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		var rank_a: int = DIFFICULTY_ORDER.get(a.get("difficulty", "easy"), 0)
+		var rank_b: int = DIFFICULTY_ORDER.get(b.get("difficulty", "easy"), 0)
+		if rank_a != rank_b:
+			return rank_a < rank_b
+		return int(a.get("reward", {}).get("xp", 0)) < int(b.get("reward", {}).get("xp", 0)))
+	return sorted_quests
 
 
 ## Quests visible to the player: those whose area has been reached.
@@ -50,6 +69,10 @@ static func complete_ready() -> Array[String]:
 
 
 static func _pay(reward: Dictionary) -> void:
+	if reward.get("xp", 0) > 0:
+		Progress.add_xp(int(reward["xp"]))
+	if reward.has("gear") and Gear.grant(reward["gear"]):
+		EventBus.loot_found.emit("Reward: %s" % Gear.definition(reward["gear"])["name"])
 	if reward.get("water", 0) > 0:
 		Survival.drink(float(reward["water"]))
 	if reward.get("health", 0) > 0:

@@ -25,6 +25,11 @@ var _objective_panel: PanelContainer
 var _banner: Label
 var _last_objective_text := ""
 var _banner_tween: Tween
+var _level_label: Label
+var _xp_meter: Meter
+var _stats_label: Label
+var _toast_label: Label
+var _toast_tween: Tween
 
 
 func _ready() -> void:
@@ -42,12 +47,18 @@ func _ready() -> void:
 	EventBus.inventory_changed.connect(_refresh_inventory)
 	EventBus.flag_changed.connect(_refresh_objective.unbind(2))
 	EventBus.survival_changed.connect(_on_survival_changed)
-	EventBus.damage_taken.connect(_flash_damage.unbind(1))
+	EventBus.damage_taken.connect(_flash_damage)
+	EventBus.xp_changed.connect(_on_xp_changed)
+	EventBus.level_up.connect(_on_level_up)
+	EventBus.gear_changed.connect(_refresh_stats)
+	EventBus.loot_found.connect(_show_toast.bind(UiTheme.COLOR_GREEN))
 
 	_on_prompt_changed("")
 	_refresh_inventory()
 	_refresh_objective()
 	_on_survival_changed(Survival.water(), Survival.health())
+	_on_xp_changed(Progress.level, Progress.xp, Progress.xp_needed())
+	_refresh_stats()
 
 
 func _start_objective_pulse() -> void:
@@ -61,8 +72,9 @@ func set_area(new_area_id: String) -> void:
 	_refresh_objective()
 
 
-func _flash_damage() -> void:
-	_damage_flash.modulate.a = DAMAGE_FLASH_ALPHA
+func _flash_damage(amount: float) -> void:
+	# A scratch barely tints the screen; a heavy hit washes it red.
+	_damage_flash.modulate.a = clampf(amount / 45.0, 0.06, DAMAGE_FLASH_ALPHA)
 	var tween := create_tween()
 	tween.tween_property(_damage_flash, "modulate:a", 0.0, DAMAGE_FLASH_SECONDS)
 
@@ -77,6 +89,40 @@ func _on_survival_changed(water: float, health: float) -> void:
 	_health_meter.ratio = health / Survival.max_health()
 	_water_meter.fill_color = UiTheme.COLOR_RED if _water_meter.ratio < LOW_THRESHOLD else UiTheme.COLOR_WATER
 	_health_meter.fill_color = UiTheme.COLOR_RED if _health_meter.ratio < LOW_THRESHOLD else UiTheme.COLOR_GREEN
+
+
+func _on_xp_changed(level: int, xp: int, needed: int) -> void:
+	_level_label.text = "LV %d" % level
+	_xp_meter.ratio = float(xp) / float(maxi(needed, 1))
+	_refresh_stats()
+
+
+func _refresh_stats() -> void:
+	var damage := CombatRules.player_damage(Gear.weapon_damage(), Progress.level)
+	_stats_label.text = "ATK %d  DEF %d" % [damage, Gear.armor()]
+
+
+func _on_level_up(level: int) -> void:
+	_show_toast("LEVEL UP!  You are level %d" % level, UiTheme.COLOR_YELLOW)
+	var flash := create_tween()
+	_damage_flash.color = UiTheme.COLOR_YELLOW
+	_damage_flash.modulate.a = 0.45
+	flash.tween_property(_damage_flash, "modulate:a", 0.0, 0.6)
+	flash.tween_callback(func() -> void: _damage_flash.color = UiTheme.COLOR_RED)
+
+
+## A line of text that appears under the banner and fades: loot, level ups.
+func _show_toast(text: String, color: Color) -> void:
+	_toast_label.text = text
+	_toast_label.add_theme_color_override("font_color", color)
+	_toast_label.visible = true
+	_toast_label.modulate.a = 1.0
+	if _toast_tween != null:
+		_toast_tween.kill()
+	_toast_tween = create_tween()
+	_toast_tween.tween_interval(2.0)
+	_toast_tween.tween_property(_toast_label, "modulate:a", 0.0, 0.5)
+	_toast_tween.tween_callback(func() -> void: _toast_label.visible = false)
 
 
 func _refresh_objective() -> void:
@@ -146,6 +192,22 @@ func _build() -> void:
 	root.add_child(left)
 	_water_meter = _add_meter_row(left, DROP_ICON)
 	_health_meter = _add_meter_row(left, HEART_ICON)
+	var level_row := HBoxContainer.new()
+	level_row.add_theme_constant_override("separation", 4)
+	level_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_level_label = Label.new()
+	_level_label.add_theme_color_override("font_color", UiTheme.COLOR_YELLOW)
+	level_row.add_child(_level_label)
+	_xp_meter = Meter.new()
+	_xp_meter.fill_color = UiTheme.COLOR_YELLOW
+	_xp_meter.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_xp_meter.custom_minimum_size = Vector2(54, 5)
+	level_row.add_child(_xp_meter)
+	left.add_child(level_row)
+	_stats_label = Label.new()
+	_stats_label.add_theme_font_size_override("font_size", 8)
+	_stats_label.add_theme_color_override("font_color", UiTheme.COLOR_MUTED)
+	left.add_child(_stats_label)
 	_inventory_box = VBoxContainer.new()
 	_inventory_box.add_theme_constant_override("separation", 1)
 	_inventory_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -186,6 +248,18 @@ func _build() -> void:
 	_banner.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_banner.visible = false
 	root.add_child(_banner)
+
+	_toast_label = Label.new()
+	_toast_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_toast_label.add_theme_color_override("font_outline_color", Color("#1a1008"))
+	_toast_label.add_theme_constant_override("outline_size", 4)
+	_toast_label.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	_toast_label.offset_left = -150.0
+	_toast_label.offset_right = 150.0
+	_toast_label.offset_top = 78.0
+	_toast_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_toast_label.visible = false
+	root.add_child(_toast_label)
 
 	_prompt_panel = PanelContainer.new()
 	_prompt_panel.anchor_left = 0.5

@@ -111,6 +111,20 @@
 						8
 					]
 				}
+			},
+			"Y": {
+				"scene": "enemy",
+				"props": {
+					"enemy_id": "walker"
+				}
+			},
+			"c": {
+				"scene": "chest",
+				"props": {
+					"gear": [
+						"rusty_sword"
+					]
+				}
 			}
 		}
 	},
@@ -206,6 +220,33 @@
 					"blocker_size": [
 						10,
 						8
+					]
+				}
+			},
+			"Y": {
+				"scene": "enemy",
+				"props": {
+					"enemy_id": "walker"
+				}
+			},
+			"Q": {
+				"scene": "enemy",
+				"props": {
+					"enemy_id": "runner"
+				}
+			},
+			"R": {
+				"scene": "enemy",
+				"props": {
+					"enemy_id": "brute"
+				}
+			},
+			"c": {
+				"scene": "chest",
+				"props": {
+					"gear": [
+						"hard_hat",
+						"cloth_wrap"
 					]
 				}
 			}
@@ -383,6 +424,40 @@
 					"required_flag": "dump_records_read",
 					"prompt": "Follow the drain to the river"
 				}
+			},
+			"Y": {
+				"scene": "enemy",
+				"props": {
+					"enemy_id": "walker"
+				}
+			},
+			"Q": {
+				"scene": "enemy",
+				"props": {
+					"enemy_id": "runner"
+				}
+			},
+			"R": {
+				"scene": "enemy",
+				"props": {
+					"enemy_id": "brute"
+				}
+			},
+			"c": {
+				"scene": "chest",
+				"props": {
+					"gear": [
+						"scrap_blade"
+					]
+				}
+			},
+			"l": {
+				"scene": "chest",
+				"props": {
+					"gear": [
+						"tire_vest"
+					]
+				}
 			}
 		}
 	},
@@ -546,6 +621,40 @@
 					"blocker_size": [
 						30,
 						10
+					]
+				}
+			},
+			"Y": {
+				"scene": "enemy",
+				"props": {
+					"enemy_id": "walker"
+				}
+			},
+			"Q": {
+				"scene": "enemy",
+				"props": {
+					"enemy_id": "runner"
+				}
+			},
+			"R": {
+				"scene": "enemy",
+				"props": {
+					"enemy_id": "brute"
+				}
+			},
+			"c": {
+				"scene": "chest",
+				"props": {
+					"gear": [
+						"crash_helmet"
+					]
+				}
+			},
+			"l": {
+				"scene": "chest",
+				"props": {
+					"gear": [
+						"recycled_edge"
 					]
 				}
 			}

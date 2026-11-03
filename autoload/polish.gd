@@ -26,12 +26,13 @@ func _ready() -> void:
 	_vignette.material = vignette_material
 	add_child(_ash())
 	add_child(_vignette)
-	EventBus.damage_taken.connect(_on_damage_taken.unbind(1))
+	EventBus.damage_taken.connect(_on_damage_taken)
 
 
-func _on_damage_taken() -> void:
-	Juicee.shake_camera(self, HURT_SHAKE_INTENSITY, HURT_SHAKE_SECONDS)
-	Juicee.vignette(self, HURT_PULSE_INTENSITY, HURT_PULSE_SECONDS, HURT_PULSE_COLOR)
+func _on_damage_taken(amount: float) -> void:
+	var weight := clampf(amount / 25.0, 0.2, 1.0)
+	Juicee.shake_camera(self, HURT_SHAKE_INTENSITY * weight, HURT_SHAKE_SECONDS)
+	Juicee.vignette(self, HURT_PULSE_INTENSITY * weight, HURT_PULSE_SECONDS, HURT_PULSE_COLOR)
 
 
 ## Pale flakes drifting across every screen, so the air is never still.

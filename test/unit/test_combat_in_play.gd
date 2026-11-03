@@ -109,7 +109,7 @@ func test_killing_a_zombie_pays_xp_counts_a_kill_and_it_stays_dead() -> void:
 	assert_true(enemy.is_dead())
 	assert_eq(GameState.get_counter("kills"), 1)
 	assert_true(GameState.has_flag("slain_test_1"))
-	assert_eq(Progress.xp, 8)
+	assert_eq(Progress.xp, 8 + 25, "8 for the kill plus 25 from the First Blood quest")
 	var again := _enemy("runner", Vector2(14, 0), "test_1")
 	await wait_frames(2)
 	assert_false(is_instance_valid(again) and not again.is_queued_for_deletion(), "a defeated zombie does not respawn")
