@@ -12,6 +12,7 @@ const ENTITY_SCENES := {
 	"archive_terminal": preload("res://world/archive_terminal.tscn"),
 	"item_pickup": preload("res://world/item_pickup.tscn"),
 	"decor": preload("res://world/decor.tscn"),
+	"sample_point": preload("res://world/sample_point.tscn"),
 }
 const COLLAPSE_LINES: Array[String] = [
 	"You collapse from the strain, and come to at the edge of camp.",

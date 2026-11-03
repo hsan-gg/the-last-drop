@@ -19,8 +19,8 @@ that follow Encounter, Experiment, Consequence, Principle, Real life.
 |---|---|
 | 0 Outpost, 1 Factory | built |
 | 2 Great Dump | built (compost bin, shelter roof) |
-| 3 Dead River | next: filter-chain mechanic (`FilterRules`) |
-| 4 Silent Fields | compost cycle (`CompostRules`) |
+| 3 Dead River | built (water samples, filter repair, treatment-chain puzzle) |
+| 4 Silent Fields | next: compost cycle (`CompostRules`) |
 | 5 Forgotten Industry | hazard scan and power grid (`HazardRules`, `GridRules`) |
 | 6 Last Sanctuary | archive timeline, Preserve or Share, final ending |
 

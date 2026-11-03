@@ -13,6 +13,7 @@ Decor markers (set dressing, data/areas.json gives each its sprite):
   d dumpster  e bench  f fire barrel  x box  y tire  z hydrant  k AC unit
   g trash bag  h open box
 Pickup markers (hidden finds, data/areas.json names the item): p q j
+Water test points: m n o
 Marker characters (entities, placed by data/areas.json; the floor shows beneath):
   @ spawn  $ scrap pile  W water  U treatment unit  V recording
   ^ gate   G generator   K terminal  1 2 3 numbered scrap piles
@@ -26,7 +27,7 @@ ROOT = Path(__file__).resolve().parent.parent
 MAPS = ROOT / "data" / "maps"
 
 BLOCKING = set("#~CFPtBSH")
-MARKERS = set("@$WUV^GK123defxyzkghpqj")
+MARKERS = set("@$WUV^GK123defxyzkghpqjmno")
 # Markers that block movement; the spawn marker does not.
 BLOCKING_MARKERS = MARKERS - {"@"}
 
@@ -253,7 +254,49 @@ def build_dump():
     for x0, y0, x1, y1 in ((8, 19, 8, 27), (8, 20, 21, 21), (21, 14, 22, 21), (22, 13, 25, 14), (25, 5, 26, 13), (25, 5, 36, 6), (6, 10, 7, 16)):
         reserved |= rect_cells(x0, y0, x1, y1, 1)
     scatter(grid, rng, reserved, [("b", 0.14), ("r", 0.07), ("H", 0.035), (",", 0.02)])
-    for ch, x, y in (("d", 13, 25), ("d", 30, 18), ("d", 38, 22), ("e", 6, 13), ("f", 4, 22), ("f", 40, 12), ("x", 20, 24), ("x", 27, 6), ("y", 12, 13), ("z", 35, 4), ("g", 28, 22), ("g", 14, 4), ("p", 43, 3), ("q", 3, 27), ("j", 41, 27)):
+    for ch, x, y in (("d", 13, 25), ("d", 30, 18), ("d", 38, 22), ("e", 6, 13), ("f", 4, 22), ("f", 40, 12), ("x", 20, 24), ("x", 27, 6), ("y", 12, 13), ("z", 35, 4), ("g", 28, 22), ("g", 14, 4), ("p", 43, 3), ("q", 3, 27), ("j", 41, 27), ("^", 42, 15)):
+        place_decor(grid, ch, x, y)
+    return grid
+
+
+def build_river():
+    """The Dead River: a river band splits the map, crossed by one bridge. The
+    south bank has two heaps and three water test points; the north bank has the
+    filter plant in a fenced yard, its console, the recording and a water point."""
+    grid = Grid(46, 30, ".")
+    rng = random.Random(33)
+    grid.box(0, 0, 45, 29, "H")
+    grid.box(1, 1, 44, 28, "H")
+
+    grid.fill(2, 13, 43, 17, "~")  # the river
+    grid.fill(22, 8, 24, 21, "=")  # bridge and its approaches
+    grid.fill(22, 22, 24, 22, "=")
+    grid.fill(15, 24, 21, 24, "=")  # path from the spawn side
+    grid.fill(4, 24, 14, 24, "=")
+
+    grid.box(30, 3, 43, 9, "F")  # the plant yard, open on its west side
+    grid.fill(30, 6, 30, 7, ".")
+    grid.fill(25, 6, 29, 7, "=")
+
+    grid.put(4, 26, "@")
+    grid.put(11, 22, "1")
+    grid.put(31, 24, "2")
+    grid.put(8, 19, "m")
+    grid.put(27, 19, "n")
+    grid.put(39, 19, "o")
+    grid.put(36, 6, "U")
+    grid.put(41, 6, "K")
+    grid.put(6, 5, "V")
+    grid.put(34, 11, "W")
+
+    reserved = set()
+    for marker in "@12mnoUKVW":
+        for x, y in grid.find(marker):
+            reserved |= rect_cells(x, y, x, y, 2)
+    for x0, y0, x1, y1 in ((22, 8, 24, 22), (15, 24, 21, 24), (4, 24, 14, 24), (25, 6, 29, 7), (30, 3, 43, 9)):
+        reserved |= rect_cells(x0, y0, x1, y1, 1)
+    scatter(grid, rng, reserved, [("b", 0.08), ("r", 0.07), (",", 0.06), ("t", 0.02)])
+    for ch, x, y in (("f", 10, 11), ("d", 18, 20), ("e", 14, 7), ("x", 20, 26), ("y", 36, 26), ("z", 28, 10), ("g", 38, 25), ("g", 5, 11), ("f", 40, 22)):
         place_decor(grid, ch, x, y)
     return grid
 
@@ -261,7 +304,7 @@ def build_dump():
 def main():
     MAPS.mkdir(parents=True, exist_ok=True)
     names = set(sys.argv[1:])
-    builders = (("outpost", build_outpost), ("factory", build_factory), ("dump", build_dump))
+    builders = (("outpost", build_outpost), ("factory", build_factory), ("dump", build_dump), ("river", build_river))
     for name, builder in builders:
         if names and name not in names:
             continue

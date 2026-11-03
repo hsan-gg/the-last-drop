@@ -6,12 +6,14 @@ extends GutTest
 const OUTPOST := preload("res://world/outpost.tscn")
 const FACTORY := preload("res://world/factory.tscn")
 const DUMP := preload("res://world/dump.tscn")
+const RIVER := preload("res://world/river.tscn")
 const OUTPOST_ITEMS: Array[String] = ["battery", "plastic_bottle", "chemical_can", "scrap_metal", "glass_shard", "pipe_section"]
 
 var _area: Node
 
 
 func before_each() -> void:
+	Chapters.ending_enabled = false
 	Inventory.clear()
 	GameState.reset()
 	Survival.set_process(false)
@@ -19,6 +21,7 @@ func before_each() -> void:
 
 
 func after_each() -> void:
+	Chapters.ending_enabled = true
 	Survival.reset()
 	Survival.set_process(true)
 
@@ -254,7 +257,7 @@ func test_dump_loop_from_the_gate_to_the_records() -> void:
 	terminal.interact(null)
 	_solve_puzzle("waste_hierarchy")
 	assert_true(GameState.has_flag("dump_records_read"))
-	assert_eq(ObjectivesTracker.current("dump"), {})
+	assert_eq(ObjectivesTracker.current("dump")["id"], "go_river", "the way on is the last objective here")
 
 
 func test_dump_gate_in_the_factory_opens_only_after_the_archive() -> void:
@@ -264,3 +267,66 @@ func test_dump_gate_in_the_factory_opens_only_after_the_archive() -> void:
 	GameState.set_flag("archive_read")
 	assert_true(gate.is_open())
 	assert_eq(gate.target_scene, "res://world/dump.tscn")
+
+
+func test_dump_gate_to_the_river_opens_after_the_records() -> void:
+	await _enter(DUMP)
+	var gate: AreaExit = _find("AreaExit")
+	assert_false(gate.is_open())
+	GameState.set_flag("dump_records_read")
+	assert_true(gate.is_open())
+	assert_eq(gate.target_scene, "res://world/river.tscn")
+
+
+func test_river_loop_from_the_samples_to_clean_water() -> void:
+	await _enter(RIVER)
+	var piles: Array = _area.find_children("*", "ScrapPile", true, false)
+	var samples: Array = _area.find_children("*", "SamplePoint", true, false)
+	var plant: RepairStation = _find("RepairStation")
+	var console: ArchiveTerminal = _find("ArchiveTerminal")
+	var water: WaterSource = _find("WaterSource")
+	var recording: Recording = _find("Recording")
+	assert_eq(piles.size(), 2)
+	assert_eq(samples.size(), 3)
+
+	water.interact(null)
+	assert_true(GameState.has_flag("river_water_tested"))
+	water.interact(null)
+	assert_false(GameState.has_flag("river_water_secure"), "river water is not drinkable yet")
+
+	for sample: SamplePoint in samples:
+		sample.interact(null)
+	assert_true(GameState.has_flag("samples_done"))
+	assert_eq(GameState.get_counter("samples"), 3)
+	samples[0].interact(null)
+	assert_eq(GameState.get_counter("samples"), 3, "re-reading a strip is not a new sample")
+
+	console.interact(null)
+	assert_false(GameState.has_flag("river_clean"), "the console needs the filter first")
+	plant.interact(null)
+	assert_false(GameState.has_flag("filter_installed"), "no materials yet")
+
+	for pile: ScrapPile in piles:
+		await _sort_pile_correctly(pile)
+	assert_eq(GameState.get_counter("sort_mistakes"), 0)
+	assert_false(Inventory.has("paint_tin"), "hazards are never recovered")
+	plant.interact(null)
+	assert_true(GameState.has_flag("filter_installed"))
+	assert_eq(Inventory.snapshot(), {"plastic_bottle": 1, "tin_can": 1, "kettle": 1, "cardboard": 1, "glass_jar": 1})
+
+	console.interact(null)
+	_solve_puzzle("treatment_chain")
+	assert_true(GameState.has_flag("river_clean"))
+
+	Survival.tick(200.0)
+	var before := Survival.water()
+	water.interact(null)
+	assert_gt(Survival.water(), before, "treated river water restores the water meter")
+	assert_true(GameState.has_flag("river_water_secure"))
+
+	recording.interact(null)
+	assert_true(GameState.has_flag("recording_3_found"))
+	assert_eq(ObjectivesTracker.current("river"), {})
+	assert_true(QuestRules.is_done("water_detective"))
+	assert_true(QuestRules.is_done("river_cleanup"))
+	assert_true(QuestRules.is_done("filter_builder"))

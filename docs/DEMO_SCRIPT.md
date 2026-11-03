@@ -19,7 +19,9 @@ Have the web build open on the title screen. Keep a recorded backup run ready in
 
 **1:45 The Great Dump (15s).** Take the gate. Sort the heaps (note the fourth, compost bin), rebuild the shelter roof from the recovered materials, find the second recording, and read the municipal records: there was no villain, only people waiting for someone else to act.
 
-**2:00 Ending (10s).** Choose Preserve or Share. The epilogue changes with how carefully you sorted. Close on: "The world wasn't destroyed in a single day. And it won't be rebuilt in one either."
+**2:00 The Dead River (20s).** Follow the drain. Test the three sample points (clear water is not safe water), install the filter, set the treatment chain, drink clean water, play the recording.
+
+**2:20 Ending (10s).** Choose Preserve or Share. The epilogue changes with how carefully you sorted. Close on: "The world wasn't destroyed in a single day. And it won't be rebuilt in one either."
 
 **Extras to show if there is time.** After a pile, a Field Check quiz pops up (right answer restores water). Press Q for the journal. At the terminals, solve the ordering puzzle to unlock the records.
 

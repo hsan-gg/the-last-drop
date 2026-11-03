@@ -1,8 +1,8 @@
 extends GutTest
 ## Dusk lighting must exist in every built area without costing the player their view.
 
-const AREAS: Array[String] = ["res://world/outpost.tscn", "res://world/factory.tscn", "res://world/dump.tscn"]
-const ARRIVALS: Array[String] = ["outpost", "factory", "dump"]
+const AREAS: Array[String] = ["res://world/outpost.tscn", "res://world/factory.tscn", "res://world/dump.tscn", "res://world/river.tscn"]
+const ARRIVALS: Array[String] = ["outpost", "factory", "dump", "river"]
 
 
 ## Arrival dialogue pauses the tree, which would freeze every later test, so mark it seen.

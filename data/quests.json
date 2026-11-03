@@ -120,5 +120,53 @@
 			"water": 10,
 			"health": 10
 		}
+	},
+	{
+		"id": "water_detective",
+		"area": "river",
+		"title": "Water Detective",
+		"text": "Test the water at all 3 sample points.",
+		"goal": {
+			"type": "counter",
+			"key": "samples",
+			"target": 3
+		},
+		"reward": {
+			"water": 15,
+			"health": 0
+		}
+	},
+	{
+		"id": "filter_builder",
+		"area": "river",
+		"title": "Filter Builder",
+		"text": "Set the treatment chain in the right order.",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"puzzle_treatment_chain_solved"
+			]
+		},
+		"reward": {
+			"water": 10,
+			"health": 10
+		}
+	},
+	{
+		"id": "river_cleanup",
+		"area": "river",
+		"title": "River Cleanup",
+		"text": "Sort both heaps on the riverbank.",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"pile_sorted_river_bank",
+				"pile_sorted_river_camp"
+			]
+		},
+		"reward": {
+			"water": 0,
+			"health": 20
+		}
 	}
 ]

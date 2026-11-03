@@ -23,5 +23,18 @@
 			"Dispose safely as a last resort"
 		],
 		"explanation": "The best waste is the waste never made. Disposal comes last, not first."
+	},
+	{
+		"id": "treatment_chain",
+		"title": "START THE TREATMENT CYCLE",
+		"prompt": "Water must pass through the stages in the right order. Set the chain.",
+		"steps": [
+			"Screen out the big debris",
+			"Let the sediment settle",
+			"Pass it through the sand and charcoal filter",
+			"Disinfect the water",
+			"Test it before anyone drinks"
+		],
+		"explanation": "Each stage does one job: debris, sediment, fine particles, germs. Then a test proves it, because clear water is not always safe."
 	}
 ]

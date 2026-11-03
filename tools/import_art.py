@@ -112,9 +112,17 @@ def build_tileset():
     garbage = load("Tiles/Garbage_TileSet.png")
     obj = lambda name: load("Objects/" + name)
 
-    water = over(ground_a, puddle)
-    water = np.where((np.abs(water[:, :, :3].astype(int) - ground_a[:, :, :3].astype(int)).sum(axis=2) > 0)[..., None], tinted(water, (40, 120, 150), 0.55), water)
-    water = tinted(water, (40, 110, 140), 0.35)
+    # Murky olive river water: a seamless tile (no blob edges, so a whole band tiles cleanly)
+    # with soft noise and lighter ripple lines.
+    rng = np.random.default_rng(5)
+    water = np.zeros((TILE, TILE, 4), np.uint8)
+    water[:, :, 3] = 255
+    noise = rng.integers(-6, 7, size=(TILE // 2, TILE // 2))
+    noise = np.repeat(np.repeat(noise, 2, axis=0), 2, axis=1)
+    for channel, base in enumerate((82, 98, 66)):
+        water[:, :, channel] = np.clip(base + noise, 0, 255)
+    for row, start, length in ((3, 2, 7), (8, 6, 8), (13, 1, 6)):
+        water[row, start:start + length, :3] = np.clip(water[row, start:start + length, :3].astype(int) + 26, 0, 255)
     toxic = tinted(over(ground_a, puddle), (84, 150, 66), 0.5)
 
     tiles = [

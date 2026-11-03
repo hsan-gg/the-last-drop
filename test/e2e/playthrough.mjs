@@ -177,14 +177,57 @@ check("a side quest was completed", Object.keys(s.flags).some((k) => /^quest_.*_
 check("no sorting mistakes beyond the one blunder", (s.counters.sort_mistakes || 0) === 1);
 await shot("8_dump_done");
 
+// ---- river
+await interact("AreaExit");
+s = await until((x) => x.area === "river", "river loaded", 12000);
+check("the drain leads to the river", s.area === "river");
+await closeDialogue();
+await shot("9_river");
+await interact("WaterSource");
+await closeDialogue();
+for (let i = 0; i < 3; i++) {
+  await interact(`SamplePoint:${i}`);
+  await closeDialogue();
+  if (i === 1) await shot("9b_river_bridge");
+}
+s = await state();
+check("all three water samples tested", s.flags.samples_done);
+for (let i = 0; i < 2; i++) {
+  await interact("ScrapPile");
+  await until((x) => x.sorting.phase === "CHOOSING", `river pile ${i}`);
+  await sortOpenPile();
+  await answerQuizIfShown();
+  await sleep(300);
+}
+await interact("RepairStation");
+await closeDialogue();
+s = await state();
+check("river filter installed", s.flags.filter_installed);
+await shot("9c_river_plant");
+await interact("ArchiveTerminal");
+await shot("10_river_puzzle");
+await solvePuzzle();
+await closeDialogue();
+s = await state();
+check("treatment cycle run", s.flags.river_clean);
+check("the game does not end before the drink and recording", s.scene === "River");
+await interact("WaterSource");
+await closeDialogue();
+s = await state();
+check("clean river water drunk", s.flags.river_water_secure);
+check("the game still waits for the recording", s.scene === "River");
+await interact("Recording");
+await closeDialogue();
+
 // ---- ending
-s = await until((x) => x.scene !== "Dump", "ending scene", 12000);
+s = await until((x) => x.scene !== "River", "ending scene", 15000);
+check("the recording ends the game", s.scene !== "River");
 await sleep(800);
-await shot("9_ending_choice");
+await shot("11_ending_choice");
 await press("Enter");
 await closeDialogue();
 await sleep(600);
-await shot("10_ending_final");
+await shot("12_ending_final");
 s = await state();
 check("an ending was chosen", Object.keys(s.flags).some((k) => /^ending_/.test(k)));
 

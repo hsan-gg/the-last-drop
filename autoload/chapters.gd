@@ -6,12 +6,18 @@ extends Node
 const CHAPTERS_PATH := "res://data/chapters.json"
 const STATUS_BUILT := "built"
 
+const ENDING_SCENE := "res://ui/ending.tscn"
+
+## Tests turn this off: a scene change would replace the test runner.
+var ending_enabled := true
+
 var _chapters: Array = []
 
 
 func _ready() -> void:
 	var loaded: Variant = DataLoader.load_json(CHAPTERS_PATH)
 	_chapters = loaded if typeof(loaded) == TYPE_ARRAY else []
+	EventBus.dialogue_finished.connect(_on_dialogue_finished.unbind(1))
 
 
 func all() -> Array:
@@ -38,3 +44,29 @@ func is_final_built(chapter_id: String) -> bool:
 		if entry.get("status", "") == STATUS_BUILT and int(entry["number"]) > number:
 			return false
 	return true
+
+
+func chapter_for_area(area_id: String) -> Dictionary:
+	for entry: Dictionary in _chapters:
+		if (entry.get("areas", []) as Array).has(area_id):
+			return entry.duplicate(true)
+	return {}
+
+
+## The last built chapter ends the game once every flag in its ending_requires is set.
+func ending_ready(chapter_id: String) -> bool:
+	if not is_final_built(chapter_id):
+		return false
+	for flag: String in chapter(chapter_id).get("ending_requires", []):
+		if not GameState.has_flag(flag):
+			return false
+	return true
+
+
+func _on_dialogue_finished() -> void:
+	if not ending_enabled:
+		return
+	var scene := get_tree().current_scene
+	if scene is GameArea and ending_ready(chapter_for_area((scene as GameArea).area_id).get("id", "")):
+		ending_enabled = false
+		SceneManager.change_scene(ENDING_SCENE)

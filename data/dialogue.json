@@ -287,5 +287,65 @@
 			"Nobody here was a villain. Everyone expected someone else to act.",
 			"One last file names a river and a treatment plant that never got its filters. Where the dump drains, the river begins."
 		]
+	},
+	{
+		"id": "sample_a",
+		"lines": [
+			"Upstream. The water looks clear.",
+			"The strip says otherwise: a faint stain of dissolved metals.",
+			"Clear does not mean safe."
+		]
+	},
+	{
+		"id": "sample_b",
+		"lines": [
+			"Below the dump's drain. Cloudy and green.",
+			"The strip turns dark: metals and runoff from the heaps.",
+			"Rain carried it here. Where waste goes, water follows."
+		]
+	},
+	{
+		"id": "sample_c",
+		"lines": [
+			"Downstream. A rainbow sheen floats on top.",
+			"The strip shows chemicals that no amount of boiling will remove.",
+			"Boiling kills germs. It does not clean poison."
+		]
+	},
+	{
+		"id": "filter_installed",
+		"lines": [
+			"Cloth, charcoal, sand and pipe lock into the old filter bed.",
+			"Four recovered materials, one working stage. But a filter alone is not a plant.",
+			"The console beside it needs the stages set in order."
+		]
+	},
+	{
+		"id": "river_cleaned",
+		"lines": [
+			"The pumps shudder, then run. Water moves through each stage in turn.",
+			"The final strip stays pale. For the first time in years, this water is safe.",
+			"Downstream, the river is still grey. But there is a place to start."
+		]
+	},
+	{
+		"id": "river_water_contaminated",
+		"lines": [
+			"Slow grey water at the bank. Cloudy, with a sheen.",
+			"You cannot drink it. The treatment plant on the north bank might clean it."
+		]
+	},
+	{
+		"id": "river_water_needs_filter",
+		"lines": [
+			"Still untreated. Install the filter and start the treatment cycle."
+		]
+	},
+	{
+		"id": "river_water_clean",
+		"lines": [
+			"Clear, cold, and tested. The strip stays pale.",
+			"One river, one plant, and a lot of work still ahead."
+		]
 	}
 ]

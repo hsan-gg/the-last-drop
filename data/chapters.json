@@ -14,7 +14,8 @@
 		],
 		"arrival": "intro",
 		"recording": "recording_1",
-		"unlock_flag": null
+		"unlock_flag": null,
+		"ending_requires": []
 	},
 	{
 		"id": "factory",
@@ -31,7 +32,10 @@
 		],
 		"arrival": "factory_arrival",
 		"recording": "archive_truth",
-		"unlock_flag": "recording_found"
+		"unlock_flag": "recording_found",
+		"ending_requires": [
+			"archive_read"
+		]
 	},
 	{
 		"id": "dump",
@@ -54,14 +58,17 @@
 		],
 		"arrival": "dump_arrival",
 		"recording": "recording_2",
-		"unlock_flag": "archive_read"
+		"unlock_flag": "archive_read",
+		"ending_requires": [
+			"dump_records_read"
+		]
 	},
 	{
 		"id": "river",
 		"number": 3,
 		"title": "The Dead River",
 		"region": "dead_river",
-		"status": "planned",
+		"status": "built",
 		"areas": [
 			"river"
 		],
@@ -73,7 +80,12 @@
 		],
 		"arrival": "river_arrival",
 		"recording": "recording_3",
-		"unlock_flag": "recording_2_found"
+		"unlock_flag": "dump_records_read",
+		"ending_requires": [
+			"river_clean",
+			"river_water_secure",
+			"recording_3_found"
+		]
 	},
 	{
 		"id": "fields",

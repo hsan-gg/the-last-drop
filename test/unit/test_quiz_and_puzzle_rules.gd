@@ -45,7 +45,7 @@ func test_is_correct_checks_the_answer_index() -> void:
 
 
 func test_every_puzzle_is_well_formed() -> void:
-	for puzzle_id in ["hazard_route", "waste_hierarchy"]:
+	for puzzle_id in ["hazard_route", "waste_hierarchy", "treatment_chain"]:
 		var puzzle := Content.puzzle(puzzle_id)
 		assert_false(puzzle.is_empty(), puzzle_id)
 		assert_between(puzzle["steps"].size(), 3, 5, puzzle_id)
@@ -54,7 +54,7 @@ func test_every_puzzle_is_well_formed() -> void:
 
 
 func test_terminals_name_real_puzzles() -> void:
-	for area_id in ["factory", "dump"]:
+	for area_id in ["factory", "dump", "river"]:
 		var props: Dictionary = Content.area(area_id)["entities"]["K"]["props"]
 		assert_false(Content.puzzle(props["puzzle_id"]).is_empty(), area_id)
 

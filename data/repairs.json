@@ -30,5 +30,17 @@
 		},
 		"sets_flag": "shelter_built",
 		"dialogue": "shelter_repaired"
+	},
+	{
+		"id": "filter_plant",
+		"name": "River Filter",
+		"requires": {
+			"textile_scrap": 1,
+			"charcoal": 1,
+			"sand_sack": 1,
+			"pipe_section": 1
+		},
+		"sets_flag": "filter_installed",
+		"dialogue": "filter_installed"
 	}
 ]

@@ -51,8 +51,26 @@ func test_dialogue_lines_stay_short() -> void:
 
 
 func test_the_ending_triggers_at_the_last_built_chapter() -> void:
-	assert_true(Chapters.is_built("dump"))
-	assert_true(Chapters.is_final_built("dump"))
+	assert_true(Chapters.is_built("river"))
+	assert_true(Chapters.is_final_built("river"))
+	assert_false(Chapters.is_final_built("dump"), "the dump leads on to the river")
 	assert_false(Chapters.is_final_built("factory"), "factory leads on to the dump")
-	assert_false(Chapters.is_final_built("river"), "unbuilt chapters never end the game")
+	assert_false(Chapters.is_final_built("fields"), "unbuilt chapters never end the game")
 	assert_false(Chapters.is_final_built("nope"))
+
+
+func test_the_river_ending_needs_clean_water_a_drink_and_the_recording() -> void:
+	GameState.reset()
+	assert_false(Chapters.ending_ready("river"))
+	GameState.set_flag("river_clean")
+	GameState.set_flag("river_water_secure")
+	assert_false(Chapters.ending_ready("river"), "the recording is still missing")
+	GameState.set_flag("recording_3_found")
+	assert_true(Chapters.ending_ready("river"))
+	assert_false(Chapters.ending_ready("dump"), "only the last built chapter can end the game")
+	GameState.reset()
+
+
+func test_areas_map_back_to_their_chapter() -> void:
+	assert_eq(Chapters.chapter_for_area("river")["id"], "river")
+	assert_eq(Chapters.chapter_for_area("nowhere"), {})

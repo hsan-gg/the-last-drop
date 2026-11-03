@@ -135,6 +135,68 @@ def glass_shard():
     return c
 
 
+def charcoal():
+    c = Canvas(16, 16)
+    black, ash = hexc("#2c2830"), hexc("#5a5560")
+    for x0, y0, x1, y1 in ((3, 8, 9, 14), (8, 5, 14, 12), (6, 2, 11, 7)):
+        shade(c, x0, y0, x1, y1, hexc("#1c1820"), black, ash)
+    c.px(5, 10, ORANGE)
+    c.px(11, 8, ORANGE)
+    c.px(8, 4, hexc("#f0a050"))
+    c.outline(OUT)
+    return c
+
+
+def sand_sack():
+    c = Canvas(16, 16)
+    tan, tan_l, tan_d = hexc("#c8a860"), hexc("#e0c888"), hexc("#8a6a34")
+    shade(c, 3, 5, 13, 15, tan_d, tan, tan_l)
+    c.rect(5, 2, 11, 5, tan)  # tied neck
+    c.rect(4, 4, 12, 5, tan_d)
+    c.rect(4, 8, 12, 9, tan_d)
+    c.rect(5, 11, 11, 12, tan_d)
+    c.px(7, 6, tan_l)
+    c.outline(OUT)
+    return c
+
+
+def kettle():
+    c = Canvas(16, 16)
+    shade(c, 3, 6, 12, 14, STEEL_D, STEEL, STEEL_L)
+    c.rect(5, 4, 10, 6, STEEL)  # lid
+    c.rect(7, 2, 8, 4, STEEL_L)
+    c.rect(12, 8, 15, 10, STEEL)  # spout
+    c.rect(1, 7, 3, 12, STEEL_D)  # handle
+    c.px(5, 9, WHITE)
+    c.outline(OUT)
+    return c
+
+
+def paint_tin():
+    c = Canvas(16, 16)
+    shade(c, 4, 5, 12, 15, hexc("#8a2c2c"), RED, hexc("#e06060"))
+    c.rect(3, 4, 13, 6, STEEL_L)
+    c.rect(3, 14, 13, 15, STEEL)
+    c.rect(5, 8, 11, 11, WHITE)
+    c.px(8, 9, RED)
+    c.rect(11, 12, 13, 15, hexc("#c04040"))  # drip
+    c.px(12, 15, hexc("#c04040"))
+    c.outline(OUT)
+    return c
+
+
+def sample_kit():
+    c = Canvas(16, 20)
+    c.rect(7, 8, 9, 19, hexc("#6a4a34"))  # post
+    shade(c, 2, 1, 14, 10, hexc("#9c9ca8"), WHITE, hexc("#f4f0f0"))  # card
+    c.rect(4, 3, 7, 8, GREEN)
+    c.rect(7, 3, 10, 8, YELLOW)
+    c.rect(10, 3, 13, 8, RED)
+    c.rect(5, 19, 11, 20, hexc("#4a3a2c"))
+    c.outline(OUT)
+    return c
+
+
 def build():
     named = [OUT, STEEL_D, STEEL, STEEL_L, RUST_D, RUST, RUST_L, BLUE_D, BLUE, BLUE_L, CYAN, WHITE,
              GREEN, GREEN_L, YELLOW, RED, ORANGE, GLASS, GLASS_L, GLASS_D]
@@ -148,6 +210,11 @@ def build():
         "items/battery": battery(),
         "items/glass_jar": glass_jar(),
         "items/glass_shard": glass_shard(),
+        "items/charcoal": charcoal(),
+        "items/sand_sack": sand_sack(),
+        "items/kettle": kettle(),
+        "items/paint_tin": paint_tin(),
+        "sample_kit": sample_kit(),
     }
     for name, canvas in drawings.items():
         path = SPRITES / f"{name}.png"

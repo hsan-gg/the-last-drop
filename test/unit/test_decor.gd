@@ -1,7 +1,7 @@
 extends GutTest
 ## Decor markers in data/areas.json must name real sprites and build working props.
 
-const AREA_IDS: Array[String] = ["outpost", "factory", "dump"]
+const AREA_IDS: Array[String] = ["outpost", "factory", "dump", "river"]
 const DECOR_SCENE := preload("res://world/decor.tscn")
 
 

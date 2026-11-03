@@ -94,5 +94,53 @@
 		"area": "dump",
 		"text": "Read the municipal records",
 		"done_flag": "dump_records_read"
+	},
+	{
+		"id": "go_river",
+		"area": "dump",
+		"text": "Follow the drain to the river",
+		"done_flag": "area_river_reached"
+	},
+	{
+		"id": "sort_river_bank",
+		"area": "river",
+		"text": "Sort the riverbank heap",
+		"done_flag": "pile_sorted_river_bank"
+	},
+	{
+		"id": "sort_river_camp",
+		"area": "river",
+		"text": "Sort the abandoned camp",
+		"done_flag": "pile_sorted_river_camp"
+	},
+	{
+		"id": "test_samples",
+		"area": "river",
+		"text": "Test the water at all three points",
+		"done_flag": "samples_done"
+	},
+	{
+		"id": "install_filter",
+		"area": "river",
+		"text": "Install the river filter",
+		"done_flag": "filter_installed"
+	},
+	{
+		"id": "run_treatment",
+		"area": "river",
+		"text": "Start the treatment cycle at the console",
+		"done_flag": "river_clean"
+	},
+	{
+		"id": "drink_river",
+		"area": "river",
+		"text": "Drink clean river water",
+		"done_flag": "river_water_secure"
+	},
+	{
+		"id": "find_recording_3",
+		"area": "river",
+		"text": "Find the third recording",
+		"done_flag": "recording_3_found"
 	}
 ]

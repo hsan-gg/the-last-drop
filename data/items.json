@@ -88,5 +88,29 @@
 		"name": "Greasy Pizza Box",
 		"category": "general",
 		"lesson_id": "contamination_ruins"
+	},
+	{
+		"id": "charcoal",
+		"name": "Charcoal",
+		"category": "reusable",
+		"lesson_id": "filter_limits"
+	},
+	{
+		"id": "sand_sack",
+		"name": "Sand Sack",
+		"category": "reusable",
+		"lesson_id": "filter_limits"
+	},
+	{
+		"id": "kettle",
+		"name": "Old Kettle",
+		"category": "reusable",
+		"lesson_id": "boil_limits"
+	},
+	{
+		"id": "paint_tin",
+		"name": "Paint Tin",
+		"category": "hazardous",
+		"lesson_id": "runoff"
 	}
 ]

@@ -375,6 +375,179 @@
 					"item_id": "glass_jar",
 					"pickup_id": "dump_c"
 				}
+			},
+			"^": {
+				"scene": "area_exit",
+				"props": {
+					"target_scene": "res://world/river.tscn",
+					"required_flag": "dump_records_read",
+					"prompt": "Follow the drain to the river"
+				}
+			}
+		}
+	},
+	{
+		"id": "river",
+		"layout": "res://data/maps/river.txt",
+		"floor": ".",
+		"tint": "#a8b4b8",
+		"arrival_dialogue": "river_arrival",
+		"entities": {
+			"1": {
+				"scene": "scrap_pile",
+				"props": {
+					"pile_id": "river_bank",
+					"item_ids": [
+						"charcoal",
+						"paint_tin",
+						"textile_scrap",
+						"plastic_bottle",
+						"tin_can"
+					]
+				}
+			},
+			"2": {
+				"scene": "scrap_pile",
+				"props": {
+					"pile_id": "river_camp",
+					"item_ids": [
+						"sand_sack",
+						"kettle",
+						"pipe_section",
+						"cardboard",
+						"glass_jar",
+						"paint_tin"
+					]
+				}
+			},
+			"m": {
+				"scene": "sample_point",
+				"props": {
+					"sample_id": "a",
+					"dialogue_id": "sample_a"
+				}
+			},
+			"n": {
+				"scene": "sample_point",
+				"props": {
+					"sample_id": "b",
+					"dialogue_id": "sample_b"
+				}
+			},
+			"o": {
+				"scene": "sample_point",
+				"props": {
+					"sample_id": "c",
+					"dialogue_id": "sample_c"
+				}
+			},
+			"U": {
+				"scene": "repair_station",
+				"props": {
+					"repair_id": "filter_plant"
+				}
+			},
+			"K": {
+				"scene": "archive_terminal",
+				"props": {
+					"chapter_id": "river",
+					"required_flag": "filter_installed",
+					"read_flag": "river_clean",
+					"final_dialogue": "river_cleaned",
+					"continue_dialogue": "river_cleaned",
+					"puzzle_id": "treatment_chain",
+					"ready_prompt": "Start the treatment cycle"
+				}
+			},
+			"V": {
+				"scene": "recording",
+				"props": {
+					"dialogue_id": "recording_3",
+					"found_flag": "recording_3_found"
+				}
+			},
+			"W": {
+				"scene": "water_source",
+				"props": {
+					"clean_flag": "river_clean",
+					"tested_flag": "river_water_tested",
+					"secure_flag": "river_water_secure",
+					"contaminated_dialogue": "river_water_contaminated",
+					"needs_treatment_dialogue": "river_water_needs_filter",
+					"clean_dialogue": "river_water_clean"
+				}
+			},
+			"d": {
+				"scene": "decor",
+				"props": {
+					"sprite_name": "dumpster",
+					"blocker_size": [
+						44,
+						12
+					]
+				}
+			},
+			"f": {
+				"scene": "decor",
+				"props": {
+					"sprite_name": "fire",
+					"blocker_size": [
+						8,
+						6
+					],
+					"light_color": "#ff9a4a",
+					"light_radius": 48.0
+				}
+			},
+			"x": {
+				"scene": "decor",
+				"props": {
+					"sprite_name": "box_closed",
+					"blocker_size": [
+						14,
+						8
+					]
+				}
+			},
+			"y": {
+				"scene": "decor",
+				"props": {
+					"sprite_name": "tire",
+					"blocker_size": [
+						12,
+						8
+					]
+				}
+			},
+			"z": {
+				"scene": "decor",
+				"props": {
+					"sprite_name": "hydrant",
+					"blocker_size": [
+						8,
+						6
+					]
+				}
+			},
+			"g": {
+				"scene": "decor",
+				"props": {
+					"sprite_name": "trash_bag_a",
+					"blocker_size": [
+						10,
+						8
+					]
+				}
+			},
+			"e": {
+				"scene": "decor",
+				"props": {
+					"sprite_name": "bench",
+					"blocker_size": [
+						30,
+						10
+					]
+				}
 			}
 		}
 	}

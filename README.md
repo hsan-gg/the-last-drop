@@ -29,7 +29,8 @@ Open `game/` in Godot and press F5, or run the web build (see Export).
    read the archive. It reveals the truth about the collapse.
 3. **The Great Dump:** sort three heaps (with a compost bin), rebuild the shelter roof from
    recovered cardboard, cloth and metal, find recording 2 and read the municipal records.
-4. **Ending:** preserve the knowledge or share it. The epilogue reflects how
+4. **The Dead River:** test the water at three points, sort two heaps, install a filter from cloth, charcoal, sand and pipe, and set the treatment chain at the console. Then drink clean water and find the recording.
+5. **Ending:** preserve the knowledge or share it. The epilogue reflects how
    carefully you sorted. The ending triggers at the last chapter marked `built` in
    `data/chapters.json`, so it moves on as chapters are added.
 
@@ -75,6 +76,7 @@ Open `game/` in Godot and press F5, or run the web build (see Export).
 ```bash
 bash scripts/test.sh     # GUT unit + integration, headless
 bash scripts/e2e.sh      # exports the web build and smoke-tests it in Chromium
+bash scripts/playthrough.sh   # plays all four areas to the ending in a real browser
 ```
 
 `bash scripts/test.sh` also fails if any script fails to compile, which GUT alone only warns about.
@@ -116,5 +118,5 @@ uses it unchanged. See `CREDITS.md` for the font licence.
 ## Known limits
 
 - There is no save/load; a run is a single sitting of about 10 to 15 minutes.
-- Three areas are playable (outpost, battery factory, Great Dump). The river, fields, industry and sanctuary chapters have script data in `data/` but no maps or mechanics yet (see `docs/GAME_SCRIPT.md`).
+- Four areas are playable (outpost, battery factory, Great Dump, Dead River). The fields, industry and sanctuary chapters have script data in `data/` but no maps or mechanics yet (see `docs/GAME_SCRIPT.md`).
 - Keyboard-first. Mouse works in menus and the sorting minigame; there is no touch layout.
