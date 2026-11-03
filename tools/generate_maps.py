@@ -28,7 +28,7 @@ ROOT = Path(__file__).resolve().parent.parent
 MAPS = ROOT / "data" / "maps"
 
 BLOCKING = set("#~CFPtBSH")
-MARKERS = set("@$WUV^GK123defxyzkghpqjmnoYQRclNLJAOZEIX")
+MARKERS = set("@$WUV^GK123defxyzkghpqjmnoYQRclNLJAOZEIXaisuvw56789")
 # Markers that block movement; the spawn marker does not.
 BLOCKING_MARKERS = MARKERS - {"@"}
 
@@ -323,10 +323,10 @@ def build_river():
 # Errands between areas: a part found in one area (A, O, Z) is wanted in
 # another (E, I, X), so the gates back get used.
 CROSS_AREA = {
-    "outpost": (("E", 12, 6, "."), ("I", 30, 18, ".")),
-    "factory": (("A", 8, 6, "M"), ("X", 24, 14, "M")),
-    "dump": (("O", 22, 14, "."),),
-    "river": (("Z", 30, 24, "."),),
+    "outpost": (("E", 12, 6, "."), ("I", 30, 18, "."), ("a", 9, 15, "."), ("i", 16, 9, ".")),
+    "factory": (("A", 8, 6, "M"), ("X", 24, 14, "M"), ("s", 14, 17, "M"), ("5", 30, 18, "M")),
+    "dump": (("O", 22, 14, "."), ("u", 9, 22, "."), ("v", 16, 18, "."), ("6", 40, 6, ".")),
+    "river": (("Z", 30, 24, "."), ("w", 26, 25, "."), ("7", 8, 4, ".")),
 }
 
 

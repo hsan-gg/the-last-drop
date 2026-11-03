@@ -162,6 +162,18 @@
 				"props": {
 					"request_id": "garden"
 				}
+			},
+			"a": {
+				"scene": "npc",
+				"props": {
+					"npc_id": "tobi"
+				}
+			},
+			"i": {
+				"scene": "npc",
+				"props": {
+					"npc_id": "mira"
+				}
 			}
 		},
 		"lit_tint": "#f0d8bc"
@@ -331,6 +343,19 @@
 				"scene": "request_point",
 				"props": {
 					"request_id": "fountain"
+				}
+			},
+			"s": {
+				"scene": "npc",
+				"props": {
+					"npc_id": "halden"
+				}
+			},
+			"5": {
+				"scene": "item_pickup",
+				"props": {
+					"item_id": "memory_shard_factory",
+					"pickup_id": "shard_factory"
 				}
 			}
 		},
@@ -598,6 +623,25 @@
 					"item_id": "seed_tin",
 					"pickup_id": "dump_seeds"
 				}
+			},
+			"u": {
+				"scene": "npc",
+				"props": {
+					"npc_id": "nana_ru"
+				}
+			},
+			"v": {
+				"scene": "npc",
+				"props": {
+					"npc_id": "kip"
+				}
+			},
+			"6": {
+				"scene": "item_pickup",
+				"props": {
+					"item_id": "memory_shard_dump",
+					"pickup_id": "shard_dump"
+				}
 			}
 		},
 		"lit_tint": "#f0dcc4"
@@ -845,6 +889,19 @@
 				"props": {
 					"item_id": "filter_cartridge",
 					"pickup_id": "river_filter"
+				}
+			},
+			"w": {
+				"scene": "npc",
+				"props": {
+					"npc_id": "osei"
+				}
+			},
+			"7": {
+				"scene": "item_pickup",
+				"props": {
+					"item_id": "memory_shard_river",
+					"pickup_id": "shard_river"
 				}
 			}
 		},

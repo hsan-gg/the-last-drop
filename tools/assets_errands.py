@@ -18,7 +18,27 @@ PALETTE = {
     "r": "#c83c3c", "t": "#2a3a44", "m": "#3e6aa0",
 }
 
+PHOTO = [
+    "................",
+    "..kkkkkkkkkkkk..",
+    "..kWWWWWWWWWWk..",
+    "..kWccccccccWk..",
+    "..kWcCCccyycWk..",
+    "..kWccccyYYcWk..",
+    "..kWcBBccyycWk..",
+    "..kWcBBcccccWk..",
+    "..kWeeeeeeeeWk..",
+    "..kWeEeeEeeeWk..",
+    "..kWWWWWWWWWWk..",
+    "..kWWWWWWWWWWk..",
+    "..kkkkkkkkkkkk..",
+    "................",
+    "................",
+    "................",
+]
+
 ART = {
+    **{f"items/memory_shard_{area}": PHOTO for area in ("factory", "dump", "river", "fields", "industry")},
     "items/radio_valve": [
         "................",
         "......kkkk......",

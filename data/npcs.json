@@ -1,0 +1,385 @@
+[
+	{
+		"id": "tobi",
+		"name": "Old Tobi",
+		"sprite": "tobi",
+		"color": "#e0b070",
+		"area": "outpost",
+		"wander": 20,
+		"talks": [
+			{
+				"id": "intro",
+				"lines": [
+					"Easy, kid. You've been out cold since yesterday.",
+					"Name's Tobi. Old Tobi, the kids say, though there aren't many kids left.",
+					"My old sword's in the chest by the hut. Take it. My knees can't swing it anymore.",
+					"And don't drink from the puddles. The water here kills you slower than the Spoiled, but it kills you."
+				]
+			},
+			{
+				"id": "water",
+				"lines": [
+					"Clean water? Out of that wreck? Huh.",
+					"I used to know someone who could do that. I think. My head's full of holes.",
+					"If you find old photographs out there, bring them back. Faces help me remember."
+				],
+				"flags": [
+					"water_secure"
+				],
+				"gives": {
+					"items": {
+						"bandage": 1
+					}
+				}
+			},
+			{
+				"id": "shard_factory",
+				"lines": [
+					"A lab coat. Ink on her fingers. She's laughing at something I said...",
+					"Ines. Her name was Ines.",
+					"We worked together, at a place in the hills. Water and soil. She was the clever one."
+				],
+				"items": {
+					"memory_shard_factory": 1
+				},
+				"take": true,
+				"gives": {
+					"xp": 60
+				}
+			},
+			{
+				"id": "shard_dump",
+				"lines": [
+					"The old recycling yard. I ran the night shift on the sorting line.",
+					"She'd come at dawn with two coffees and a list of everything we did wrong.",
+					"She was always right. It was very annoying."
+				],
+				"items": {
+					"memory_shard_dump": 1
+				},
+				"take": true,
+				"gives": {
+					"xp": 70
+				}
+			},
+			{
+				"id": "shard_river",
+				"lines": [
+					"The river. We swam there. Before.",
+					"She said: 'The river remembers everything we pour into it.' I laughed at her.",
+					"I'm not laughing now, kid."
+				],
+				"items": {
+					"memory_shard_river": 1
+				},
+				"take": true,
+				"gives": {
+					"xp": 80,
+					"items": {
+						"bandage": 2
+					}
+				}
+			},
+			{
+				"id": "shard_fields",
+				"lines": [
+					"Lena's farm. We drove compost out from the city every week.",
+					"Then the trucks stopped. Then everything stopped."
+				],
+				"items": {
+					"memory_shard_fields": 1
+				},
+				"take": true,
+				"gives": {
+					"xp": 90
+				}
+			},
+			{
+				"id": "shard_industry",
+				"lines": [
+					"That's me. On the Sanctuary roof, a power cable in my hands.",
+					"It got hard. The money went, the people went. And I... went too.",
+					"I left her there alone. That's the hole in my head, kid. I dug it myself.",
+					"If you get to the Sanctuary... no. I'll tell her myself. I'm coming."
+				],
+				"items": {
+					"memory_shard_industry": 1
+				},
+				"take": true,
+				"sets": "tobi_remembered",
+				"gives": {
+					"xp": 150,
+					"gear": "solar_saber"
+				}
+			},
+			{
+				"id": "chatter",
+				"lines": [
+					"Mind the green puddles. My boots learned the hard way.",
+					"The generator? Clear the Spoiled first. They hate the light, but they hate the noise more.",
+					"Mira's on the roof again. Kid thinks that radio will talk back one day.",
+					"You sort like you mean it. Good. The world needs people who mean it."
+				],
+				"repeat": true
+			}
+		]
+	},
+	{
+		"id": "mira",
+		"name": "Mira",
+		"sprite": "mira",
+		"color": "#f08aa8",
+		"area": "outpost",
+		"wander": 26,
+		"talks": [
+			{
+				"id": "intro",
+				"lines": [
+					"Hey! You're the one who slept in the hut. I'm Mira. I fix things.",
+					"Well. I fix most things. My radio needs a valve. The glass kind, with a glow.",
+					"The Battery Factory made them. If you find one, I'll let you listen first. Deal?"
+				]
+			},
+			{
+				"id": "radio",
+				"lines": [
+					"Listen! Voices! Someone by the river is ALIVE!",
+					"He calls himself Osei. He says the Last Drop is real, but it's 'not what we think'.",
+					"What does that even mean? Grown-ups are so annoying."
+				],
+				"flags": [
+					"request_done_radio"
+				],
+				"gives": {
+					"items": {
+						"energy_bar": 1
+					}
+				}
+			},
+			{
+				"id": "lights",
+				"lines": [
+					"The lights! I can see the whole street from the roof!",
+					"Tobi cried a little. Don't tell him I told you."
+				],
+				"flags": [
+					"region_lit_outpost"
+				]
+			},
+			{
+				"id": "chatter",
+				"lines": [
+					"I'm going to be an engineer. Like the voice on your recorder.",
+					"Bottle caps are money. Don't let anyone tell you different.",
+					"Do you think the Spoiled were people once? Tobi says don't think about it.",
+					"Kip at the Dump says he has more bottle caps than me. He's lying."
+				],
+				"repeat": true
+			}
+		]
+	},
+	{
+		"id": "halden",
+		"name": "Dr. Halden",
+		"sprite": "halden",
+		"color": "#c8d8f0",
+		"area": "factory",
+		"wander": 10,
+		"talks": [
+			{
+				"id": "intro",
+				"lines": [
+					"Don't come closer! ...You're not one of them. Sorry. Sorry.",
+					"Halden. I was the chemist here.",
+					"Everything you see leaking out there, I signed off on it. Every month. 'Within limits.'",
+					"The limits were set by people who never drank this water."
+				]
+			},
+			{
+				"id": "ember",
+				"lines": [
+					"You got the generator running. Then maybe you're the one for this.",
+					"Years ago I built a burner to clear dried sludge from the tanks. The pickers call it a rune now.",
+					"Take it. Press 1 to breathe fire. Burn what poisons, never what lives."
+				],
+				"flags": [
+					"power_restored"
+				],
+				"gives": {
+					"rune": "ember"
+				}
+			},
+			{
+				"id": "archive",
+				"lines": [
+					"So you read it. The orders came from far away. Cheaper, faster, someone else's river.",
+					"It doesn't make me innocent. It makes all of us a little guilty.",
+					"That's harder to live with. And easier to fix."
+				],
+				"flags": [
+					"archive_read"
+				]
+			},
+			{
+				"id": "chatter",
+				"lines": [
+					"Batteries are tiny chemistry sets. Treat them like it.",
+					"Fire cleans sludge. It also cleans you right off the map if you stand in it.",
+					"Gloves first, questions later.",
+					"There was an old photo pinned in the lab. Someone took it out to the yard. Sentimental fools."
+				],
+				"repeat": true
+			}
+		]
+	},
+	{
+		"id": "nana_ru",
+		"name": "Nana Ru",
+		"sprite": "nana_ru",
+		"color": "#c8a0e8",
+		"area": "dump",
+		"wander": 8,
+		"talks": [
+			{
+				"id": "intro",
+				"lines": [
+					"Another stray. Sit. No, not there. That's Kip's chair.",
+					"I'm Nana Ru. This heap is my kingdom, and everything in it has a price.",
+					"Sort for me and we'll trade. Nothing is free. Nothing is worthless either."
+				]
+			},
+			{
+				"id": "scatter",
+				"lines": [
+					"A perfect pile! Not one battery in the wrong bin. My pickers can't do that.",
+					"Here. An old scattergun the kids fitted with a rune. Press 2 and it roars.",
+					"It throws the Spoiled back. Use it to buy yourself time to think."
+				],
+				"counters": {
+					"perfect_piles": 1
+				},
+				"gives": {
+					"rune": "scatter"
+				}
+			},
+			{
+				"id": "records",
+				"lines": [
+					"The records say every bag here had an address. Every single one.",
+					"People thought 'away' was a place. Away is my kitchen."
+				],
+				"flags": [
+					"dump_records_read"
+				],
+				"gives": {
+					"items": {
+						"purified_water": 1
+					}
+				}
+			},
+			{
+				"id": "chatter",
+				"lines": [
+					"Glass goes for recycling. Broken glass? General waste, unless you like bleeding.",
+					"Kip is fast. Faster than you. Don't take it personally.",
+					"A heap is just a library nobody bothered to sort.",
+					"Food scraps make soil. Soil makes food. The old world forgot the second half."
+				],
+				"repeat": true
+			}
+		]
+	},
+	{
+		"id": "kip",
+		"name": "Kip",
+		"sprite": "kip",
+		"color": "#f0c050",
+		"area": "dump",
+		"wander": 34,
+		"talks": [
+			{
+				"id": "intro",
+				"lines": [
+					"Race you to the east heap! ...No? Boring.",
+					"Nana says you sort slow but right. That's the worst kind of fast."
+				]
+			},
+			{
+				"id": "race",
+				"lines": [
+					"You sorted the east heap before me. Rematch never.",
+					"Here, I found this in it before you did. So technically I still win."
+				],
+				"flags": [
+					"pile_sorted_dump_east"
+				],
+				"gives": {
+					"items": {
+						"energy_bar": 2
+					}
+				}
+			},
+			{
+				"id": "chatter",
+				"lines": [
+					"I've got 412 bottle caps. Mira has 380. I'm winning.",
+					"The big Spoiled smell like old batteries. Don't ask how I know.",
+					"Nana pretends she doesn't like you. She does. She gave you the good chair."
+				],
+				"repeat": true
+			}
+		]
+	},
+	{
+		"id": "osei",
+		"name": "Ferryman Osei",
+		"sprite": "osei",
+		"color": "#80c0e0",
+		"area": "river",
+		"wander": 16,
+		"talks": [
+			{
+				"id": "intro",
+				"lines": [
+					"Easy now. I'm not Spoiled, just ugly.",
+					"Osei. I keep the raft. If you came from the Outpost, maybe you've heard my voice.",
+					"The little one with the radio? Tell her I said: keep listening."
+				]
+			},
+			{
+				"id": "tide",
+				"lines": [
+					"Clean water, running. I never thought I'd see it again.",
+					"Ines used to say the Last Drop isn't a spring. It's a promise that needs keeping.",
+					"The river gave me this rune. It belongs to whoever gave the river back. Press 3."
+				],
+				"flags": [
+					"river_clean"
+				],
+				"gives": {
+					"rune": "tide"
+				}
+			},
+			{
+				"id": "recording",
+				"lines": [
+					"She's not waiting for you at the end of the road, you know.",
+					"She left you instructions. That's harder. And better."
+				],
+				"flags": [
+					"recording_3_found"
+				]
+			},
+			{
+				"id": "chatter",
+				"lines": [
+					"Boiling kills germs. It doesn't kill poison. Remember that.",
+					"The fields upstream used to feed three cities.",
+					"Rivers forgive slowly. But they do forgive.",
+					"Clear water isn't clean water. The worst poisons have no colour."
+				],
+				"repeat": true
+			}
+		]
+	}
+]

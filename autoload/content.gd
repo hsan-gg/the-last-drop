@@ -13,6 +13,7 @@ const QUESTS_PATH := "res://data/quests.json"
 const ENEMIES_PATH := "res://data/enemies.json"
 const GEAR_PATH := "res://data/gear.json"
 const REQUESTS_PATH := "res://data/requests.json"
+const NPCS_PATH := "res://data/npcs.json"
 
 var _areas: Dictionary = {}
 var _lessons: Dictionary = {}
@@ -26,6 +27,7 @@ var _enemies: Dictionary = {}
 var _gear: Dictionary = {}
 var _enemy_counts: Dictionary = {}
 var _requests: Dictionary = {}
+var _npcs: Dictionary = {}
 
 
 func _ready() -> void:
@@ -37,6 +39,10 @@ func _ready() -> void:
 	_objectives = objectives if typeof(objectives) == TYPE_ARRAY else []
 	var quizzes: Variant = DataLoader.load_json(QUIZZES_PATH)
 	_quizzes = quizzes if typeof(quizzes) == TYPE_ARRAY else []
+	var npcs: Variant = DataLoader.load_json(NPCS_PATH)
+	if npcs is Array:
+		for entry: Dictionary in npcs:
+			_npcs[entry["id"]] = entry
 	var requests: Variant = DataLoader.load_json(REQUESTS_PATH)
 	if requests is Array:
 		for entry: Dictionary in requests:
@@ -58,6 +64,15 @@ func all_lessons() -> Array:
 
 func lesson(lesson_id: String) -> Dictionary:
 	return _lessons.get(lesson_id, {}).duplicate()
+
+
+## A person (data/npcs.json), or {} if unknown.
+func npc(npc_id: String) -> Dictionary:
+	return _npcs.get(npc_id, {})
+
+
+func all_npcs() -> Array:
+	return _npcs.values()
 
 
 ## An errand between areas (data/requests.json), or {} if unknown.

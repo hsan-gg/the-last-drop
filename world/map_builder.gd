@@ -6,6 +6,9 @@ extends RefCounted
 
 const TILE_SIZE := 16
 const ATLAS := preload("res://assets/tilesets/outpost_tiles.png")
+## Each region can have its own atlas (same column layout, so the same map
+## characters and collision): assets/tilesets/<name>_tiles.png.
+const ATLAS_FORMAT := "res://assets/tilesets/%s_tiles.png"
 const GROUND_CHAR := "."
 const SPAWN_MARKER := "@"
 const GROUND_TILES: Array[int] = [0, 1, 2]
@@ -62,10 +65,10 @@ static func markers(layout: PackedStringArray, marker_chars: String) -> Array[Di
 
 
 ## `marker_floor` is the floor drawn under marker cells.
-static func build_layer(layout: PackedStringArray, marker_chars: String, marker_floor: String) -> TileMapLayer:
+static func build_layer(layout: PackedStringArray, marker_chars: String, marker_floor: String, tileset: String = "") -> TileMapLayer:
 	var layer := TileMapLayer.new()
 	layer.name = "Ground"
-	layer.tile_set = make_tile_set()
+	layer.tile_set = make_tile_set(atlas_for(tileset))
 	for y in layout.size():
 		for x in layout[y].length():
 			var cell := Vector2i(x, y)
@@ -80,7 +83,14 @@ static func build_layer(layout: PackedStringArray, marker_chars: String, marker_
 	return layer
 
 
-static func make_tile_set() -> TileSet:
+static func atlas_for(tileset: String) -> Texture2D:
+	var path := ATLAS_FORMAT % tileset
+	if tileset.is_empty() or not ResourceLoader.exists(path):
+		return ATLAS
+	return load(path) as Texture2D
+
+
+static func make_tile_set(atlas: Texture2D = ATLAS) -> TileSet:
 	var tile_set := TileSet.new()
 	tile_set.tile_size = Vector2i(TILE_SIZE, TILE_SIZE)
 	tile_set.add_physics_layer()
@@ -88,14 +98,14 @@ static func make_tile_set() -> TileSet:
 	tile_set.set_physics_layer_collision_mask(0, 0)
 
 	var source := TileSetAtlasSource.new()
-	source.texture = ATLAS
+	source.texture = atlas
 	source.texture_region_size = Vector2i(TILE_SIZE, TILE_SIZE)
 	tile_set.add_source(source, 0)
 
 	var half := TILE_SIZE / 2.0
 	var square := PackedVector2Array([Vector2(-half, -half), Vector2(half, -half), Vector2(half, half), Vector2(-half, half)])
 	@warning_ignore("integer_division")
-	var columns := ATLAS.get_width() / TILE_SIZE
+	var columns := atlas.get_width() / TILE_SIZE
 	for column in columns:
 		var coords := Vector2i(column, 0)
 		source.create_tile(coords)

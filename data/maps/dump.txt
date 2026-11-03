@@ -4,7 +4,7 @@ HH.....r...H....Hb..b.HHb....b.HH.b..r......HH
 HH.l...b.....rb.H.r......b..r..HH..........pHH
 HH..V..bb.....gH...rr..........HH..z....K...HH
 HH......bb...............============......,HH
-HH......rb....b,..rb.....============.......HH
+HH......rb....b,..rb.....============...6...HH
 HH..,..QbH...........b...==x.....L.......b..HH
 HHHHH..,HHHHH...bbbb.rY.U==...b........Hrr..HH
 HHHHH...HHHHH.b....b.b...==..r.HH,..3....b..HH
@@ -17,10 +17,10 @@ HH.b..==...br..H.HH..==......b.b...rb.....^.HH
 HH....==..bb..r.bHHb.==.....rbY.....b.Hb...rHH
 HHHHHHH...HHHHHHHHH..=2..r...dH.........b...HH
 HHHHHHH...HHHHHHHHH..==...r...r......b.r...bHH
-HHb..b..=........HH..==..Hb....bH.....,.....HH
+HHb..b..=......v.HH..==..Hb....bH.....,.....HH
 HH.b....===============...L..b....rH...b....HH
 HH......===============...,...r..b..r.,..Hr.HH
-HH.Hf...=................rrbg.b..b....d.....HH
+HH.Hf...=u...............rrbg.b..b....d.....HH
 HH....HL=..1...b.HHxH..b.r...Hbrr..HbQb..r..HH
 HH......=.....bH.HHbr....b.....b....r.b....rHH
 HH......=....d...HH..b.b...r.b..H........r..HH

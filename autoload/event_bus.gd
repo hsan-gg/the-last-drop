@@ -78,3 +78,11 @@ signal sorting_left(pile_id: String, remaining: Array)
 signal reward_requested(kind: String, title: String, line: String)
 ## XP was earned (before difficulty scaling is shown, the amount actually added).
 signal xp_gained(amount: int)
+
+## Someone speaks: lines plus a speaker {"name", "color", "portrait": Texture2D}.
+signal speech_requested(lines: Array, speaker: Dictionary)
+## A conversation with an NPC changed the story (for quests and tests).
+signal npc_talked(npc_id: String, talk_id: String)
+
+signal runes_changed
+signal energy_changed(value: float, maximum: float)

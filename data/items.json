@@ -158,5 +158,35 @@
 		"name": "Filter Cartridge",
 		"category": "keepsake",
 		"description": "A fresh charcoal cartridge. The Factory's drinking fountain takes this size."
+	},
+	{
+		"id": "memory_shard_factory",
+		"name": "Old Photograph",
+		"category": "keepsake",
+		"description": "A faded photo of a woman in a lab coat, laughing. Old Tobi might recognise it."
+	},
+	{
+		"id": "memory_shard_dump",
+		"name": "Old Photograph",
+		"category": "keepsake",
+		"description": "A photo of a sorting line at dawn, two coffee cups on a rail. Old Tobi might recognise it."
+	},
+	{
+		"id": "memory_shard_river",
+		"name": "Old Photograph",
+		"category": "keepsake",
+		"description": "A photo of two people swimming in a clear river. Old Tobi might recognise it."
+	},
+	{
+		"id": "memory_shard_fields",
+		"name": "Old Photograph",
+		"category": "keepsake",
+		"description": "A photo of a truck full of compost at a farm gate. Old Tobi might recognise it."
+	},
+	{
+		"id": "memory_shard_industry",
+		"name": "Old Photograph",
+		"category": "keepsake",
+		"description": "A photo of a man on a rooftop holding a power cable. Old Tobi might recognise it."
 	}
 ]

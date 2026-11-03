@@ -49,6 +49,7 @@ func _ready() -> void:
 	visible = false
 	EventBus.dialogue_requested.connect(_on_dialogue_requested)
 	EventBus.text_requested.connect(show_lines.bind(""))
+	EventBus.speech_requested.connect(show_speech)
 	EventBus.damage_taken.connect(interrupt.unbind(1))
 	EventBus.interacted.connect(_remember_source)
 
@@ -90,6 +91,19 @@ func show_lines(lines: Array[String], dialogue_id: String = "") -> void:
 	if pauses_game:
 		get_tree().paused = true
 	_show_line()
+
+
+## An NPC talking: their name in their colour and their face as the portrait.
+func show_speech(lines: Array, speaker: Dictionary) -> void:
+	var typed: Array[String] = []
+	typed.assign(lines)
+	show_lines(typed, "npc_%s" % speaker.get("name", ""))
+	_stripe.color = speaker.get("color", Color.WHITE)
+	_name.visible = true
+	_name.text = String(speaker.get("name", "")).to_upper()
+	_name.add_theme_color_override("font_color", speaker.get("color", Color.WHITE))
+	_portrait.texture = speaker.get("portrait", null)
+	_portrait_frame.visible = _portrait.texture != null
 
 
 ## Ends the conversation without finishing it, e.g. because the player was hit.

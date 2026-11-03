@@ -18,6 +18,7 @@ const ENTITY_SCENES := {
 	"region_generator": preload("res://world/region_generator.tscn"),
 	"lamp": preload("res://world/lamp.tscn"),
 	"request_point": preload("res://world/request_point.tscn"),
+	"npc": preload("res://world/npc.tscn"),
 }
 const PENALTY_ZOMBIE := "runner"
 const PENALTY_DISTANCE := 90.0
@@ -54,7 +55,7 @@ func _ready() -> void:
 	var definitions: Dictionary = config.get("entities", {})
 	var marker_chars := MapBuilder.SPAWN_MARKER + "".join(PackedStringArray(definitions.keys()))
 
-	var ground := MapBuilder.build_layer(layout, marker_chars, config.get("floor", MapBuilder.GROUND_CHAR))
+	var ground := MapBuilder.build_layer(layout, marker_chars, config.get("floor", MapBuilder.GROUND_CHAR), config.get("tileset", ""))
 	add_child(ground)
 	move_child(ground, 0)
 	_place_entities(layout, definitions, marker_chars)

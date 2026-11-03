@@ -16,6 +16,11 @@ const ATTACK_SHEET_PATH := "res://assets/sprites/player_attack.png"
 const ATTACK_FRAME_WIDTH := 20
 const ATTACK_FRAMES := 4
 
+## The sheet to animate; NPCs set their own before entering the tree.
+var sheet: Texture2D = SHEET
+## NPCs do not swing swords.
+var with_attacks := true
+
 
 func _ready() -> void:
 	sprite_frames = _build_frames()
@@ -57,11 +62,11 @@ func _facing_name(direction: Vector2) -> String:
 
 
 func _frame_height() -> int:
-	return SHEET.get_height() / DIRECTIONS.size()
+	return sheet.get_height() / DIRECTIONS.size()
 
 
 func _has_full_layout() -> bool:
-	return SHEET.get_width() / FRAME_WIDTH >= FULL_LAYOUT_COLUMNS
+	return sheet.get_width() / FRAME_WIDTH >= FULL_LAYOUT_COLUMNS
 
 
 func _build_frames() -> SpriteFrames:
@@ -86,10 +91,10 @@ func _build_frames() -> SpriteFrames:
 
 
 func _add_attack_animations(frames: SpriteFrames) -> void:
-	if not ResourceLoader.exists(ATTACK_SHEET_PATH):
+	if not with_attacks or not ResourceLoader.exists(ATTACK_SHEET_PATH):
 		return
-	var sheet := load(ATTACK_SHEET_PATH) as Texture2D
-	var height := sheet.get_height() / DIRECTIONS.size()
+	var attack_sheet := load(ATTACK_SHEET_PATH) as Texture2D
+	var height := attack_sheet.get_height() / DIRECTIONS.size()
 	for row in DIRECTIONS.size():
 		var animation_name := "attack_%s" % DIRECTIONS[row]
 		frames.add_animation(animation_name)
@@ -97,7 +102,7 @@ func _add_attack_animations(frames: SpriteFrames) -> void:
 		frames.set_animation_speed(animation_name, 12.0)
 		for column in ATTACK_FRAMES:
 			var atlas := AtlasTexture.new()
-			atlas.atlas = sheet
+			atlas.atlas = attack_sheet
 			atlas.region = Rect2(column * ATTACK_FRAME_WIDTH, row * height, ATTACK_FRAME_WIDTH, height)
 			frames.add_frame(animation_name, atlas)
 
@@ -111,7 +116,7 @@ func _add_animation(frames: SpriteFrames, animation_name: String, row: int, colu
 
 func _frame(column: int, row: int) -> AtlasTexture:
 	var atlas := AtlasTexture.new()
-	atlas.atlas = SHEET
+	atlas.atlas = sheet
 	var height := _frame_height()
 	atlas.region = Rect2(column * FRAME_WIDTH, row * height, FRAME_WIDTH, height)
 	return atlas

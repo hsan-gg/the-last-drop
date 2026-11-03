@@ -89,6 +89,7 @@ func reset_run() -> void:
 	Lives.reset()
 	MapMemory.reset()
 	Chapters.reset()
+	Runes.reset()
 	Notices.clear()
 	Tutorial.reset_run()
 
