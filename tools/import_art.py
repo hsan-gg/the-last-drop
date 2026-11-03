@@ -65,6 +65,41 @@ def tinted(tile, rgb, strength):
     return out
 
 
+def plate_floor(base_rgb, seed=11):
+    """A metal floor plate: soft 2x2 blotches, a lit top-left edge and a dark bottom-right seam."""
+    rng = np.random.default_rng(seed)
+    tile = np.zeros((TILE, TILE, 4), np.uint8)
+    tile[:, :, 3] = 255
+    blotch = rng.integers(-7, 8, size=(TILE // 2, TILE // 2))
+    shade = np.repeat(np.repeat(blotch, 2, axis=0), 2, axis=1)
+    for channel in range(3):
+        tile[:, :, channel] = np.clip(base_rgb[channel] + shade, 0, 255)
+    tile[0, :, :3] = np.clip(tile[0, :, :3].astype(int) + 16, 0, 255)
+    tile[:, 0, :3] = np.clip(tile[:, 0, :3].astype(int) + 10, 0, 255)
+    tile[-1, :, :3] = np.clip(tile[-1, :, :3].astype(int) - 24, 0, 255)
+    tile[:, -1, :3] = np.clip(tile[:, -1, :3].astype(int) - 18, 0, 255)
+    for _ in range(4):
+        x, y = rng.integers(2, TILE - 3, size=2)
+        tile[y, x:x + 2, :3] = np.clip(tile[y, x:x + 2, :3].astype(int) - 20, 0, 255)
+    return tile
+
+
+def outlined(image, rgb):
+    """Adds a one pixel outline around the opaque pixels of a sprite, padded by one."""
+    h, w = image.shape[:2]
+    padded = np.zeros((h + 2, w + 2, 4), np.uint8)
+    padded[1:-1, 1:-1] = image
+    solid = padded[:, :, 3] > 0
+    grown = solid.copy()
+    grown[1:, :] |= solid[:-1, :]
+    grown[:-1, :] |= solid[1:, :]
+    grown[:, 1:] |= solid[:, :-1]
+    grown[:, :-1] |= solid[:, 1:]
+    edge = grown & ~solid
+    padded[edge] = (*rgb, 255)
+    return padded
+
+
 def build_tileset():
     ground_sheet = load("Tiles/Background_Bleak-Yellow_TileSet.png")
     ground_a, ground_b, ground_c = crop(ground_sheet, 0, 0), crop(ground_sheet, 2, 0), crop(ground_sheet, 5, 0)
@@ -80,7 +115,7 @@ def build_tileset():
     water = over(ground_a, puddle)
     water = np.where((np.abs(water[:, :, :3].astype(int) - ground_a[:, :, :3].astype(int)).sum(axis=2) > 0)[..., None], tinted(water, (40, 120, 150), 0.55), water)
     water = tinted(water, (40, 110, 140), 0.35)
-    toxic = tinted(over(ground_a, puddle), (110, 200, 60), 0.55)
+    toxic = tinted(over(ground_a, puddle), (84, 150, 66), 0.5)
 
     tiles = [
         ground_a, ground_b, ground_c,
@@ -90,13 +125,13 @@ def build_tileset():
         over(ground_a, obj("Pallet_1.png")),
         over(ground_a, crop(load("Tiles/Wire-Fence/Wire-Fence_TileSet.png"), 1, 1)),
         over(dark, obj("Iron-beam.png"), dy=5),
-        tinted(concrete, (76, 70, 86), 0.3),
+        plate_floor((92, 88, 108)),
         dark, toxic,
         over(ground_a, load("Objects/Nature/Flowers_Mashrooms_Other-nature-stuff/Stump_1.png")),
         over(ground_a, obj("Barrel_rust_red_1.png")),
         over(dark, obj("Washing-machine.png")),
         over(ground_a, obj("Trash-bag_1.png")),
-        crop(garbage, 1, 0),
+        tinted(crop(garbage, 1, 0), (96, 76, 84), 0.3),
     ]
     sheet = np.concatenate(tiles, axis=1)
     write_png(ROOT / "assets" / "tilesets" / "outpost_tiles.png", sheet)
@@ -105,7 +140,8 @@ def build_tileset():
 
 def build_props():
     garbage = load("Tiles/Garbage_TileSet.png")
-    write_png(ROOT / "assets" / "sprites" / "scrap_pile.png", crop(garbage, 0, 0, 2, 2))
+    pile = tinted(crop(garbage, 0, 0, 2, 2), (255, 236, 200), 0.12)  # brighter than the heap tiles so it reads as loot
+    write_png(ROOT / "assets" / "sprites" / "scrap_pile.png", outlined(pile, (42, 32, 48)))
     print("props written")
 
 
