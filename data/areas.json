@@ -176,7 +176,15 @@
 				}
 			}
 		},
-		"lit_tint": "#f0d8bc"
+		"lit_tint": "#f0d8bc",
+		"ambience": [
+			"ash",
+			"embers"
+		],
+		"haze": {
+			"color": "#7a6040",
+			"alpha": 0.08
+		}
 	},
 	{
 		"id": "factory",
@@ -359,7 +367,15 @@
 				}
 			}
 		},
-		"lit_tint": "#bcc8f0"
+		"lit_tint": "#bcc8f0",
+		"ambience": [
+			"ash",
+			"flies"
+		],
+		"haze": {
+			"color": "#5a8a40",
+			"alpha": 0.12
+		}
 	},
 	{
 		"id": "dump",
@@ -644,7 +660,15 @@
 				}
 			}
 		},
-		"lit_tint": "#f0dcc4"
+		"lit_tint": "#f0dcc4",
+		"ambience": [
+			"flies",
+			"dust"
+		],
+		"haze": {
+			"color": "#8a7040",
+			"alpha": 0.12
+		}
 	},
 	{
 		"id": "river",
@@ -905,6 +929,14 @@
 				}
 			}
 		},
-		"lit_tint": "#c8e0e4"
+		"lit_tint": "#c8e0e4",
+		"ambience": [
+			"mist",
+			"flies"
+		],
+		"haze": {
+			"color": "#6a7a60",
+			"alpha": 0.1
+		}
 	}
 ]

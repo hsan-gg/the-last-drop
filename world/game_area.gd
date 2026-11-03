@@ -35,6 +35,7 @@ var _layout: PackedStringArray = PackedStringArray()
 var _lit_tint := Color.WHITE
 var _hazard_timer := 0.0
 var _spawned := 0
+var ambience: Ambience
 var _reveal_timer := 0.0
 
 @onready var _entities: Node2D = $Entities
@@ -58,6 +59,11 @@ func _ready() -> void:
 	var ground := MapBuilder.build_layer(layout, marker_chars, config.get("floor", MapBuilder.GROUND_CHAR), config.get("tileset", ""))
 	add_child(ground)
 	move_child(ground, 0)
+	ambience = Ambience.new()
+	ambience.name = "Ambience"
+	add_child(ambience)
+	move_child(ambience, 1)
+	ambience.setup(layout, config)
 	_place_entities(layout, definitions, marker_chars)
 	AreaLighting.add_player_lantern(_player)
 	_arrive(layout)

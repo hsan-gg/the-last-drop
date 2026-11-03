@@ -143,3 +143,11 @@ func test_harder_difficulties_bring_bigger_packs() -> void:
 	assert_gt(counts["hard"], counts["medium"])
 	assert_gt(counts["hardcore"], counts["hard"])
 	assert_gte(counts["medium"], counts["easy"])
+
+
+func test_the_world_is_alive_water_toxins_and_air() -> void:
+	var area: GameArea = add_child_autofree(preload("res://world/river.tscn").instantiate())
+	await wait_physics_frames(2)
+	var counts := area.ambience.counts()
+	assert_gt(counts["water"], 0, "the river flows")
+	assert_gt(counts["airs"], 0, "something hangs in the air")
