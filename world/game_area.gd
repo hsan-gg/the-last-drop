@@ -45,6 +45,7 @@ func _ready() -> void:
 	add_child(ground)
 	move_child(ground, 0)
 	_place_entities(layout, definitions, marker_chars)
+	AreaLighting.add_player_lantern(_player)
 	_limit_camera(layout)
 
 	_tint.color = Color(config.get("tint", "#ffffff"))
@@ -73,6 +74,7 @@ func _place_entities(layout: PackedStringArray, definitions: Dictionary, marker_
 		for key: String in properties:
 			entity.set(key, _typed(properties[key]))
 		_entities.add_child(entity)
+		AreaLighting.decorate(entity, definition.get("scene", ""))
 
 
 func _limit_camera(layout: PackedStringArray) -> void:

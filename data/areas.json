@@ -3,7 +3,7 @@
 		"id": "outpost",
 		"layout": "res://data/maps/outpost.txt",
 		"floor": ".",
-		"tint": "#ffe2c4",
+		"tint": "#c9ab9a",
 		"arrival_dialogue": "intro",
 		"entities": {
 			"$": {
@@ -46,7 +46,7 @@
 		"id": "factory",
 		"layout": "res://data/maps/factory.txt",
 		"floor": "M",
-		"tint": "#d6e4ff",
+		"tint": "#8f9ab8",
 		"arrival_dialogue": "factory_arrival",
 		"entities": {
 			"$": {
@@ -92,7 +92,7 @@
 		"id": "dump",
 		"layout": "res://data/maps/dump.txt",
 		"floor": ".",
-		"tint": "#e6dccb",
+		"tint": "#bfae9f",
 		"arrival_dialogue": "dump_arrival",
 		"entities": {
 			"1": {
