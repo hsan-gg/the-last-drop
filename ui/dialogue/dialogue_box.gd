@@ -16,6 +16,8 @@ const SPEAKERS: Array[Dictionary] = [
 	{"prefix": "river_cleaned", "name": "TREATMENT PLANT", "tag": "", "color": "#5fe0d0", "icon": "terminal_on"},
 	{"prefix": "sample_", "name": "TEST STRIP", "tag": "", "color": "#9be04a", "icon": "sample_kit"},
 ]
+## Walk this far from where the conversation started and it closes.
+const WALK_AWAY_DISTANCE := 64.0
 const NARRATION := {"name": "", "tag": "", "color": "#5fd0c4", "icon": ""}
 
 ## Conversations no longer stop the world: zombies still come, and being hit
@@ -27,6 +29,9 @@ var _index := 0
 var _dialogue_id := ""
 var _typing: Tween
 var _opened_on_frame := -1
+var _anchor := Vector2.INF
+var _last_source: Node2D
+var _last_source_frame := -1
 
 var _root: Control
 var _stripe: ColorRect
@@ -45,6 +50,7 @@ func _ready() -> void:
 	EventBus.dialogue_requested.connect(_on_dialogue_requested)
 	EventBus.text_requested.connect(show_lines.bind(""))
 	EventBus.damage_taken.connect(interrupt.unbind(1))
+	EventBus.interacted.connect(_remember_source)
 
 
 func is_open() -> bool:
@@ -74,6 +80,7 @@ func show_lines(lines: Array[String], dialogue_id: String = "") -> void:
 	_index = 0
 	_opened_on_frame = Engine.get_process_frames()
 	_apply_speaker(speaker_for(dialogue_id))
+	_anchor = _anchor_position()
 	visible = true
 	EventBus.dialogue_opened.emit()
 	if pauses_game:
@@ -91,6 +98,27 @@ func interrupt() -> void:
 	if pauses_game:
 		get_tree().paused = false
 	EventBus.dialogue_interrupted.emit()
+
+
+func _remember_source(source: Node) -> void:
+	_last_source = source as Node2D
+	_last_source_frame = Engine.get_process_frames()
+
+
+## Where the conversation is "at": the thing just interacted with, else the player.
+func _anchor_position() -> Vector2:
+	if is_instance_valid(_last_source) and Engine.get_process_frames() - _last_source_frame <= 2:
+		return _last_source.global_position
+	var player := get_tree().get_first_node_in_group("player") as Node2D
+	return player.global_position if player != null else Vector2.INF
+
+
+func _process(_delta: float) -> void:
+	if not visible or _anchor == Vector2.INF:
+		return
+	var player := get_tree().get_first_node_in_group("player") as Node2D
+	if player != null and player.global_position.distance_to(_anchor) > WALK_AWAY_DISTANCE:
+		interrupt()
 
 
 func advance() -> void:

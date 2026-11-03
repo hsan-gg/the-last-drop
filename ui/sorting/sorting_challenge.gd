@@ -105,6 +105,26 @@ func choose_bin(bin_id: String) -> void:
 		_set_feedback(Phase.FEEDBACK_WRONG, "[color=#e0584a]NOT QUITE[/color]\n%s\n[color=#5fd0c4]%s[/color]" % [lesson.get("wrong", ""), lesson.get("principle", "")])
 
 
+## Walks away from the pile part-way. What was recovered is kept; the rest stays
+## on the pile for later. Nothing is lost and nothing is punished.
+func leave() -> void:
+	if _phase == Phase.IDLE or _session == null:
+		return
+	if _phase == Phase.SUMMARY:
+		_close()
+		return
+	for item_id in _session.recovered_items():
+		Inventory.add(item_id)
+	var remaining := _session.remaining_items()
+	var pile := _pile_id
+	_phase = Phase.IDLE
+	visible = false
+	if pauses_game:
+		get_tree().paused = false
+	_session = null
+	EventBus.sorting_left.emit(pile, remaining)
+
+
 func continue_flow() -> void:
 	match _phase:
 		Phase.FEEDBACK_WRONG:
@@ -128,7 +148,7 @@ func _show_current_item() -> void:
 	_feedback.text = ""
 	_set_bins_enabled(true)
 	_continue.visible = false
-	_hint.text = "Press 1, 2 or 3, or click a bin"
+	_hint.text = "Press 1 to %d or click a bin.   Esc: leave for now" % _visible_bin_count()
 
 
 ## A run of correct bins pays a growing XP bonus.
@@ -184,6 +204,13 @@ func _set_feedback(next_phase: Phase, bbcode: String) -> void:
 	_hint.text = "[E] %s" % _continue.text
 
 
+func _visible_bin_count() -> int:
+	var shown := 0
+	for button: Button in _bin_buttons.values():
+		shown += 1 if button.visible else 0
+	return shown
+
+
 func _show_bins(bin_ids: Array[String]) -> void:
 	for bin_id: String in _bin_buttons:
 		_bin_buttons[bin_id].visible = bin_ids.has(bin_id)
@@ -210,6 +237,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not visible or Engine.get_process_frames() == _opened_on_frame:
 		return
 	var key := event as InputEventKey
+	if event.is_action_pressed("menu"):
+		get_viewport().set_input_as_handled()
+		leave()
+		return
 	if _phase == Phase.CHOOSING and key != null and key.pressed and not key.echo and BIN_KEYS.has(key.keycode) and _bin_buttons[BIN_KEYS[key.keycode]].visible:
 		get_viewport().set_input_as_handled()
 		choose_bin(BIN_KEYS[key.keycode])

@@ -55,6 +55,14 @@ func _ready() -> void:
 	_build_body()
 
 
+## Starts chasing the player wherever they are (the generator calls them).
+func hunt() -> void:
+	if _state == State.DEAD:
+		return
+	_def["leash"] = maxf(float(_def["leash"]), 2000.0)
+	_state = State.CHASE
+
+
 ## Forgets the player (after a collapse the player is back at the start).
 func reset_aggro() -> void:
 	if _state != State.DEAD:

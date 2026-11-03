@@ -70,3 +70,6 @@ signal tip_requested(text: String)
 
 ## A region's generator was started: the place lights up.
 signal region_lit(area_id: String)
+
+## The player walked away from a scrap pile part-way; `remaining` goes back on the pile.
+signal sorting_left(pile_id: String, remaining: Array)

@@ -22,6 +22,7 @@ func _ready() -> void:
 	set_prompt("Sort the scrap pile")
 	interacted.connect(_on_interacted)
 	EventBus.sorting_finished.connect(_on_sorting_finished)
+	EventBus.sorting_left.connect(_on_sorting_left)
 
 
 func flag_name() -> String:
@@ -30,6 +31,12 @@ func flag_name() -> String:
 
 func _on_interacted(_by: Node) -> void:
 	EventBus.sorting_requested.emit(pile_id, item_ids)
+
+
+func _on_sorting_left(left_pile_id: String, remaining: Array) -> void:
+	if left_pile_id == pile_id:
+		item_ids.assign(remaining)
+		set_prompt("Finish sorting the pile (%d left)" % item_ids.size())
 
 
 func _on_sorting_finished(finished_pile_id: String) -> void:

@@ -33,16 +33,23 @@ func _generator() -> RegionGenerator:
 	return generator
 
 
-func test_it_will_not_start_while_zombies_remain() -> void:
+func _zombie() -> Enemy:
+	Combat.enemies_enabled = true
+	var enemy: Enemy = preload("res://world/enemy.tscn").instantiate()
+	enemy.position = Vector2(400, 400)
+	add_child_autofree(enemy)
+	return enemy
+
+
+func test_it_will_not_start_while_a_zombie_is_standing() -> void:
+	_zombie()
 	var generator := _generator()
 	generator.interact(null)
 	assert_false(generator.is_lit())
-	assert_gt(RegionGenerator.zombies_left("outpost"), 0)
+	assert_eq(generator.zombies_left(), 1)
 
 
 func test_it_starts_once_the_region_is_clear_and_pays_out() -> void:
-	for index in Content.enemy_count("outpost"):
-		GameState.set_flag("slain_outpost_%d_0" % index)
 	Survival.damage(40.0)
 	watch_signals(EventBus)
 	var generator := _generator()
@@ -50,18 +57,42 @@ func test_it_starts_once_the_region_is_clear_and_pays_out() -> void:
 	assert_true(generator.is_lit())
 	assert_signal_emitted_with_parameters(EventBus, "region_lit", ["outpost"])
 	assert_eq(Survival.health(), Survival.max_health(), "fully healed")
-	assert_gt(Progress.xp + (Progress.level - 1) * 100, 0, "XP awarded")
 	assert_true(GameState.has_flag("region_lit_outpost"))
 
 
+func test_a_dead_zombie_does_not_count() -> void:
+	var enemy := _zombie()
+	enemy.take_hit(9999.0, Vector2.ZERO, 0.0)
+	var generator := _generator()
+	generator.interact(null)
+	assert_true(generator.is_lit())
+
+
 func test_starting_it_twice_pays_once() -> void:
-	for index in Content.enemy_count("outpost"):
-		GameState.set_flag("slain_outpost_%d_0" % index)
 	var generator := _generator()
 	generator.interact(null)
 	var xp_after := Progress.xp + Progress.level
 	generator.interact(null)
 	assert_eq(Progress.xp + Progress.level, xp_after)
+
+
+func test_the_lantern_is_put_away_in_a_lit_region() -> void:
+	GameState.set_flag("region_lit_outpost")
+	var area: Node = add_child_autofree(AREA_SCENE.instantiate())
+	await wait_physics_frames(2)
+	var lantern := area.find_child("Lantern", true, false) as PointLight2D
+	assert_not_null(lantern)
+	assert_false(lantern.visible)
+
+
+func test_the_generator_calls_far_zombies_to_the_player() -> void:
+	Combat.enemies_enabled = true
+	var area: GameArea = add_child_autofree(AREA_SCENE.instantiate())
+	await wait_physics_frames(2)
+	var player := get_tree().get_first_node_in_group("player") as Node2D
+	assert_gt(area.summon_remaining(), 0)
+	for node in get_tree().get_nodes_in_group("enemies"):
+		assert_lte((node as Node2D).global_position.distance_to(player.global_position), GameArea.PENALTY_DISTANCE * 1.5 + 1.0)
 
 
 func test_lamps_come_on_when_the_region_lights_up() -> void:

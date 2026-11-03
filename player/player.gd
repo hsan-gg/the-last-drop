@@ -20,6 +20,7 @@ var _spawn_position := Vector2.ZERO
 
 func _ready() -> void:
 	add_to_group("player")
+	collision_mask = 1 | 4  # walls and zombies: walking into a zombie stops you instead of shoving it
 	add_child(SwordSwing.new())
 	combat = PlayerCombat.new()
 	combat.name = "Combat"

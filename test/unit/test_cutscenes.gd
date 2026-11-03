@@ -113,17 +113,16 @@ func test_longer_beats_are_held_longer() -> void:
 	assert_gte(CutscenePlayer.hold_seconds(""), CutscenePlayer.MIN_HOLD_SECONDS)
 
 
-func test_the_cutscene_moves_on_by_itself_except_at_the_end() -> void:
+func test_the_cutscene_waits_for_the_player_on_every_beat() -> void:
 	var player: CutscenePlayer = preload("res://ui/cutscene.tscn").instantiate()
 	Cutscenes.pending_id = "to_dump"
 	add_child_autofree(player)
 	await wait_physics_frames(2)
-	assert_eq(player.index(), 0)
-	await wait_seconds(CutscenePlayer.hold_seconds(Cutscenes.beats("to_dump")[0]["text"]) + 2.5)
-	assert_eq(player.index(), 1, "the next beat arrives without a key press")
-	await wait_seconds(8.0)
-	assert_eq(player.index(), 1, "the last beat waits for the player")
-	assert_false(player.is_done())
+	await wait_seconds(6.0)
+	assert_eq(player.index(), 0, "no beat moves on by itself")
+	player.advance()
+	player.advance()
+	assert_eq(player.index(), 1, "a key press moves on")
 
 
 func test_every_scene_draws_without_error() -> void:

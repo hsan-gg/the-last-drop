@@ -28,23 +28,28 @@ static func lit_flag(area: String) -> String:
 	return "region_lit_%s" % area
 
 
-## Zombies still alive in the region (the base count until the area has been loaded).
-static func zombies_left(area: String) -> int:
-	var spawned := GameState.get_counter("spawned_%s" % area)
-	var total := spawned if spawned > 0 else Content.enemy_count(area)
-	return maxi(total - GameState.count_flags_with_prefix("slain_%s_" % area), 0)
+## Zombies still standing in the region right now.
+func zombies_left() -> int:
+	var alive := 0
+	for node in get_tree().get_nodes_in_group("enemies"):
+		var enemy := node as Enemy
+		if enemy != null and not enemy.is_dead():
+			alive += 1
+	return alive
 
 
 func _on_interacted(_by: Node) -> void:
 	if is_lit():
 		EventBus.text_requested.emit(["The lights are on. This place is safe now."] as Array[String])
 		return
-	var left := zombies_left(region_id)
+	var left := zombies_left()
 	if left > 0:
-		EventBus.text_requested.emit([
-			"The generator coughs and dies. The area is not safe to light up yet.",
-			"Defeat the remaining zombies first: %d left." % left,
-		] as Array[String])
+		var area := get_tree().current_scene as GameArea
+		if area != null:
+			area.summon_remaining()
+		EventBus.sfx_requested.emit("sort_bad")
+		FloatingText.spawn(get_parent(), "%d zombie%s left!" % [left, "" if left == 1 else "s"], global_position + Vector2(0, -20), Color("#ff9a5a"))
+		EventBus.banner_requested.emit("THE GENERATOR SPUTTERS", "Its noise draws the last %d zombie%s to you. Defeat them, then try again." % [left, "" if left == 1 else "s"], Color("#ff9a5a"))
 		return
 	_start()
 

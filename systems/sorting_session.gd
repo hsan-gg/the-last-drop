@@ -20,6 +20,11 @@ func remaining() -> int:
 	return _queue.size()
 
 
+## Items not yet sorted, in order.
+func remaining_items() -> Array[String]:
+	return _queue.duplicate()
+
+
 func is_complete() -> bool:
 	return _queue.is_empty()
 

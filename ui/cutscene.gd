@@ -7,7 +7,7 @@ signal finished
 
 const CHARS_PER_SECOND := 90.0
 const FADE_SECONDS := 0.3
-## After the words finish, the next beat comes by itself (E or a click is faster).
+## How long the camera drifts over a beat: the time to type it plus a reading pause.
 const MIN_HOLD_SECONDS := 1.6
 const HOLD_PER_CHARACTER := 0.022
 const DRIFT_ZOOM := 0.07
@@ -23,7 +23,6 @@ var _typing: Tween
 var _veil: ColorRect
 var _bar: ColorRect
 var _pips: Label
-var _auto: Tween
 var _drift: Tween
 var _done := false
 
@@ -64,8 +63,6 @@ func advance() -> void:
 		_text.visible_characters = -1
 		return
 	_index += 1
-	if _auto != null:
-		_auto.kill()
 	if _index >= _beats.size():
 		finish()
 	else:
@@ -103,7 +100,6 @@ func _show_beat() -> void:
 	_typing.tween_method(func(count: Variant) -> void: _text.visible_characters = int(count), 0, _text.text.length(), maxf(_text.text.length() / CHARS_PER_SECOND, 0.1))
 	_start_camera_drift()
 	_slam_title()
-	_schedule_auto_advance(last)
 	if beat.get("visual", "") == "map":
 		var route := create_tween()
 		route.tween_property(_stage, "route_progress", 1.0, 1.2)
@@ -112,17 +108,6 @@ func _show_beat() -> void:
 ## Seconds a beat stays after its words are out, before it moves on by itself.
 static func hold_seconds(text: String) -> float:
 	return MIN_HOLD_SECONDS + text.length() * HOLD_PER_CHARACTER
-
-
-func _schedule_auto_advance(is_last: bool) -> void:
-	if _auto != null:
-		_auto.kill()
-	if is_last:
-		return  # the last beat waits: the player decides when to begin
-	var words: String = _text.text
-	_auto = create_tween()
-	_auto.tween_interval(FADE_SECONDS + words.length() / CHARS_PER_SECOND + hold_seconds(words))
-	_auto.tween_callback(advance)
 
 
 ## A slow push-in with a sideways drift, like a camera moving over a painting.

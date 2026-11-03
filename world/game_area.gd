@@ -65,6 +65,9 @@ func _ready() -> void:
 	_tint.color = Color(config.get("tint", "#ffffff"))
 	if GameState.has_flag(RegionGenerator.lit_flag(area_id)):
 		_tint.color = _lit_tint
+		var lantern := _player.get_node_or_null("Lantern") as PointLight2D
+		if lantern != null:
+			lantern.visible = false
 	EventBus.region_lit.connect(_on_region_lit)
 	_hud.set_area(area_id)
 	GameState.set_flag("area_%s_reached" % area_id)
@@ -79,8 +82,12 @@ func _ready() -> void:
 func _on_region_lit(lit_area: String) -> void:
 	if lit_area != area_id:
 		return
-	var tween := create_tween()
+	var tween := create_tween().set_parallel()
 	tween.tween_property(_tint, "color", _lit_tint, 2.5).set_trans(Tween.TRANS_SINE)
+	var lantern := _player.get_node_or_null("Lantern") as PointLight2D
+	if lantern != null:  # the region is lit: the lantern is put away
+		tween.tween_property(lantern, "energy", 0.0, 2.5)
+		tween.chain().tween_callback(func() -> void: lantern.visible = false)
 
 
 ## Green puddles are toxic: standing in one hurts, a lesson in what not to touch.
@@ -151,12 +158,39 @@ func _place_enemy(scene: PackedScene, definition: Dictionary, position: Vector2,
 		var properties: Dictionary = definition.get("props", {})
 		for key: String in properties:
 			enemy.set(key, _typed(properties[key], enemy.get(key)))
-		var jitter := Vector2.ZERO if copy == 0 else Vector2.from_angle(copy * 2.4) * 22.0
-		enemy.position = position + jitter
+		enemy.position = position + _free_offset(position, copy)
 		enemy.spawn_key = "%s_%d_%d" % [area_id, cell.x, cell.y] + ("" if copy == 0 else "_%d" % copy)
 		enemy.add_to_group("scene_enemy")
 		_entities.add_child(enemy)
 	_spawned += copies
+
+
+## An offset for the n-th zombie at a marker that lands on open ground, so a
+## pack never spawns inside a wall where it could not be reached.
+func _free_offset(position: Vector2, copy: int) -> Vector2:
+	if copy == 0:
+		return Vector2.ZERO
+	for attempt in 8:
+		var offset := Vector2.from_angle(copy * 2.4 + attempt * TAU / 8.0) * 22.0
+		var cell := Vector2i(((position + offset) / MapBuilder.TILE_SIZE).floor())
+		if cell.y >= 0 and cell.y < _layout.size() and cell.x >= 0 and cell.x < _layout[cell.y].length() and not MapBuilder.is_solid_char(_layout[cell.y][cell.x]):
+			return offset
+	return Vector2.ZERO
+
+
+## The generator's racket calls every zombie still around to the player, so a
+## region can always be cleared even if one wandered somewhere awkward.
+func summon_remaining() -> int:
+	var called := 0
+	for node in get_tree().get_nodes_in_group("enemies"):
+		var enemy := node as Enemy
+		if enemy == null or enemy.is_dead():
+			continue
+		if enemy.global_position.distance_to(_player.global_position) > PENALTY_DISTANCE * 1.5:
+			enemy.global_position = _player.global_position + Vector2.from_angle(randf() * TAU) * PENALTY_DISTANCE
+		enemy.hunt()
+		called += 1
+	return called
 
 
 func _limit_camera(layout: PackedStringArray) -> void:
