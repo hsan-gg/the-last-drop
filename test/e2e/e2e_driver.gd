@@ -25,6 +25,9 @@ func _on_command(args: Array) -> void:
 			_publish(_state())
 		"goto":
 			_publish({"moved": _goto(argument)})
+		"damage":
+			Survival.damage(float(argument))
+			_publish({"damaged": true})
 		"peace":
 			_peace()
 			_publish({"peace": true})
@@ -121,7 +124,7 @@ func _player_state() -> Dictionary:
 	return {
 		"x": position.x, "y": position.y,
 		"health": Survival.health(), "max_health": Survival.max_health(),
-		"level": Progress.level, "xp": Progress.xp,
+		"level": Progress.level, "xp": Progress.xp, "lives": Lives.lives,
 		"weapon": Gear.equipped("weapon"), "armor": Gear.armor(),
 	}
 

@@ -45,7 +45,10 @@ await sleep(1500);
 await page.mouse.click(480, 270);
 await press("Enter");
 let s;
-for (let i = 0; i < 40 && !(s = await state()).area; i++) await sleep(250);
+for (let i = 0; i < 80 && !(s = await state()).area; i++) {
+  if (s.scene === "Cutscene") await press("Escape");
+  else await sleep(250);
+}
 await closeDialogue();
 s = await state();
 check("zombies exist in a started run", s.enemies.length >= 2);

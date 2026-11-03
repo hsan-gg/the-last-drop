@@ -39,6 +39,19 @@ const until = async (predicate, label, timeout = 8000) => {
   problems.push(`timed out waiting for: ${label}`);
   return state();
 };
+// Waits for an area to load, skipping any story cutscene on the way.
+const waitForArea = async (name, label, timeout = 20000) => {
+  const end = Date.now() + timeout;
+  while (Date.now() < end) {
+    const s = await state();
+    if (process.env.DEBUG_FLOW) console.log(`  waiting for ${name}: scene=${s.scene} area=${s.area} dialogue=${s.dialogue_open}`);
+    if (s.area === name) return s;
+    if (s.scene === "Cutscene") await press("Escape");
+    else await sleep(200);
+  }
+  problems.push(`timed out waiting for: ${label}`);
+  return state();
+};
 const goto = async (target) => {
   const r = await drive("goto", target);
   if (!r.moved) problems.push(`could not move to ${target}`);
@@ -99,11 +112,26 @@ await sleep(1500);
 await shot("1_title");
 await page.mouse.click(480, 270);
 await press("Enter");
-let s = await until((x) => x.area === "outpost", "outpost loaded");
+await until((x) => x.scene === "Cutscene", "the opening cutscene");
+await sleep(800);
+await shot("1b_intro_sky");
+for (let i = 0; i < 4; i++) { await press("e"); await press("e"); }
+await shot("1c_intro_map");
+let s = await waitForArea("outpost", "outpost loaded");
 await drive("peace");
 check("starts in the outpost", s.area === "outpost");
+await shot("2_outpost_dialogue");
 await closeDialogue();
 await shot("2_outpost");
+await press("Tab");
+await sleep(300);
+await shot("2b_tracker");
+await press("Tab");
+await press("m");
+await sleep(500);
+await shot("2c_map");
+await press("Escape");
+await sleep(300);
 
 await interact("WaterSource");
 await closeDialogue();
@@ -130,7 +158,7 @@ await sleep(200);
 await shot("5_journal");
 await press("q");
 await interact("AreaExit");
-s = await until((x) => x.area === "factory", "factory loaded", 12000);
+s = await waitForArea("factory", "factory loaded");
 check("gate leads to the factory", s.area === "factory");
 await closeDialogue();
 
@@ -148,7 +176,7 @@ await closeDialogue();
 s = await state();
 check("archive read after the puzzle", s.flags.archive_read);
 await interact("AreaExit");
-s = await until((x) => x.area === "dump", "dump loaded", 12000);
+s = await waitForArea("dump", "dump loaded");
 check("gate leads to the dump", s.area === "dump");
 await closeDialogue();
 await shot("7_dump");
@@ -180,7 +208,7 @@ await shot("8_dump_done");
 
 // ---- river
 await interact("AreaExit");
-s = await until((x) => x.area === "river", "river loaded", 12000);
+s = await waitForArea("river", "river loaded");
 check("the drain leads to the river", s.area === "river");
 await closeDialogue();
 await shot("9_river");
@@ -221,8 +249,13 @@ await interact("Recording");
 await closeDialogue();
 
 // ---- ending
-s = await until((x) => x.scene !== "River", "ending scene", 15000);
-check("the recording ends the game", s.scene !== "River");
+s = await until((x) => x.scene === "Cutscene", "the finale cutscene", 15000);
+check("the recording starts the finale", s.scene === "Cutscene");
+await sleep(800);
+await shot("11a_finale");
+await press("Escape");
+s = await until((x) => x.scene !== "River" && x.scene !== "Cutscene", "ending scene", 15000);
+check("the finale leads to the ending", s.scene !== "River" && s.scene !== "Cutscene");
 await sleep(800);
 await shot("11_ending_choice");
 await press("Enter");

@@ -76,6 +76,7 @@ func _row(label_text: String) -> HBoxContainer:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 4)
 	var label := _label(label_text)
+	label.autowrap_mode = TextServer.AUTOWRAP_OFF
 	label.custom_minimum_size = Vector2(170, 0)
 	row.add_child(label)
 	_list.add_child(row)

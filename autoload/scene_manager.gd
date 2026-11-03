@@ -8,6 +8,8 @@ const GAME_OVER_SCENE := "res://ui/game_over.tscn"
 
 var _fade: ColorRect
 var _changing := false
+## A change asked for while another was fading; it runs as soon as that one ends.
+var _queued_path := ""
 
 
 func _ready() -> void:
@@ -23,6 +25,7 @@ func _ready() -> void:
 
 func change_scene(path: String) -> void:
 	if _changing:
+		_queued_path = path
 		return
 	_changing = true
 	await _fade_to(1.0)
@@ -33,6 +36,10 @@ func change_scene(path: String) -> void:
 	await get_tree().process_frame
 	await _fade_to(0.0)
 	_changing = false
+	if not _queued_path.is_empty():
+		var next := _queued_path
+		_queued_path = ""
+		change_scene(next)
 
 
 ## `skip_intro` is for restarts after dying, so the opening is not replayed.

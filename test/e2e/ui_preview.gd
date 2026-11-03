@@ -6,11 +6,19 @@ const STEP_SECONDS := 3.0
 
 var _menu := GameMenu.new()
 var _step := 0
+var _tracker: ObjectiveTracker
+var _banners: BannerQueue
 
 
 func _ready() -> void:
 	_menu.pauses_game = false
 	add_child(_menu)
+	var layer := CanvasLayer.new()
+	add_child(layer)
+	_tracker = ObjectiveTracker.new()
+	layer.add_child(_tracker)
+	_banners = BannerQueue.new()
+	layer.add_child(_banners)
 	for area_id in ["outpost", "factory", "dump"]:
 		GameState.set_flag("area_%s_reached" % area_id)
 	GameState.add_to_counter("sort_correct", 4)
@@ -44,4 +52,9 @@ func _advance() -> void:
 			_menu.open(GameMenu.OPTIONS)
 		3:
 			_menu.open(GameMenu.CONTROLS)
+		4:
+			_menu.close()
+			_tracker.toggle()
+			_banners.push("OBJECTIVE COMPLETE", "Find a water source", UiTheme.COLOR_GREEN, 5.0)
+			_banners.push("NEW OBJECTIVE", "Sort the scrap pile", UiTheme.COLOR_ORANGE, 5.0)
 	_step += 1

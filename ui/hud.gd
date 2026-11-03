@@ -253,7 +253,7 @@ func _build() -> void:
 	_toast_label.set_anchors_preset(Control.PRESET_CENTER_TOP)
 	_toast_label.offset_left = -150.0
 	_toast_label.offset_right = 150.0
-	_toast_label.offset_top = 78.0
+	_toast_label.offset_top = 112.0
 	_toast_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_toast_label.visible = false
 	root.add_child(_toast_label)

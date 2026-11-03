@@ -107,11 +107,18 @@ func _card(quest: Dictionary) -> Control:
 	var head := HBoxContainer.new()
 	box.add_child(head)
 	var title := _label(quest["title"], UiTheme.COLOR_TEXT if not done else Color("#7bc043"))
+	title.autowrap_mode = TextServer.AUTOWRAP_OFF
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(title)
-	head.add_child(_label(QuestRules.DIFFICULTY_TAGS[difficulty], color))
-	head.add_child(_label("  +%d XP" % int(quest.get("reward", {}).get("xp", 0)), Color("#9be04a")))
-	box.add_child(_label(quest["text"], UiTheme.COLOR_MUTED))
+	var tag := _label(QuestRules.DIFFICULTY_TAGS[difficulty], color)
+	tag.autowrap_mode = TextServer.AUTOWRAP_OFF
+	head.add_child(tag)
+	var xp := _label("  +%d XP" % int(quest.get("reward", {}).get("xp", 0)), Color("#9be04a"))
+	xp.autowrap_mode = TextServer.AUTOWRAP_OFF
+	head.add_child(xp)
+	var description := _label(quest["text"], UiTheme.COLOR_MUTED)
+	description.custom_minimum_size = Vector2(380, 0)
+	box.add_child(description)
 	var progress := QuestRules.progress(quest)
 	var bar_row := HBoxContainer.new()
 	bar_row.add_theme_constant_override("separation", 6)
@@ -122,7 +129,9 @@ func _card(quest: Dictionary) -> Control:
 	bar.ratio = 1.0 if done else float(progress["current"]) / float(maxi(progress["target"], 1))
 	bar.fill_color = color
 	bar_row.add_child(bar)
-	bar_row.add_child(_label("DONE" if done else "%d/%d" % [progress["current"], progress["target"]], UiTheme.COLOR_YELLOW))
+	var count := _label("DONE" if done else "%d/%d" % [progress["current"], progress["target"]], UiTheme.COLOR_YELLOW)
+	count.autowrap_mode = TextServer.AUTOWRAP_OFF
+	bar_row.add_child(count)
 	return panel
 
 
@@ -145,6 +154,7 @@ func _build() -> void:
 		_filter_buttons.append(button)
 		filters.add_child(button)
 	_summary = _label("", UiTheme.COLOR_MUTED)
+	_summary.autowrap_mode = TextServer.AUTOWRAP_OFF
 	_summary.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_summary.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	filters.add_child(_summary)
@@ -153,6 +163,7 @@ func _build() -> void:
 	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	column.add_child(_scroll)
 	_list = VBoxContainer.new()
+	_list.custom_minimum_size = Vector2(410, 0)
 	_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_list.add_theme_constant_override("separation", 3)
 	_scroll.add_child(_list)

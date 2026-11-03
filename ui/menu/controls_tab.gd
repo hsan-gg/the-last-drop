@@ -79,6 +79,7 @@ func _build() -> void:
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", 6)
 		var label := _label(ACTION_NAMES.get(action, action))
+		label.autowrap_mode = TextServer.AUTOWRAP_OFF
 		label.custom_minimum_size = Vector2(200, 0)
 		row.add_child(label)
 		var button := Button.new()
@@ -91,6 +92,7 @@ func _build() -> void:
 	for pair in FIXED_KEYS:
 		var row := HBoxContainer.new()
 		var name_label := _label(pair[0], UiTheme.COLOR_MUTED)
+		name_label.autowrap_mode = TextServer.AUTOWRAP_OFF
 		name_label.custom_minimum_size = Vector2(200, 0)
 		row.add_child(name_label)
 		row.add_child(_label(pair[1], UiTheme.COLOR_MUTED))

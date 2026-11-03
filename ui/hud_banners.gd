@@ -6,8 +6,8 @@ extends Control
 
 const SHOW_SECONDS := 2.6
 const FADE_SECONDS := 0.35
-const TOP := 22.0
-const WIDTH := 260.0
+const TOP := 40.0
+const WIDTH := 156.0
 
 var _queue: Array[Dictionary] = []
 var _active := false
@@ -18,7 +18,7 @@ var _text: Label
 
 
 func _ready() -> void:
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_build()
 	EventBus.banner_requested.connect(push)
@@ -59,7 +59,10 @@ func _build() -> void:
 	_panel = PanelContainer.new()
 	_panel.theme = UiTheme.get_theme()
 	_panel.add_theme_stylebox_override("panel", UiTheme.banner_style())
-	_panel.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	_panel.anchor_left = 0.5
+	_panel.anchor_right = 0.5
+	_panel.anchor_top = 0.0
+	_panel.anchor_bottom = 0.0
 	_panel.offset_left = -WIDTH / 2.0
 	_panel.offset_right = WIDTH / 2.0
 	_panel.offset_top = TOP

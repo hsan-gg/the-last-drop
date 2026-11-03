@@ -202,11 +202,15 @@ func _build() -> void:
 		worn_row.add_theme_constant_override("separation", 4)
 		var button := Button.new()
 		button.custom_minimum_size = Vector2(SLOT_SIZE, SLOT_SIZE)
+		button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		button.expand_icon = true
 		button.pressed.connect(_on_worn_pressed.bind(slot))
 		_worn_buttons[slot] = button
 		worn_row.add_child(button)
-		worn_row.add_child(_label(SLOT_NAMES[slot], UiTheme.COLOR_MUTED))
+		var slot_name := _label(SLOT_NAMES[slot], UiTheme.COLOR_MUTED)
+		slot_name.autowrap_mode = TextServer.AUTOWRAP_OFF
+		slot_name.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		worn_row.add_child(slot_name)
 		worn_column.add_child(worn_row)
 	_stats = _rich()
 	left.add_child(_stats)

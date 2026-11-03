@@ -24,7 +24,7 @@ var _tab_ids: Array[String] = []
 var _tab_buttons: Array[Button] = []
 var _tabs: Array[MenuTab] = []
 var _index := 0
-var _content: Control
+var _content: MarginContainer
 var _built := false
 
 
@@ -41,7 +41,7 @@ func _ensure_built() -> void:
 	var bar := HBoxContainer.new()
 	bar.add_theme_constant_override("separation", 3)
 	_box.add_child(bar)
-	_content = Control.new()
+	_content = MarginContainer.new()
 	_content.custom_minimum_size = Vector2(448, 190)
 	_content.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_box.add_child(_content)
@@ -61,7 +61,7 @@ func _ensure_built() -> void:
 		_tab_buttons.append(button)
 	var footer := HBoxContainer.new()
 	_box.add_child(footer)
-	var hint := _label("Esc: close   Tab: next page", UiTheme.COLOR_MUTED)
+	var hint := _label("Esc: close   Tab or PgDn: next page", UiTheme.COLOR_MUTED)
 	hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	footer.add_child(hint)
 	if not title_mode:
@@ -167,7 +167,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if not visible or _just_opened():
 		return
-	if event.is_action_pressed("ui_focus_next"):
+	if event.is_action_pressed("ui_focus_next") or event.is_action_pressed("ui_page_down"):
 		get_viewport().set_input_as_handled()
 		next_tab()
 	elif _tabs[_index].tab_input(event):

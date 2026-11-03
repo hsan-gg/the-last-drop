@@ -5,7 +5,7 @@ extends Control
 
 const AUTO_SHOW_SECONDS := 5.0
 const MAX_SIDE_QUESTS := 3
-const PANEL_WIDTH := 178.0
+const PANEL_WIDTH := 150.0
 
 var _panel: PanelContainer
 var _body: RichTextLabel
@@ -17,11 +17,12 @@ var _hud: Hud
 
 func _ready() -> void:
 	_hud = get_parent() as Hud
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_build()
 	EventBus.counter_changed.connect(refresh.unbind(2))
 	EventBus.quest_completed.connect(refresh.unbind(1))
+	Settings.changed.connect(_update_chip.unbind(1))
 	refresh()
 
 
@@ -78,6 +79,10 @@ func _process(delta: float) -> void:
 			_apply()
 
 
+func _update_chip() -> void:
+	_chip.text = "%s  tasks" % Settings.key_label("tracker")
+
+
 func _apply() -> void:
 	var visible_now := _shown or _auto_timer > 0.0
 	refresh()
@@ -95,7 +100,10 @@ func _build() -> void:
 	_panel = PanelContainer.new()
 	_panel.theme = UiTheme.get_theme()
 	_panel.add_theme_stylebox_override("panel", UiTheme.panel_style(UiTheme.COLOR_ORANGE))
-	_panel.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	_panel.anchor_left = 1.0
+	_panel.anchor_right = 1.0
+	_panel.anchor_top = 0.0
+	_panel.anchor_bottom = 0.0
 	_panel.offset_left = -PANEL_WIDTH - 6.0
 	_panel.offset_right = -6.0
 	_panel.offset_top = 6.0
@@ -110,12 +118,15 @@ func _build() -> void:
 	_body.custom_minimum_size = Vector2(PANEL_WIDTH - 16.0, 0)
 	_panel.add_child(_body)
 	_chip = Label.new()
-	_chip.text = "TAB  tasks"
+	_chip.text = "%s  tasks" % Settings.key_label("tracker")
 	_chip.theme = UiTheme.get_theme()
 	_chip.add_theme_font_size_override("font_size", 8)
 	_chip.add_theme_color_override("font_color", Color(0.62, 0.69, 0.73, 0.7))
-	_chip.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-	_chip.offset_left = -72.0
+	_chip.anchor_left = 1.0
+	_chip.anchor_right = 1.0
+	_chip.anchor_top = 0.0
+	_chip.anchor_bottom = 0.0
+	_chip.offset_left = -90.0
 	_chip.offset_right = -6.0
 	_chip.offset_top = 6.0
 	_chip.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT

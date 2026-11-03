@@ -15,13 +15,16 @@ Open `game/` in Godot and press F5, or run the web build (see Export).
 |---|---|
 | WASD / arrows | Move |
 | E / Space | Interact, continue dialogue |
-| 1 / 2 / 3 / 4 or click | Choose a bin while sorting (4 is compost, shown only when a pile has organic waste) |
 | J / left click | Sword attack |
 | K / right click (hold) | Block; raise it just as a strike lands to parry |
-| I | Equipment and stats (Tab slot, 1 to 6 wear) |
-| Q | Journal: main goal and quests by difficulty (Tab page) |
-| Esc | Leave a puzzle |
-| M | Mute |
+| H / G | Use a bandage / drink purified water |
+| T | Show or hide the task tracker |
+| Esc | Menu: Inventory, Quests, Map, Options, Controls |
+| I / Q / M | Open the menu on Inventory / Quests / Map |
+| Tab or PgDn (in the menu) | Next page |
+| 1 / 2 / 3 / 4 or click | Choose a bin while sorting (4 is compost) |
+
+Every key except the menu and fixed shortcuts can be rebound in Menu > Controls.
 
 ## The loop
 
@@ -36,6 +39,16 @@ Open `game/` in Godot and press F5, or run the web build (see Export).
 5. **Ending:** preserve the knowledge or share it. The epilogue reflects how
    carefully you sorted. The ending triggers at the last chapter marked `built` in
    `data/chapters.json`, so it moves on as chapters are added.
+
+## Menus, story and lives
+
+- **Three lives:** collapsing costs one and returns you to the area start; with none left the run restarts after a game over screen.
+- **Story cutscenes:** an opening overview of the regions, a short scene at each gate, and a finale. Esc skips.
+- **Dialogue does not pause the world.** Zombies still come, and being hit cuts a conversation short.
+- **A wrong Field Check costs 12 health** and draws a zombie, so the quiz matters.
+- **Inventory board:** your character, worn weapon, head and body gear, and a backpack grid with consumables and materials.
+- **Map with fog of war;** quests as cards sorted by difficulty; options for audio, display, gameplay and accessibility (saved).
+- **Objective tracker:** hidden until you press T. It slides in with OBJECTIVE COMPLETE and NEW OBJECTIVE banners. The objective pointer is subtle (Options > Objective hints: Off, Subtle, Strong).
 
 ## Combat and progression
 

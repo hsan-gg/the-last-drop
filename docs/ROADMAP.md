@@ -42,3 +42,17 @@ that follow Encounter, Experiment, Consequence, Principle, Real life.
 | E gear, chests, equipment screen | done |
 | F tiered quests | done |
 | G polish and balance | in progress: tune from play, add enemy variety per chapter |
+
+## Story, menus and lives (this round)
+
+| Item | Status |
+|---|---|
+| Cutscenes: opening map overview, gate scenes, finale | done (`data/cutscenes.json`) |
+| Dialogue that does not pause and is cut short by a hit | done |
+| Three lives and a game over screen | done |
+| Wrong Field Check costs health and draws a zombie | done |
+| Tabbed menu: inventory board, quests, map (fog of war), options, controls | done |
+| Hideable task tracker, COMPLETE and NEW banners, subtle pointer | done |
+| Clear-the-area quests | done |
+| Consumables and quick-use keys | done |
+| Next | chapters 3 to 5 (fields, industry, sanctuary) with their own enemies, quests and cutscenes |

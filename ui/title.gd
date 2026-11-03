@@ -3,7 +3,7 @@ extends Control
 
 const SHEET := preload("res://assets/sprites/player.png")
 const TAGLINE := "A survival adventure in a world buried by its own waste."
-const CONTROLS := "WASD move  J attack  K block  E act  Q quests  I gear"
+const CONTROLS := "WASD move  J attack  K block  E act  Esc menu"
 
 var _start: Button
 var _menu: GameMenu

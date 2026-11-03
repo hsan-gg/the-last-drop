@@ -111,8 +111,8 @@ func _draw_legend(at: Vector2) -> void:
 	var entries: Array[Dictionary] = [{"color": Color.WHITE, "label": "You"}, {"color": Color("#ffb347"), "label": "Objective"}]
 	entries.append_array(MARKERS)
 	for entry in entries:
-		draw_rect(Rect2(at + Vector2(0, y - 12 - at.y + at.y), Vector2(5, 5)), entry["color"])
-		draw_string(font, Vector2(at.x + 9, y - 6), entry["label"], HORIZONTAL_ALIGNMENT_LEFT, -1, 8, UiTheme.COLOR_TEXT)
+		draw_rect(Rect2(Vector2(at.x, y - 6), Vector2(5, 5)), entry["color"])
+		draw_string(font, Vector2(at.x + 9, y), entry["label"], HORIZONTAL_ALIGNMENT_LEFT, -1, 8, UiTheme.COLOR_TEXT)
 		y += 12
 	var total := MapBuilder.layout_size(_layout).x * MapBuilder.layout_size(_layout).y
 	draw_string(font, Vector2(at.x, y + 6), "Explored %d%%" % int(MapMemory.fraction_seen(_area_id, total) * 100.0), HORIZONTAL_ALIGNMENT_LEFT, -1, 8, UiTheme.COLOR_MUTED)
