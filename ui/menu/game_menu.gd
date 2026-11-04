@@ -32,6 +32,7 @@ var _built := false
 
 func _ready() -> void:
 	layer = 40
+	touch_dpad = true
 	_build_shell(Vector2(468, 254), UiTheme.COLOR_TEAL)
 	_ensure_built()
 

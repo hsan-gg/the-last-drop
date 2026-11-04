@@ -13,6 +13,7 @@ var _code := ""
 
 func _init() -> void:
 	super()
+	touch_dpad = true
 	kind = "lock"
 
 
@@ -27,7 +28,7 @@ func _start(data: Dictionary) -> void:
 		_say("[color=#f2c94c]Your note:[/color] %s" % data.get("clue", ""))
 	else:
 		_say("[color=#9fb0bb]%s[/color]" % data.get("no_clue", "You do not know the code. Someone must have written it down."))
-	_hint.text = "Left/Right dial   Up/Down turn   E try   Esc leave"
+	_hint.text = TouchControls.hint("Left/Right dial   Up/Down turn   E try   Esc leave", "Tap the top or bottom of a dial to turn it   OK try   BACK leave")
 
 
 func _board_input(event: InputEvent) -> void:
@@ -40,6 +41,26 @@ func _board_input(event: InputEvent) -> void:
 		EventBus.sfx_requested.emit("click")
 	elif is_confirm(event):
 		try_code()
+
+
+## Which dial a point is on, and whether it is the upper half: {"dial", "up"}.
+func dial_at(point: Vector2) -> Dictionary:
+	var total := Vector2(digits.size() * (DIAL.x + 8) - 8, DIAL.y)
+	var origin := ((_board.size - total) / 2.0).floor() - Vector2(0, 8)
+	for index in digits.size():
+		var box := Rect2(origin + Vector2(index * (DIAL.x + 8), 0), DIAL).grow(4.0)
+		if box.has_point(point):
+			return {"dial": index, "up": point.y < box.get_center().y}
+	return {}
+
+
+func _board_tap(point: Vector2) -> void:
+	var hit := dial_at(point)
+	if hit.is_empty():
+		return
+	selected = hit["dial"]
+	digits[selected] = wrapi(digits[selected] + (-1 if hit["up"] else 1), 0, 10)
+	EventBus.sfx_requested.emit("click")
 
 
 func entered() -> String:

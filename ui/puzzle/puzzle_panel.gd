@@ -53,7 +53,7 @@ func open_puzzle(puzzle_id: String, shuffle_seed: int = 0) -> void:
 	_prompt.text = data["prompt"]
 	_feedback.text = ""
 	_continue.visible = false
-	_hint.text = "Press 1 to %d. A wrong step costs health. Esc leaves." % steps.size()
+	_hint.text = TouchControls.hint("Press 1 to %d. A wrong step costs health. Esc leaves." % steps.size(), "Tap the steps in order. A wrong step costs health. BACK leaves.")
 	_refresh()
 	_show_panel()
 
@@ -70,7 +70,7 @@ func choose(option: String) -> void:
 		EventBus.sfx_requested.emit("repair")
 		_feedback.text = "[color=#7bc043]UNLOCKED[/color]\n%s" % _data["explanation"]
 		_continue.visible = true
-		_hint.text = "Press E to continue"
+		_hint.text = TouchControls.hint("Press E to continue", "Tap OK to continue")
 	elif result["correct"]:
 		EventBus.sfx_requested.emit("sort_ok")
 		_feedback.text = ""

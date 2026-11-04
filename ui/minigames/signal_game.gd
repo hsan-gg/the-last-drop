@@ -24,7 +24,7 @@ func _init() -> void:
 func _start(data: Dictionary) -> void:
 	sequence = SignalSequence.new(4, int(data.get("length", 6)), int(data.get("seed", Time.get_ticks_msec())), int(data.get("start", 3)))
 	_play_sequence()
-	_hint.text = "Watch, then repeat: arrows or 1-4   Esc leave"
+	_hint.text = TouchControls.hint("Watch, then repeat: arrows or 1-4   Esc leave", "Watch, then repeat: tap the lights or 1-4   BACK leave")
 
 
 func _play_sequence() -> void:
@@ -93,9 +93,25 @@ func press(light: int) -> void:
 			_win()
 
 
+const SPOTS := [Vector2(0, -34), Vector2(42, 0), Vector2(0, 34), Vector2(-42, 0)]
+
+
+func light_at(point: Vector2) -> int:
+	for index in 4:
+		if point.distance_to(_board.size / 2.0 + SPOTS[index]) <= 18.0:
+			return index
+	return -1
+
+
+func _board_tap(point: Vector2) -> void:
+	var light := light_at(point)
+	if light >= 0:
+		press(light)
+
+
 func _draw_board() -> void:
 	var centre := _board.size / 2.0
-	var spots := [Vector2(0, -34), Vector2(42, 0), Vector2(0, 34), Vector2(-42, 0)]
+	var spots := SPOTS
 	_board.draw_circle(centre, 22.0, Color("#141a22"))
 	for index in 4:
 		var color: Color = COLORS[index]

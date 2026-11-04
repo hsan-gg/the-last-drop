@@ -20,6 +20,11 @@ const DEFAULTS := {
 	"difficulty": "medium",
 	"tips": true,
 	"tips_seen": "",
+	"touch_controls": 0,
+	"touch_size": 1,
+	"touch_opacity": 0.6,
+	"touch_left_handed": false,
+	"vibration": true,
 }
 const HINTS_OFF := 0
 const HINTS_SUBTLE := 1
@@ -64,6 +69,11 @@ func text_speed_multiplier() -> float:
 	return TEXT_SPEEDS[clampi(int(value("text_speed")), 0, TEXT_SPEEDS.size() - 1)]
 
 
+func apply_audio() -> void:
+	for key in ["master", "muted", "music", "sfx"]:
+		_apply(key)
+
+
 func apply_all() -> void:
 	for key: String in DEFAULTS:
 		_apply(key)
@@ -75,6 +85,8 @@ func apply_all() -> void:
 
 ## A readable name for the key bound to an action ("W", "Space", "Tab").
 func key_label(action: String) -> String:
+	if TouchControls.active:
+		return TouchControls.label_for(action)
 	var code := key_for(action)
 	return OS.get_keycode_string(code) if code != 0 else "(unbound)"
 

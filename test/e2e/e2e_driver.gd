@@ -53,8 +53,32 @@ func _on_command(args: Array) -> void:
 		"scene":
 			SceneManager.change_scene("res://world/%s.tscn" % argument)
 			_publish({"scene": argument})
+		"touch":  # the on-screen controls, in viewport pixels
+			_publish(_touch_state())
+		"button":  # the centre of a visible button with this text, in viewport pixels
+			_publish(_button_centre(argument))
 		_:
 			_publish({"error": "unknown command %s" % command})
+
+
+func _touch_state() -> Dictionary:
+	var buttons := []
+	for button: Dictionary in TouchControls.buttons:
+		var centre: Vector2 = button["center"]
+		buttons.append({"id": button["id"], "x": centre.x, "y": centre.y, "r": button["radius"]})
+	var view := get_viewport().get_visible_rect().size
+	return {"active": TouchControls.active, "mode": TouchControls.Mode.keys()[TouchControls.mode],
+		"buttons": buttons, "view_w": view.x, "view_h": view.y, "stick": TouchControls._stick_finger >= 0}
+
+
+func _button_centre(text: String) -> Dictionary:
+	for node in get_tree().root.find_children("*", "BaseButton", true, false):
+		var button := node as Button
+		if button != null and button.is_visible_in_tree() and button.text.strip_edges() == text:
+			var rect := button.get_global_rect()
+			var at := button.get_global_transform_with_canvas() * (rect.size / 2.0)
+			return {"found": true, "x": at.x, "y": at.y}
+	return {"found": false}
 
 
 func _publish(data: Dictionary) -> void:
@@ -175,6 +199,7 @@ func _player_state() -> Dictionary:
 		"health": Survival.health(), "max_health": Survival.max_health(),
 		"level": Progress.level, "xp": Progress.xp, "lives": Lives.lives,
 		"weapon": Gear.equipped("weapon"), "armor": Gear.armor(),
+		"combat": PlayerCombat.State.keys()[(players[0] as Player).combat.state] if not players.is_empty() else "",
 	}
 
 

@@ -46,6 +46,7 @@ var _hint: Label
 
 func _ready() -> void:
 	layer = 20
+	add_to_group("dialogue_ui")
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_build()
 	visible = false
@@ -191,7 +192,7 @@ func _show_line() -> void:
 	_text.text = line
 	_text.visible_characters = 0
 	var last := _index >= _lines.size() - 1
-	_hint.text = "%d/%d   [E] %s" % [_index + 1, _lines.size(), "Close" if last else "Continue"]
+	_hint.text = "%d/%d   %s %s" % [_index + 1, _lines.size(), TouchControls.hint("[E]", "Tap"), "Close" if last else "Continue"]
 	if _typing != null:
 		_typing.kill()
 	_last_blip = -1

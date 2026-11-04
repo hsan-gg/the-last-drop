@@ -5,6 +5,8 @@ extends MenuTab
 
 const HINT_NAMES := ["Off", "Subtle", "Strong"]
 const SPEED_NAMES := ["Slow", "Normal", "Fast"]
+const TOUCH_NAMES := ["Auto", "On", "Off"]
+const SIZE_NAMES := ["Small", "Normal", "Large"]
 const VOLUME_STEP := 0.1
 
 var _rows: Array[Dictionary] = []
@@ -59,6 +61,12 @@ func _build() -> void:
 	_toggle_row("Mute everything", "muted")
 	_heading("DISPLAY")
 	_toggle_row("Fullscreen", "fullscreen")
+	_heading("TOUCH SCREEN")
+	_cycle_row("On-screen controls", "touch_controls", TOUCH_NAMES)
+	_cycle_row("Button size", "touch_size", SIZE_NAMES)
+	_volume_row("Button opacity", "touch_opacity")
+	_toggle_row("Left-handed layout", "touch_left_handed")
+	_toggle_row("Vibration", "vibration")
 	_heading("GAMEPLAY")
 	_cycle_row("Objective hints", "objective_hints", HINT_NAMES)
 	_cycle_row("Text speed", "text_speed", SPEED_NAMES)

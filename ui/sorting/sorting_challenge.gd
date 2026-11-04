@@ -181,7 +181,7 @@ func _show_current_item() -> void:
 	_feedback.text = ""
 	_set_bins_enabled(true)
 	_continue.visible = false
-	_hint.text = "Press 1 to %d or click a bin.   Esc: leave for now" % _visible_bin_count()
+	_hint.text = TouchControls.hint("Press 1 to %d or click a bin.   Esc: leave for now" % _visible_bin_count(), "Tap a bin.   BACK: leave for now")
 
 
 ## A run of correct bins pays a growing XP bonus.
@@ -234,7 +234,7 @@ func _set_feedback(next_phase: Phase, bbcode: String) -> void:
 	_set_bins_enabled(false)
 	_continue.visible = true
 	_continue.text = "Done" if next_phase == Phase.SUMMARY else "Continue"
-	_hint.text = "[E] %s" % _continue.text
+	_hint.text = "%s %s" % [TouchControls.hint("[E]", "Tap"), _continue.text]
 
 
 func _visible_bin_count() -> int:

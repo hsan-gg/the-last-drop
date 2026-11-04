@@ -47,6 +47,8 @@ Settings="*res://autoload/settings.gd"
 AudioManager="*res://autoload/audio_manager.gd"
 Music="*res://autoload/music.gd"
 Polish="*res://autoload/polish.gd"
+TouchControls="*res://autoload/touch_controls.gd"
+WebPlatform="*res://autoload/web_platform.gd"
 
 [display]
 

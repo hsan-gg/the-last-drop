@@ -22,6 +22,7 @@ var _total := 10
 
 func _init() -> void:
 	super()
+	touch_digits = 4
 	kind = "conveyor"
 
 
@@ -51,7 +52,7 @@ func _start(data: Dictionary) -> void:
 		icon.visible = false
 		_board.add_child(icon)
 		_icons.append(icon)
-	_hint.text = "1 General  2 Hazardous  3 Recover  4 Compost   Esc leave"
+	_hint.text = TouchControls.hint("1 General  2 Hazardous  3 Recover  4 Compost   Esc leave", "1 General  2 Hazardous  3 Recover  4 Compost   BACK leave")
 
 
 func _process(delta: float) -> void:

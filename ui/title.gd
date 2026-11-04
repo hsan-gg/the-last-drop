@@ -4,9 +4,12 @@ extends Control
 const SHEET := preload("res://assets/sprites/player.png")
 const TAGLINE := "A survival adventure in a world buried by its own waste."
 const CONTROLS := "WASD move  J attack  K block  E act  Esc menu"
+const TOUCH_CONTROLS := "Left thumb: walk   Right: sword, guard, use"
 
 var _start: Button
 var _continue: Button
+var _update: Button
+var _controls: Label
 var _menu: GameMenu
 var _picker: DifficultyPicker
 
@@ -81,6 +84,16 @@ func _build() -> void:
 	options.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	options.pressed.connect(func() -> void: _menu.open(GameMenu.OPTIONS))
 	column.add_child(options)
+
+	_update = Button.new()
+	_update.text = "UPDATE READY: LOAD IT"
+	_update.custom_minimum_size = Vector2(120, 20)
+	_update.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_update.add_theme_color_override("font_color", UiTheme.COLOR_YELLOW)
+	_update.visible = WebPlatform.has_update()
+	_update.pressed.connect(WebPlatform.apply_update)
+	WebPlatform.update_ready.connect(_on_update_ready)
+	column.add_child(_update)
 	_menu = GameMenu.new()
 	_menu.title_mode = true
 	_menu.pauses_game = false
@@ -90,7 +103,17 @@ func _build() -> void:
 	_picker.chosen.connect(_on_difficulty_chosen)
 	add_child(_picker)
 
-	column.add_child(_label(CONTROLS, 8, UiTheme.COLOR_MUTED))
+	_controls = _label(TouchControls.hint(CONTROLS, TOUCH_CONTROLS), 8, UiTheme.COLOR_MUTED)
+	TouchControls.active_changed.connect(_on_touch_changed)
+	column.add_child(_controls)
+
+
+func _on_update_ready() -> void:
+	_update.visible = true
+
+
+func _on_touch_changed(on: bool) -> void:
+	_controls.text = TOUCH_CONTROLS if on else CONTROLS
 
 
 func _label(text: String, font_size: int, color: Color) -> Label:

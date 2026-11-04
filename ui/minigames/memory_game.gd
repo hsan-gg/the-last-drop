@@ -16,6 +16,7 @@ var _clock := 0.0
 
 func _init() -> void:
 	super()
+	touch_dpad = true
 	kind = "memory"
 
 
@@ -25,7 +26,7 @@ func _start(data: Dictionary) -> void:
 	_misses = 0
 	_free_misses = int(data.get("free_misses", board.cards.size() / 2))
 	_hide_at = -1.0
-	_hint.text = "Arrows move   E turn a card   Esc leave"
+	_hint.text = TouchControls.hint("Arrows move   E turn a card   Esc leave", "Tap a card, or arrows + OK   BACK leave")
 
 
 func _process(delta: float) -> void:
@@ -46,6 +47,26 @@ func _board_input(event: InputEvent) -> void:
 		EventBus.sfx_requested.emit("ui_move")
 	elif is_confirm(event):
 		turn(cursor)
+
+
+func card_at(point: Vector2) -> int:
+	if board == null:
+		return -1
+	var rows := ceili(board.cards.size() / float(COLUMNS))
+	var total := Vector2(COLUMNS * (CARD.x + 4) - 4, rows * (CARD.y + 4) - 4)
+	var origin := ((_board.size - total) / 2.0).floor()
+	for index in board.cards.size():
+		var at := origin + Vector2(index % COLUMNS * (CARD.x + 4), index / COLUMNS * (CARD.y + 4))
+		if Rect2(at, CARD).has_point(point):
+			return index
+	return -1
+
+
+func _board_tap(point: Vector2) -> void:
+	var index := card_at(point)
+	if index >= 0:
+		cursor = index
+		turn(index)
 
 
 func turn(index: int) -> void:

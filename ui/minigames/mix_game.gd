@@ -14,6 +14,7 @@ var selected := 0
 
 func _init() -> void:
 	super()
+	touch_dpad = true
 	kind = "mix"
 
 
@@ -23,7 +24,7 @@ func _start(data: Dictionary) -> void:
 	for ingredient: Dictionary in ingredients:
 		amounts[ingredient["id"]] = int(ingredient.get("start", 0))
 	selected = 0
-	_hint.text = "Up/Down choose   Left/Right amount   E test   Esc leave"
+	_hint.text = TouchControls.hint("Up/Down choose   Left/Right amount   E test   Esc leave", "Tap the boxes to set amounts   OK test   BACK leave")
 
 
 func _board_input(event: InputEvent) -> void:
@@ -37,6 +38,24 @@ func _board_input(event: InputEvent) -> void:
 		EventBus.sfx_requested.emit("dig" if step.x > 0 else "click")
 	elif is_confirm(event):
 		test_mix()
+
+
+func _board_tap(point: Vector2) -> void:
+	var index := int((point.y - 6.0) / ROW)
+	if index < 0 or index >= ingredients.size():
+		return
+	selected = index
+	var ingredient: Dictionary = ingredients[index]
+	var block := int((point.x - 190.0) / (BLOCK.x + 2))
+	if point.x < 190.0:
+		EventBus.sfx_requested.emit("ui_move")
+		return
+	block = clampi(block, 0, int(ingredient.get("max", 6)) - 1)
+	var amount := block + 1
+	if int(amounts[ingredient["id"]]) == amount:
+		amount = block
+	set_amount(ingredient["id"], amount)
+	EventBus.sfx_requested.emit("click")
 
 
 func set_amount(ingredient_id: String, amount: int) -> void:

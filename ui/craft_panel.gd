@@ -12,6 +12,7 @@ var _open := false
 
 
 func _ready() -> void:
+	touch_dpad = true
 	in_world = true
 	_build_shell(Vector2(440, 240), UiTheme.COLOR_YELLOW)
 	_box.add_child(_label("WORKBENCH", UiTheme.COLOR_YELLOW))
@@ -78,6 +79,16 @@ func _unhandled_input(event: InputEvent) -> void:
 		make_selected()
 
 
+## A tap picks a recipe; tapping the picked one makes it.
+func tap_recipe(index: int) -> void:
+	if index == _selected:
+		make_selected()
+		return
+	_selected = index
+	EventBus.sfx_requested.emit("ui_move")
+	_refresh()
+
+
 func _refresh() -> void:
 	for row in _rows:
 		row.queue_free()
@@ -89,6 +100,7 @@ func _refresh() -> void:
 		var owned: bool = recipe["makes"].has("gear") and Gear.is_owned(recipe["makes"]["gear"])
 		var color := UiTheme.COLOR_GREEN if ready else (UiTheme.COLOR_MUTED if not owned else Color("#5a6a70"))
 		var row := _label(("> " if index == _selected else "  ") + RecipeBook.product_name(recipe) + ("  (made)" if owned else ""), color)
+		make_tappable(row, tap_recipe.bind(index))
 		_list.add_child(row)
 		_rows.append(row)
 	if recipes.is_empty():

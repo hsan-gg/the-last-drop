@@ -29,6 +29,7 @@ var _done := false
 
 
 func _ready() -> void:
+	add_to_group("cutscene_ui")
 	Music.stop_area()
 	Music.play("finale" if Cutscenes.pending_id == "finale" else "story")
 	theme = UiTheme.get_theme()
@@ -91,7 +92,7 @@ func _show_beat() -> void:
 	_text.text = beat.get("text", "")
 	_text.visible_characters = 0
 	var last := _index >= _beats.size() - 1
-	_hint.text = "[E] begin   [Esc] skip" if last else "[E] next   [Esc] skip"
+	_hint.text = (TouchControls.hint("[E] begin   [Esc] skip", "Tap to begin   SKIP") if last else TouchControls.hint("[E] next   [Esc] skip", "Tap for next   SKIP"))
 	_pips.text = "".join(PackedStringArray(range(_beats.size()).map(func(i: int) -> String: return "o" if i == _index else ".")))
 	_wipe()
 	if _typing != null:

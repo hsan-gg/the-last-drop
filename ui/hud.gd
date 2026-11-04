@@ -85,6 +85,7 @@ func _ready() -> void:
 	EventBus.game_over.connect(_on_game_over)
 	EventBus.quest_completed.connect(_on_quest_completed)
 	Settings.changed.connect(_on_settings_changed.unbind(1))
+	TouchControls.active_changed.connect(_on_settings_changed.unbind(1))
 	EventBus.inventory_changed.connect(_refresh_quick)
 
 	_on_prompt_changed("")
@@ -117,7 +118,7 @@ func _flash_damage(amount: float) -> void:
 
 func _on_prompt_changed(text: String) -> void:
 	_prompt_panel.visible = not text.is_empty()
-	_prompt_label.text = "[E] %s" % text
+	_prompt_label.text = "%s %s" % [TouchControls.hint("[E]", "USE:"), text]
 
 
 func _on_survival_changed(water: float, health: float) -> void:
@@ -228,7 +229,10 @@ func _on_settings_changed() -> void:
 func _refresh_quick() -> void:
 	var heal := Inventory.count("bandage") + Inventory.count("energy_bar")
 	var water := Inventory.count("purified_water")
-	_quick_label.text = "%s heal x%d   %s water x%d" % [Settings.key_label("quick_heal"), heal, Settings.key_label("quick_drink"), water]
+	if TouchControls.active:
+		_quick_label.text = "heal x%d   water x%d" % [heal, water]
+	else:
+		_quick_label.text = "%s heal x%d   %s water x%d" % [Settings.key_label("quick_heal"), heal, Settings.key_label("quick_drink"), water]
 	_quick_label.modulate.a = 1.0 if heal + water > 0 else 0.35
 
 

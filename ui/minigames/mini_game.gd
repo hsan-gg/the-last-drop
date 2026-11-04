@@ -38,6 +38,7 @@ func _ready() -> void:
 	_board = Control.new()
 	_board.custom_minimum_size = BOARD_SIZE
 	_board.draw.connect(_draw_board)
+	_board.gui_input.connect(_on_board_gui_input)
 	_box.add_child(_board)
 	_feedback = _rich(30)
 	_box.add_child(_feedback)
@@ -105,6 +106,24 @@ func _process(_delta: float) -> void:
 		_board.queue_redraw()
 
 
+## A tap or click on the board (touch screens play every board by tapping).
+func tap(point: Vector2) -> void:
+	if not visible or _just_opened():
+		return
+	if _phase == Phase.WON:
+		leave()
+		return
+	_board_tap(point)
+	_board.queue_redraw()
+
+
+func _on_board_gui_input(event: InputEvent) -> void:
+	var click := event as InputEventMouseButton
+	if click != null and click.pressed and click.button_index == MOUSE_BUTTON_LEFT:
+		_board.accept_event()
+		tap(click.position)
+
+
 func _win() -> void:
 	_phase = Phase.WON
 	GameState.set_flag(SOLVED_FLAG_FORMAT % _puzzle_id)
@@ -116,7 +135,7 @@ func _win() -> void:
 		Progress.add_xp(xp)
 	EventBus.sfx_requested.emit("task_done")
 	_feedback.text = "[color=#7bc043]DONE[/color]  %s" % _data.get("explanation", "")
-	_hint.text = "E  continue"
+	_hint.text = TouchControls.hint("E  continue", "OK  continue")
 
 
 func _mistake(text: String, damage: float = 6.0) -> void:
@@ -142,6 +161,11 @@ func _start(_data_in: Dictionary) -> void:
 
 
 func _board_input(_event: InputEvent) -> void:
+	pass
+
+
+## Board-local point -> whatever was tapped (a card, a tile, a dial).
+func _board_tap(_point: Vector2) -> void:
 	pass
 
 

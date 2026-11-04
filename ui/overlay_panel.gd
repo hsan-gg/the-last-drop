@@ -8,6 +8,10 @@ extends CanvasLayer
 ## An in-world panel (a puzzle at a terminal, a quiz in the field) does not
 ## stop time: zombies keep coming, the backdrop stays light enough to see them,
 ## your health is on the panel, and a blow from outside knocks you away from it.
+## On touch screens: arrow buttons for panels you steer with the arrows, and
+## numbered buttons for panels you answer with 1, 2, 3...
+var touch_dpad := false
+var touch_digits := 0
 var in_world := false
 
 var _health_meter: Meter
@@ -152,3 +156,13 @@ func _button(text: String, handler: Callable) -> Button:
 	button.custom_minimum_size = Vector2(0, 14)
 	button.pressed.connect(handler)
 	return button
+
+
+## Makes a label (a list row) answer a tap or click with `on_tap`.
+static func make_tappable(control: Control, on_tap: Callable) -> void:
+	control.mouse_filter = Control.MOUSE_FILTER_STOP
+	control.gui_input.connect(func(event: InputEvent) -> void:
+		var click := event as InputEventMouseButton
+		if click != null and click.pressed and click.button_index == MOUSE_BUTTON_LEFT:
+			control.accept_event()
+			on_tap.call())

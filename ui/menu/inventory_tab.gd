@@ -162,10 +162,10 @@ func _show_detail() -> void:
 		var item := Gear.definition(entry["id"])
 		var stat := "Attack %d" % int(item["damage"]) if item.has("damage") else "Defence %d" % int(item["armor"])
 		var worn: bool = Gear.equipped(item["slot"]) == entry["id"]
-		var action := "worn" if worn else "[E] wear"
+		var action := "worn" if worn else TouchControls.hint("[E] wear", "tap again: wear")
 		_detail.text = "[color=%s]%s[/color]  %s  [color=#9fb0bb](%s)[/color]\n[color=#9fb0bb]%s[/color]\n[color=#f2c94c]%s[/color]" % [RARITY_COLORS.get(item["rarity"], "#c8d0d8"), item["name"], stat, item["rarity"], item["description"], action]
 		return
-	var action_hint := "[E] use" if ItemDB.is_consumable(entry["id"]) else ("Someone in another area needs this" if ItemDB.get_item(entry["id"]).get("category", "") == "keepsake" else "Material for repairs")
+	var action_hint := TouchControls.hint("[E] use", "tap again: use") if ItemDB.is_consumable(entry["id"]) else ("Someone in another area needs this" if ItemDB.get_item(entry["id"]).get("category", "") == "keepsake" else "Material for repairs")
 	var description := ItemDB.description(entry["id"])
 	_detail.text = "[color=#e8eef2]%s[/color] x%d\n[color=#9fb0bb]%s[/color]\n[color=#f2c94c]%s[/color]" % [ItemDB.display_name(entry["id"]), entry["count"], description, action_hint]
 

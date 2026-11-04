@@ -15,6 +15,18 @@ const TIPS := {
 	"map": "Press {map} for the map. Explore to reveal it.",
 	"supplies": "Press {quick_heal} for a bandage and {quick_drink} for water.",
 }
+## The same lessons for the on-screen controls.
+const TOUCH_TIPS := {
+	"move": "Drag your thumb on the left side of the screen to walk.",
+	"interact": "Tap USE (the glowing button) to interact with what you walk up to.",
+	"inventory": "Tap the menu button (top right) for your inventory and gear.",
+	"attack": "Tap the sword button to swing.",
+	"block": "Hold the shield button to guard. Raise it just as a zombie strikes to parry it!",
+	"tracker": "Tap \"tasks\" in the top right corner to see your tasks.",
+	"menu": "The menu button (top right) has your inventory, quests, map and options.",
+	"map": "Tap the map button (top right) for the map. Explore to reveal it.",
+	"supplies": "The small red cross uses a bandage; the blue drop drinks water.",
+}
 const LATE_TIPS := {"menu": 25.0, "map": 80.0}
 
 var _queue: Array[String] = []
@@ -48,7 +60,7 @@ func _reset_clock() -> void:
 
 
 func text_for(tip_id: String) -> String:
-	var text: String = TIPS.get(tip_id, "")
+	var text: String = TOUCH_TIPS.get(tip_id, TIPS.get(tip_id, "")) if TouchControls.active else TIPS.get(tip_id, "")
 	for action in Settings.REBINDABLE:
 		text = text.replace("{%s}" % action, "[%s]" % Settings.key_label(action))
 	return text

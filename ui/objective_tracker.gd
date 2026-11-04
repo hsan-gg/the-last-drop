@@ -97,7 +97,7 @@ func _process(delta: float) -> void:
 
 
 func _update_chip() -> void:
-	_chip.text = "%s  tasks%s" % [Settings.key_label("tracker"), "  !" if _has_news else ""]
+	_chip.text = "%s%s" % [_chip_prefix(), "  !" if _has_news else ""]
 	_chip.add_theme_color_override("font_color", Color("#f2b45a") if _has_news else Color(0.62, 0.69, 0.73, 0.7))
 
 
@@ -143,7 +143,7 @@ func _build() -> void:
 	_body.add_theme_constant_override("line_separation", 3)
 	_panel.add_child(_body)
 	_chip = Label.new()
-	_chip.text = "%s  tasks" % Settings.key_label("tracker")
+	_chip.text = _chip_prefix()
 	_chip.theme = UiTheme.get_theme()
 	_chip.add_theme_font_size_override("font_size", 8)
 	_chip.add_theme_color_override("font_color", Color(0.62, 0.69, 0.73, 0.7))
@@ -156,3 +156,11 @@ func _build() -> void:
 	_chip.offset_top = 6.0
 	_chip.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	add_child(_chip)
+	# On a touch screen the chip and the open list are the button.
+	OverlayPanel.make_tappable(_chip, toggle)
+	OverlayPanel.make_tappable(_panel, toggle)
+
+
+## "T  tasks" on a keyboard; just "tasks" on touch, where the list button opens it.
+func _chip_prefix() -> String:
+	return "tasks" if TouchControls.active else "%s  tasks" % Settings.key_label("tracker")

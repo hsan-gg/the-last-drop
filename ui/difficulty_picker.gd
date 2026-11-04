@@ -21,6 +21,7 @@ var _levels: Array = []
 
 func _ready() -> void:
 	layer = 45
+	touch_dpad = true
 	_levels = Difficulty.all()
 	_build_shell(Vector2(440, 214), UiTheme.COLOR_ORANGE)
 	var solid := UiTheme.panel_style(UiTheme.COLOR_ORANGE)

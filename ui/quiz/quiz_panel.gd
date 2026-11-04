@@ -49,7 +49,7 @@ func open_quiz(quiz: Dictionary) -> void:
 			_options[index].text = "%d  %s" % [index + 1, choices[index]]
 	_feedback.text = ""
 	_continue.visible = false
-	_hint.text = "Press 1, 2 or 3"
+	_hint.text = TouchControls.hint("Press 1, 2 or 3", "Tap an answer, or 1, 2 or 3")
 	_show_panel()
 
 
@@ -77,7 +77,7 @@ func answer(index: int) -> void:
 		EventBus.penalty_spawn.emit("quiz")
 	GameState.add_to_counter("quiz_correct" if _was_correct else "quiz_wrong")
 	_continue.visible = true
-	_hint.text = "Press E to continue"
+	_hint.text = TouchControls.hint("Press E to continue", "Tap OK to continue")
 
 
 func continue_flow() -> void:

@@ -15,6 +15,7 @@ var _style := "wire"
 
 func _init() -> void:
 	super()
+	touch_dpad = true
 	kind = "circuit"
 
 
@@ -23,7 +24,7 @@ func _start(data: Dictionary) -> void:
 	board = CircuitBoard.new(int(size[0]), int(size[1]), int(data.get("seed", 1)))
 	_style = data.get("style", "wire")
 	cursor = board.source
-	_hint.text = "Arrows move   E turn   Esc leave"
+	_hint.text = TouchControls.hint("Arrows move   E turn   Esc leave", "Tap a tile to turn it, or arrows + OK   BACK leave")
 
 
 func _board_input(event: InputEvent) -> void:
@@ -33,6 +34,23 @@ func _board_input(event: InputEvent) -> void:
 		EventBus.sfx_requested.emit("ui_move")
 	elif is_confirm(event):
 		turn(cursor)
+
+
+func cell_at(point: Vector2) -> Vector2i:
+	if board == null:
+		return Vector2i(-1, -1)
+	var origin := ((_board.size - Vector2(board.width, board.height) * CELL) / 2.0).floor()
+	var cell := Vector2i(((point - origin) / CELL).floor())
+	if cell.x < 0 or cell.y < 0 or cell.x >= board.width or cell.y >= board.height:
+		return Vector2i(-1, -1)
+	return cell
+
+
+func _board_tap(point: Vector2) -> void:
+	var cell := cell_at(point)
+	if cell.x >= 0:
+		cursor = cell
+		turn(cell)
 
 
 func turn(cell: Vector2i) -> void:
