@@ -19,7 +19,7 @@ Open `game/` in Godot and press F5, or run the web build (see Export).
 | J / left click | Sword attack |
 | K / right click (hold) | Block; raise it just as a strike lands to parry. Block straight out of a swing once the blow lands (pressed earlier, it waits for that moment). A quick guard is ready again at once; one held until the arm tires (about 1.6 s) needs 1.2 s |
 | H / G | Use a bandage / drink purified water |
-| 1 / 2 / 3 | Use the rune in that slot (Ember: hold to breathe fire; Scatter; Tide) |
+| 1 / 2 / 3 | Use the rune in that slot (Ember: hold to breathe fire; Scatter: the shotgun, two shells then a 1.1 s reload from the shells you carry, which are rare (a few chests and 5-30% drops from the Spoiled once you own it); Tide) |
 | T | Show or hide the task tracker |
 | Esc | Menu: Items, Quests, Codex, Map, Options, Keys |
 | I / Q / M | Open the menu on Inventory / Quests / Map |
@@ -84,6 +84,8 @@ Seven regions, each its own world with its own tileset, light, weather, music,
 monsters and people: the Forgotten Outpost, the Battery Factory, the Great Dump,
 the Dead River, the Silent Fields, the Forgotten Industry and the Last Sanctuary.
 The story is written up in `docs/STORY.md` (kept up to date with every change).
+
+Houses are shaded to look three-dimensional (light from the upper left, a hipped roof, a ground shadow) and only their wall is solid: walk round behind one and its roof fades. A banner at the top warns when you are thirsty (water 25% or less), exhausted (no water, so you move slowly) or out of breath (no stamina).
 
 - **People:** eleven characters (`data/npcs.json`) with conversations that follow
   the story; a gold "!" means they have something new to say.
