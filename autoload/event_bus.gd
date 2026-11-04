@@ -89,3 +89,6 @@ signal energy_changed(value: float, maximum: float)
 
 ## A boss's health for the HUD bar; an empty name hides the bar.
 signal boss_changed(boss_name: String, ratio: float)
+
+## A timed challenge's label and seconds left; an empty label hides the timer.
+signal challenge_changed(label: String, seconds: float)

@@ -103,6 +103,7 @@ func reset_run() -> void:
 	MapMemory.reset()
 	Chapters.reset()
 	Runes.reset()
+	Challenges.reset()
 	Notices.clear()
 	Tutorial.reset_run()
 

@@ -296,6 +296,7 @@ func _build() -> void:
 	left.add_child(_lives_row)
 	left.add_child(RuneBar.new())
 	root.add_child(BossBar.new())
+	root.add_child(ChallengeTimer.new())
 	_area_title = AreaTitle.new()
 	root.add_child(_area_title)
 

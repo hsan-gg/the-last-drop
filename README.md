@@ -18,11 +18,12 @@ Open `game/` in Godot and press F5, or run the web build (see Export).
 | J / left click | Sword attack |
 | K / right click (hold) | Block; raise it just as a strike lands to parry. The guard tires after about 1.6 s and then goes on cooldown |
 | H / G | Use a bandage / drink purified water |
+| 1 / 2 / 3 | Use the rune in that slot (Ember: hold to breathe fire; Scatter; Tide) |
 | T | Show or hide the task tracker |
 | Esc | Menu: Items, Quests, Codex, Map, Options, Keys |
 | I / Q / M | Open the menu on Inventory / Quests / Map |
 | Tab or PgDn (in the menu) | Next page |
-| 1 / 2 / 3 / 4 or click | Choose a bin while sorting (4 is compost) |
+| 1 / 2 / 3 / 4 or click (while sorting) | Choose a bin (4 is compost); Esc leaves the pile for later |
 
 Every key except the menu and fixed shortcuts can be rebound in Menu > Controls.
 

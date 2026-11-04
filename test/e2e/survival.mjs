@@ -68,11 +68,10 @@ await drive("damage", "1000");
 await sleep(500);
 s = await state();
 check("a collapse costs a life", s.player.lives === 2);
-await shot("2_life_lost");
 await drive("damage", "1000");
-await sleep(300);
 s = await state();
 check("a second blow straight after a collapse is absorbed", s.player.lives === 2);
+await shot("2_life_lost"); // after the check: screenshots are slow and would outlast the grace
 await sleep(2200); // the grace after a collapse runs out
 await drive("damage", "1000");
 await sleep(500);

@@ -756,5 +756,22 @@
 		"reward": {
 			"xp": 30
 		}
+	},
+	{
+		"id": "faster_than_kip",
+		"area": "dump",
+		"title": "Faster Than Kip",
+		"text": "Win Kip's race to the east heap.",
+		"difficulty": "hard",
+		"category": "sort",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"kip_race_won"
+			]
+		},
+		"reward": {
+			"xp": 80
+		}
 	}
 ]

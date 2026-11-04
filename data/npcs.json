@@ -300,18 +300,66 @@
 			{
 				"id": "intro",
 				"lines": [
-					"Race you to the east heap! ...No? Boring.",
-					"Nana says you sort slow but right. That's the worst kind of fast."
-				]
+					"Race you to the east heap! First one to sort it all wins.",
+					"Ninety seconds. Starting... NOW! Go go go!"
+				],
+				"not_flags": [
+					"pile_sorted_dump_east"
+				],
+				"challenge": {
+					"seconds": 90,
+					"goal_flag": "pile_sorted_dump_east",
+					"win_flag": "kip_race_won",
+					"lose_flag": "kip_race_lost",
+					"label": "Race Kip",
+					"win_text": "You sorted the east heap before Kip.",
+					"lose_text": "Kip got there first. You can still sort it."
+				}
 			},
 			{
-				"id": "race",
+				"id": "won",
 				"lines": [
-					"You sorted the east heap before me. Rematch never.",
+					"You beat me. You actually beat me. Nobody beats me.",
+					"Fine. Take my lucky stash. And my second-best bottle cap."
+				],
+				"flags": [
+					"kip_race_won"
+				],
+				"gives": {
+					"items": {
+						"energy_bar": 2,
+						"bandage": 1
+					},
+					"xp": 60
+				}
+			},
+			{
+				"id": "lost",
+				"lines": [
+					"HA! Too slow! Nana, I won!",
+					"...it's okay. You sort right, and that's harder. Here, a consolation snack."
+				],
+				"flags": [
+					"kip_race_lost"
+				],
+				"gives": {
+					"items": {
+						"energy_bar": 1
+					}
+				}
+			},
+			{
+				"id": "late",
+				"lines": [
+					"You sorted the east heap without even racing me? Rude.",
 					"Here, I found this in it before you did. So technically I still win."
 				],
 				"flags": [
 					"pile_sorted_dump_east"
+				],
+				"not_flags": [
+					"kip_race_won",
+					"kip_race_lost"
 				],
 				"gives": {
 					"items": {
@@ -321,12 +369,12 @@
 			},
 			{
 				"id": "chatter",
+				"repeat": true,
 				"lines": [
 					"I've got 412 bottle caps. Mira has 380. I'm winning.",
 					"The big Spoiled smell like old batteries. Don't ask how I know.",
 					"Nana pretends she doesn't like you. She does. She gave you the good chair."
-				],
-				"repeat": true
+				]
 			}
 		]
 	},

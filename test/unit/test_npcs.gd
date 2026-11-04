@@ -111,3 +111,22 @@ func test_everyone_lives_somewhere() -> void:
 				placed[definition["props"]["npc_id"]] = true
 	for npc: Dictionary in Content.all_npcs():
 		assert_true(placed.has(npc["id"]), "%s is placed on a map" % npc["id"])
+
+
+func test_kip_races_you_and_the_clock_decides() -> void:
+	Challenges.reset()
+	var kip := _npc("kip")
+	kip.interact(null)
+	assert_false(Challenges.active().is_empty(), "the race is on")
+	GameState.set_flag("pile_sorted_dump_east")
+	assert_true(GameState.has_flag("kip_race_won"))
+	assert_eq(kip.current_talk()["id"], "won")
+	Challenges.reset()
+
+
+func test_running_out_of_time_loses_the_race() -> void:
+	Challenges.reset()
+	Challenges.start({"seconds": 1.0, "goal_flag": "never", "win_flag": "test_won", "lose_flag": "test_lost"})
+	Challenges._process(1.5)
+	assert_true(GameState.has_flag("test_lost"))
+	assert_true(Challenges.active().is_empty())

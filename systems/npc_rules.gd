@@ -58,3 +58,5 @@ static func apply(npc_id: String, talk: Dictionary) -> void:
 		Runes.grant(rune_id)
 	if int(gives.get("xp", 0)) > 0:
 		Progress.add_xp(int(gives["xp"]))
+	if talk.has("challenge"):
+		Challenges.start(talk["challenge"])
