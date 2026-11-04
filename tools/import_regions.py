@@ -209,7 +209,90 @@ def sanctuary():
                         tiles_white, moss, pool, stump, urn, console, leaves, hedge])
 
 
+def factory():
+    """Cold blue concrete and steel: a plant that was cleaned by nobody."""
+    ground_sheet = load("Tiles/Background_Dark-Green_TileSet.png")
+    base = tinted(crop(ground_sheet, 0, 0), (96, 104, 120), 0.55)
+    a, b, c = base, shade(base, -6), cracks(shade(base, 4), (70, 76, 90), 5)
+    rubble = tinted(crop(ground_sheet, 3, 1), (100, 106, 120), 0.5)
+    wall = tinted(crop(load("Tiles/Buildings/Buildings_gray_TileSet.png"), 5, 4), (110, 116, 130), 0.25)
+    leak = liquid((60, 110, 70), (140, 220, 120), 21)
+    weeds = over(base, tinted(load("Objects/Nature/Dark-Green/Grass_1_Dark-Green.png"), (90, 120, 90), 0.3))
+    grating = grate(solid((110, 116, 130), 3, 22), (60, 64, 76))
+    walkway = stripes(base, (200, 190, 60), (50, 50, 56))
+    crate = over(base, load("Objects/Pallet_1.png"))
+    fence = over(base, crop(load("Tiles/Wire-Fence/Wire-Fence_TileSet.png"), 1, 1))
+    beam = over(shade(base, -20), load("Objects/Iron-beam.png"), dy=5)
+    plate = plate_floor((92, 96, 116), seed=23)
+    dark = shade(base, -30)
+    acid = tinted(liquid((80, 170, 70), (190, 250, 130), 24), (90, 200, 80), 0.3)
+    stump = over(base, load("Objects/Exhaust-pipe.png"))
+    barrel = over(base, load("Objects/Barrel_blue_2.png"))
+    machine = over(dark, load("Objects/Washing-machine.png"))
+    trash = over(base, load("Objects/Metal-Plates.png")[7:23, 1:17])
+    heap = tinted(crop(load("Tiles/Garbage_TileSet.png"), 1, 0), (90, 96, 110), 0.4)
+    build("factory", [a, b, c, rubble, wall, leak, weeds, grating, walkway, crate, fence, beam,
+                      plate, dark, acid, stump, barrel, machine, trash, heap])
+
+
+def dump():
+    """Rust, refuse and stained earth: a city's rubbish in mountains."""
+    ground_sheet = load("Tiles/Background_Bleak-Yellow_TileSet.png")
+    base = tinted(crop(ground_sheet, 0, 0), (120, 96, 72), 0.4)
+    a = base
+    b = over(base, load("Objects/Chips-pack_Red.png"), dx=3, dy=9) if load("Objects/Chips-pack_Red.png").shape[0] <= 16 else shade(base, -6)
+    c = cracks(shade(base, 4), (80, 60, 44), 7)
+    rubble = tinted(crop(ground_sheet, 3, 1), (130, 100, 76), 0.4)
+    wall = tinted(crop(load("Tiles/Brick-Wall_TileSet.png"), 0, 1), (120, 80, 64), 0.4)
+    sludge = liquid((76, 70, 52), (130, 120, 80), 31)
+    grass = over(base, load("Objects/Nature/Bleak-Yellow/Grass_3_Bleak-Yellow.png"))
+    concrete = shade(tinted(crop(ground_sheet, 5, 8), (150, 130, 110), 0.35), -4)
+    path = tinted(crop(ground_sheet, 8, 0), (150, 120, 90), 0.3)
+    pallet = over(base, load("Objects/Pallet_2.png"))
+    fence = over(base, crop(load("Tiles/Wire-Fence/Wire-Fence_TileSet.png"), 1, 1))
+    beam = over(shade(base, -20), load("Objects/Iron-beam.png"), dy=5)
+    plate = plate_floor((110, 92, 80), seed=33)
+    dark = shade(base, -32)
+    toxic = tinted(over(base, load("Objects/Nature/Flowers_Mashrooms_Other-nature-stuff/Puddles-And-Water-Anim/Puddle_On-Dry-Ground_3.png")), (110, 160, 60), 0.5)
+    stump = over(base, load("Objects/Tire_1.png"))
+    barrel = over(base, load("Objects/Barrel_rust_red_1.png"))
+    machine = over(dark, load("Objects/Refrigerator.png")[:, 6:22])
+    trash = over(base, load("Objects/Trash-bag_2.png"))
+    heap = tinted(crop(load("Tiles/Garbage_TileSet.png"), 1, 0), (120, 90, 80), 0.25)
+    build("dump", [a, b, c, rubble, wall, sludge, grass, concrete, path, pallet, fence, beam,
+                   plate, dark, toxic, stump, barrel, machine, trash, heap])
+
+
+def river():
+    """Mud, reeds and sandbags along water the colour of old tea."""
+    ground_sheet = load("Tiles/Background_Dark-Green_TileSet.png")
+    base = tinted(crop(ground_sheet, 0, 0), (96, 92, 70), 0.45)
+    a, b, c = base, shade(base, -6), cracks(shade(base, 3), (70, 64, 46), 9)
+    pebbles = tinted(crop(ground_sheet, 3, 1), (110, 104, 86), 0.4)
+    wall = tinted(crop(load("Tiles/Brick-Wall_TileSet.png"), 0, 1), (100, 90, 76), 0.5)
+    water = liquid((92, 98, 66), (150, 156, 110), 41)
+    reeds = over(base, load("Objects/Nature/Dark-Green/Grass_4_Dark-Green.png"))
+    stones = shade(tinted(crop(ground_sheet, 5, 8), (140, 140, 124), 0.3), -6)
+    planks = plate_floor((120, 96, 70), seed=43)
+    sandbags = over(base, tinted(load("Objects/Cardboard_1.png"), (190, 170, 120), 0.5))
+    fence = over(base, crop(load("Tiles/Wire-Fence/Wire-Fence_TileSet.png"), 1, 1))
+    post = pillar(base, (110, 84, 60), (76, 56, 40))
+    plate = plate_floor((96, 100, 92), seed=44)
+    dark = shade(base, -30)
+    toxic = tinted(over(base, load("Objects/Nature/Flowers_Mashrooms_Other-nature-stuff/Puddles-And-Water-Anim/Puddle_On-Dry-Ground_3.png")), (120, 150, 60), 0.5)
+    stump = over(base, load("Objects/Nature/Flowers_Mashrooms_Other-nature-stuff/Stump_1.png"))
+    barrel = over(base, load("Objects/Barrel_rust_blue_1.png"))
+    machine = over(dark, load("Objects/Washing-machine.png"))
+    trash = over(base, load("Objects/Trash-bag_1.png"))
+    heap = tinted(crop(load("Tiles/Garbage_TileSet.png"), 1, 0), (100, 96, 80), 0.3)
+    build("river", [a, b, c, pebbles, wall, water, reeds, stones, planks, sandbags, fence, post,
+                    plate, dark, toxic, stump, barrel, machine, trash, heap])
+
+
 def main():
+    factory()
+    dump()
+    river()
     fields()
     industry()
     sanctuary()

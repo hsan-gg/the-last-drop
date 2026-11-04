@@ -387,7 +387,8 @@
 		"haze": {
 			"color": "#5a8a40",
 			"alpha": 0.12
-		}
+		},
+		"tileset": "factory"
 	},
 	{
 		"id": "dump",
@@ -686,7 +687,8 @@
 		"haze": {
 			"color": "#8a7040",
 			"alpha": 0.12
-		}
+		},
+		"tileset": "dump"
 	},
 	{
 		"id": "river",
@@ -971,7 +973,8 @@
 		"haze": {
 			"color": "#6a7a60",
 			"alpha": 0.1
-		}
+		},
+		"tileset": "river"
 	},
 	{
 		"id": "fields",
