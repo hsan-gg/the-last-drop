@@ -67,7 +67,9 @@ static func draw(canvas: CanvasItem, kind: String, size: Vector2, t: float) -> v
 		"sanctuary":
 			_sky(canvas, size, Color("#a0d8e8"), Color("#e8f4e0"), 0.55)
 			_hills(canvas, size, t)
+			_trees(canvas, size, t)
 			_hall(canvas, size, t)
+			_stream(canvas, size, t)
 			_fireflies(canvas, size, t)
 
 
@@ -309,14 +311,41 @@ static func _hills(canvas: CanvasItem, size: Vector2, t: float) -> void:
 		canvas.draw_colored_polygon(points, color)
 
 
+static func _trees(canvas: CanvasItem, size: Vector2, t: float) -> void:
+	for tree in 9:
+		var x := _hash(tree + 40) * size.x
+		var y := size.y * (0.5 + _hash(tree + 60) * 0.12)
+		var sway := sin(t * 0.8 + tree) * 1.5
+		canvas.draw_rect(Rect2(x - 1, y - 4, 3, 10), Color("#5a4030"))
+		canvas.draw_circle(Vector2(x + sway, y - 9), 8.0 + _hash(tree) * 4.0, Color("#4a8a50"))
+		canvas.draw_circle(Vector2(x + sway - 3, y - 12), 5.0, Color("#6aaa6a"))
+
+
+static func _stream(canvas: CanvasItem, size: Vector2, t: float) -> void:
+	var y := size.y * 0.86
+	canvas.draw_rect(Rect2(0, y, size.x, 12), Color("#6ab8d0"))
+	for streak in 14:
+		var x := fposmod(streak * 40.0 + t * 24.0, size.x + 40.0) - 20.0
+		canvas.draw_line(Vector2(x, y + 3 + (streak % 3) * 3), Vector2(x + 12, y + 3 + (streak % 3) * 3), Color("#d8f4ff", 0.8), 1.0)
+
+
 static func _hall(canvas: CanvasItem, size: Vector2, t: float) -> void:
 	var base := Vector2(size.x * 0.5, size.y * 0.62)
+	canvas.draw_circle(base + Vector2(0, -44), 34.0, Color("#bfe8f0", 0.55))  # the glass dome
+	canvas.draw_arc(base + Vector2(0, -44), 34.0, PI, TAU, 24, Color("#e8ffff"), 1.5)
+	for rib in 5:
+		var angle := PI + rib * PI / 4.0
+		canvas.draw_line(base + Vector2(0, -44), base + Vector2(0, -44) + Vector2.from_angle(angle) * 34.0, Color("#e8ffff", 0.6), 1.0)
 	canvas.draw_rect(Rect2(base + Vector2(-70, -40), Vector2(140, 40)), Color("#e8ece4"))
 	canvas.draw_rect(Rect2(base + Vector2(-70, -44), Vector2(140, 4)), Color("#c8ccc4"))
 	for window in 6:
 		var lit := fposmod(t * 0.8 - window * 0.25, 3.0) < 2.5
 		canvas.draw_rect(Rect2(base + Vector2(-60 + window * 22, -32), Vector2(12, 16)), Color("#ffe8a0") if lit else Color("#9ac8d0"))
 	canvas.draw_rect(Rect2(base + Vector2(-70, -40), Vector2(140, 6)), Color("#6ab070", 0.7))
+	for vine in 10:  # moss hanging from the roofline
+		var x := -66.0 + vine * 14.0
+		var length := 6.0 + _hash(vine + 7) * 14.0 + sin(t + vine) * 1.0
+		canvas.draw_line(base + Vector2(x, -36), base + Vector2(x + sin(t * 0.9 + vine) * 1.5, -36 + length), Color("#5a9a5a"), 2.0)
 
 
 static func _fireflies(canvas: CanvasItem, size: Vector2, t: float) -> void:
