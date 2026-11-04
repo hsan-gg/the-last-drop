@@ -157,3 +157,7 @@ bar), which refills over time and with kills.
   array, grid console, Vex, Unit-7, the Slag Golem), and the Last Sanctuary (atrium
   core, the archive timeline, Ines's last recording; Tobi, Osei and Mira arrive if
   the story brought them). Rail carts link every lit region.
+- 2026-11-04: Events added: Kip's race to the east heap (90 s timed challenge),
+  Unit-7's combat certification (3 kills in 60 s), and the Night of the Spoiled
+  (lighting a region's generator draws one final wave). The epilogue now names
+  what you changed: the restored systems, Tobi, Mira's radio, Vex sharing power.

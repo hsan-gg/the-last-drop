@@ -96,6 +96,7 @@ func _on_region_lit(lit_area: String) -> void:
 	if lit_area != area_id:
 		return
 	ambience.clear_air()
+	_night_wave()
 	var tween := create_tween().set_parallel()
 	tween.tween_property(_tint, "color", _lit_tint, 2.5).set_trans(Tween.TRANS_SINE)
 	var lantern := _player.get_node_or_null("Lantern") as PointLight2D
@@ -207,6 +208,22 @@ func _arrive(layout: PackedStringArray) -> void:
 		if is_open_ground(spot):
 			_player.place_at(spot)
 			return
+
+
+## Night of the Spoiled: the new light draws the last of them in, one final
+## wave (from "night_wave" in the area's config) to hold the light against.
+func _night_wave() -> void:
+	var wave: Array = Content.area(area_id).get("night_wave", [])
+	if wave.is_empty() or not Combat.enemies_enabled:
+		return
+	EventBus.banner_requested.emit("NIGHT OF THE SPOILED", "The light draws them in. Hold it!", Color("#ff6a5a"))
+	for index in wave.size():
+		var enemy: Enemy = ENTITY_SCENES["enemy"].instantiate()
+		enemy.enemy_id = wave[index]
+		enemy.position = open_spot_near(_player.position, PENALTY_DISTANCE + index * 10.0)
+		_entities.add_child(enemy)
+		enemy.hunt()
+	GameState.add_to_counter("night_waves")
 
 
 ## True if `point` is inside the map on a tile you can walk on.

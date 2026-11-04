@@ -190,7 +190,11 @@
 		"haze": {
 			"color": "#7a6040",
 			"alpha": 0.08
-		}
+		},
+		"night_wave": [
+			"walker",
+			"runner"
+		]
 	},
 	{
 		"id": "factory",
@@ -388,7 +392,11 @@
 			"color": "#5a8a40",
 			"alpha": 0.12
 		},
-		"tileset": "factory"
+		"tileset": "factory",
+		"night_wave": [
+			"walker",
+			"walker"
+		]
 	},
 	{
 		"id": "dump",
@@ -688,7 +696,12 @@
 			"color": "#8a7040",
 			"alpha": 0.12
 		},
-		"tileset": "dump"
+		"tileset": "dump",
+		"night_wave": [
+			"runner",
+			"walker",
+			"runner"
+		]
 	},
 	{
 		"id": "river",
@@ -974,7 +987,12 @@
 			"color": "#6a7a60",
 			"alpha": 0.1
 		},
-		"tileset": "river"
+		"tileset": "river",
+		"night_wave": [
+			"walker",
+			"runner",
+			"walker"
+		]
 	},
 	{
 		"id": "fields",
@@ -1156,7 +1174,12 @@
 					"region_id": "fields"
 				}
 			}
-		}
+		},
+		"night_wave": [
+			"husk",
+			"husk",
+			"runner"
+		]
 	},
 	{
 		"id": "industry",
@@ -1358,7 +1381,12 @@
 					"region_id": "industry"
 				}
 			}
-		}
+		},
+		"night_wave": [
+			"wraith",
+			"wraith",
+			"rust_brute"
+		]
 	},
 	{
 		"id": "sanctuary",

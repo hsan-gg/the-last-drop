@@ -151,3 +151,14 @@ func test_the_world_is_alive_water_toxins_and_air() -> void:
 	var counts := area.ambience.counts()
 	assert_gt(counts["water"], 0, "the river flows")
 	assert_gt(counts["airs"], 0, "something hangs in the air")
+
+
+func test_lighting_a_region_draws_one_last_wave() -> void:
+	Combat.enemies_enabled = true
+	var area: GameArea = add_child_autofree(preload("res://world/fields.tscn").instantiate())
+	await wait_physics_frames(2)
+	var before := get_tree().get_nodes_in_group("enemies").size()
+	EventBus.region_lit.emit("fields")
+	await wait_physics_frames(2)
+	assert_eq(get_tree().get_nodes_in_group("enemies").size(), before + Content.area("fields")["night_wave"].size())
+	assert_eq(GameState.get_counter("night_waves"), 1)
