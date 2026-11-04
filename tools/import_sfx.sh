@@ -110,6 +110,11 @@ take block "$RPG/metal_02.ogg" $IMPACT 0.4
 take parry "$V2/sfx100v2_metal_hit_01.ogg" $((IMPACT + 2)) 0.6
 take flame "$RPG/spell_fire_01.ogg" $((ACTION - 4)) 0.35
 take shotgun "$BANG/shot_01.ogg" $IMPACT 0.45
+# The shotgun's two shells: a pump-rack as it reloads, a shell sliding home,
+# and the hollow click of an empty gun.
+take reload "$KENNEY/metalLatch.ogg" $ACTION 0.35
+take shell_in "$PACK/inventory/metal-small2.wav" $((FEEDBACK - 2)) 0.25
+take dry_fire "$HUNDRED/switch_02.ogg" $((FEEDBACK - 2)) 0.2
 
 # The zombies: groans while they wander, a snarl when they spot you, a rasp
 # as they wind up a swing (your cue to guard), and hurt and dying cries.

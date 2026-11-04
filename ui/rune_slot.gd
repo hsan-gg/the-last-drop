@@ -18,10 +18,14 @@ func _draw() -> void:
 	var definition: Dictionary = Runes.DEFINITIONS[rune]
 	var cost := float(definition["cost"]) * (0.2 if rune == "ember" else 1.0)
 	var ready := Runes.can_afford(cost)
+	if rune == Runes.SCATTER:
+		ready = Runes.loaded_shells > 0
 	var color := Color(definition["color"])
 	var box := Rect2(Vector2.ZERO, size)
 	draw_rect(box, Color("#120c18"))
 	var fill := clampf(Runes.energy / Runes.MAX_ENERGY, 0.0, 1.0)
+	if rune == Runes.SCATTER:  # the gun's slot fills as it reloads, not with energy
+		fill = Runes.reload_progress() if Runes.is_reloading() else float(Runes.loaded_shells) / Runes.MAGAZINE
 	var fill_color := color.darkened(0.55)
 	fill_color.a = 0.85
 	draw_rect(Rect2(Vector2(1, 1 + (size.y - 2) * (1.0 - fill)), Vector2(size.x - 2, (size.y - 2) * fill)), fill_color)
@@ -40,3 +44,14 @@ func _draw() -> void:
 	draw_rect(key, Color("#120c18"))
 	draw_rect(key, frame, false, 1.0)
 	draw_string(UiTheme.FONT_FILE, key.position + Vector2(1.5, 6), str(slot), HORIZONTAL_ALIGNMENT_LEFT, -1, 6, Color("#f6ecd6"))
+	if rune == Runes.SCATTER:
+		_draw_shells()
+
+
+## Two pips for the shells in the gun, and how many more you carry.
+func _draw_shells() -> void:
+	for i in Runes.MAGAZINE:
+		var pip := Rect2(Vector2(2 + i * 4, 2), Vector2(3, 5))
+		draw_rect(pip, Color("#e05a48") if i < Runes.loaded_shells else Color("#3a2a28"))
+		draw_rect(Rect2(pip.position + Vector2(0, 4), Vector2(3, 1)), Color("#f0c860") if i < Runes.loaded_shells else Color("#4a4030"))
+	draw_string(UiTheme.FONT_FILE, Vector2(-1, size.y + 7), "+%d" % Runes.spare_shells(), HORIZONTAL_ALIGNMENT_LEFT, -1, 6, Color("#f6ecd6"))

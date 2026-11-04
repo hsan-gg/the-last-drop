@@ -287,12 +287,14 @@ func _die() -> void:
 
 func _roll_drops() -> void:
 	for drop: Dictionary in _def.get("drops", []):
+		if drop.has("needs_rune") and not Runes.has(drop["needs_rune"]):
+			continue  # shells only turn up once you have the gun to load them in
 		if randf() > float(drop["chance"]) * Difficulty.value("drops"):
 			continue
 		if drop.has("gear"):
 			if Gear.grant(drop["gear"]):
 				EventBus.loot_found.emit("Found: %s" % Gear.definition(drop["gear"])["name"])
-		elif Inventory.add(drop["item"]):
+		elif Inventory.add(drop["item"], int(drop.get("count", 1))):
 			EventBus.loot_found.emit("Found: %s" % ItemDB.display_name(drop["item"]))
 			EventBus.sfx_requested.emit("pickup")
 

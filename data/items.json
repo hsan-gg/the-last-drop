@@ -239,5 +239,11 @@
 		"use": {
 			"energy": 50
 		}
+	},
+	{
+		"id": "shotgun_shell",
+		"name": "Shotgun Shell",
+		"category": "ammo",
+		"description": "For the Scatter rune's shotgun, two at a time. Rare: keep them for when it counts."
 	}
 ]

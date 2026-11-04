@@ -55,6 +55,7 @@ func snapshot() -> Dictionary:
 		"map": map,
 		"runes": Runes.owned.duplicate(),
 		"energy": Runes.energy,
+		"loaded_shells": Runes.loaded_shells,
 	}
 
 
@@ -97,6 +98,7 @@ func restore(data: Dictionary) -> void:
 	for rune_id: String in data.get("runes", []):
 		Runes.owned.append(rune_id)
 	Runes.energy = float(data.get("energy", Runes.MAX_ENERGY))
+	Runes.loaded_shells = int(data.get("loaded_shells", Runes.MAGAZINE if Runes.has(Runes.SCATTER) else 0))
 	EventBus.runes_changed.emit()
 	EventBus.xp_changed.emit(Progress.level, Progress.xp, Progress.xp_needed())
 

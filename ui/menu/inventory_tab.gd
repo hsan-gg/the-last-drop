@@ -165,7 +165,7 @@ func _show_detail() -> void:
 		var action := "worn" if worn else TouchControls.hint("[E] wear", "tap: wear")
 		_detail.text = "[color=%s]%s[/color]  %s  [color=#9fb0bb](%s)[/color]\n[color=#9fb0bb]%s[/color]\n[color=#f2c94c]%s[/color]" % [RARITY_COLORS.get(item["rarity"], "#c8d0d8"), item["name"], stat, item["rarity"], item["description"], action]
 		return
-	var action_hint := TouchControls.hint("[E] use", "tap: use") if ItemDB.is_consumable(entry["id"]) else ("Someone in another area needs this" if ItemDB.get_item(entry["id"]).get("category", "") == "keepsake" else "Material for repairs")
+	var action_hint := TouchControls.hint("[E] use", "tap: use") if ItemDB.is_consumable(entry["id"]) else _carried_hint(entry["id"])
 	var description := ItemDB.description(entry["id"])
 	_detail.text = "[color=#e8eef2]%s[/color] x%d\n[color=#9fb0bb]%s[/color]\n[color=#f2c94c]%s[/color]" % [ItemDB.display_name(entry["id"]), entry["count"], description, action_hint]
 
@@ -254,3 +254,13 @@ func _on_slot_pressed(index: int) -> void:
 func _on_worn_pressed(slot: String) -> void:
 	if slot != "weapon" and not Gear.equipped(slot).is_empty():
 		Gear.unequip(slot)
+
+
+## What a carried item is for, when it is not used from the inventory.
+static func _carried_hint(item_id: String) -> String:
+	match ItemDB.get_item(item_id).get("category", ""):
+		"keepsake":
+			return "Someone in another area needs this"
+		"ammo":
+			return "Loaded into the shotgun as it reloads"
+	return "Material for repairs"

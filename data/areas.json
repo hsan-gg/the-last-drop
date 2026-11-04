@@ -665,7 +665,8 @@
 						"tire_vest"
 					],
 					"items": {
-						"energy_bar": 2
+						"energy_bar": 2,
+						"shotgun_shell": 2
 					}
 				}
 			},
@@ -968,7 +969,8 @@
 						"recycled_edge"
 					],
 					"items": {
-						"bandage": 2
+						"bandage": 2,
+						"shotgun_shell": 2
 					}
 				}
 			},
@@ -1443,7 +1445,8 @@
 						"tire_vest"
 					],
 					"items": {
-						"bandage": 2
+						"bandage": 2,
+						"shotgun_shell": 2
 					}
 				}
 			},
@@ -2430,7 +2433,8 @@
 				"props": {
 					"items": {
 						"energy_bar": 2,
-						"rune_battery": 1
+						"rune_battery": 1,
+						"shotgun_shell": 2
 					},
 					"gear": []
 				}
@@ -2501,7 +2505,8 @@
 				"props": {
 					"items": {
 						"iron_ore": 2,
-						"coal": 2
+						"coal": 2,
+						"shotgun_shell": 3
 					},
 					"gear": []
 				}
@@ -2582,7 +2587,8 @@
 				"props": {
 					"items": {
 						"crystal_shard": 3,
-						"rune_battery": 2
+						"rune_battery": 2,
+						"shotgun_shell": 2
 					},
 					"gear": [
 						"recycled_edge"
@@ -2766,7 +2772,8 @@
 				"props": {
 					"items": {
 						"rune_battery": 2,
-						"bandage": 2
+						"bandage": 2,
+						"shotgun_shell": 2
 					},
 					"gear": []
 				}

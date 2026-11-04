@@ -144,6 +144,22 @@ def battery_cell():
     ], {"p": "#c8c8d0", "P": "#7a4ab0", "w": "#c890ff"}, 10, 12)
 
 
+def shotgun_shells():
+    """Two red shotgun shells with brass bases, leaning together."""
+    return from_rows([
+        "..rr....",
+        ".rRrr...",
+        ".rRr.rr.",
+        ".rRr.rRr",
+        ".rRr.rRr",
+        ".rRr.rRr",
+        ".rRr.rRr",
+        ".bBb.rRr",
+        ".bbb.bBb",
+        ".....bbb",
+    ], {"r": "#b8302a", "R": "#e05a48", "b": "#a8782c", "B": "#f0c860"}, 12, 14)
+
+
 def note():
     img = blank()
     rect(img, 3, 3, 13, 14, "#e8e0c8")
@@ -312,7 +328,7 @@ def main():
         "copper_ore": ore("#d8783a", "#ffc890"), "iron_ore": ore("#a85a3a", "#e0a080"),
         "crystal_shard": crystal(), "coal": coal(), "rusty_key": key("#a8783a", "#e0b070"),
         "metro_key": key("#3a8ad8", "#a0d0ff"), "pickaxe": pickaxe(), "rune_battery": battery_cell(),
-        "note": note(),
+        "note": note(), "shotgun_shell": shotgun_shells(),
     }.items():
         write_png(str(items / f"{name}.png"), icon)
     stations = ROOT / "assets/sprites/stations"

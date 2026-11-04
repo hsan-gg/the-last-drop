@@ -97,6 +97,11 @@ func _draw_rune(button: Dictionary, center: Vector2, ink: Color) -> void:
 	var color := Color(Runes.DEFINITIONS[rune]["color"])
 	var radius: float = button["radius"]
 	var fill := clampf(Runes.energy / Runes.MAX_ENERGY, 0.0, 1.0)
+	if rune == Runes.SCATTER:
+		fill = Runes.reload_progress() if Runes.is_reloading() else float(Runes.loaded_shells) / Runes.MAGAZINE
+		var count := "%d+%d" % [Runes.loaded_shells, Runes.spare_shells()]
+		var width := UiTheme.FONT_FILE.get_string_size(count, HORIZONTAL_ALIGNMENT_LEFT, -1, 6).x
+		draw_string(UiTheme.FONT_FILE, center + Vector2(-width / 2.0, radius + 7.0), count, HORIZONTAL_ALIGNMENT_LEFT, -1, 6, ink)
 	draw_arc(center, radius - 2.0, -PI / 2.0, -PI / 2.0 + TAU * fill, 24, Color(color, ink.a), 2.0, true)
 	var at := (center - Vector2(RUNE_ICON, RUNE_ICON) / 2.0).round()
 	draw_texture_rect_region(RUNE_ICONS, Rect2(at, Vector2(RUNE_ICON, RUNE_ICON)), Rect2(index * RUNE_ICON, 0, RUNE_ICON, RUNE_ICON), Color(1, 1, 1, ink.a))

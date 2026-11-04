@@ -4,6 +4,7 @@ extends Node2D
 ## - Ember: hold to breathe a cone of fire. The Spoiled catch fire, burn for a
 ##   while, and the fire jumps to their neighbours.
 ## - Scatter: a shotgun blast of pellets that hurts and hurls the Spoiled back.
+##   It holds two shells and reloads from the (rare) shells you carry.
 ## - Tide: a ring of clean water that heals you and pushes everything away.
 
 const FLAME_RANGE := 50.0
@@ -144,7 +145,11 @@ func _make_flames() -> CPUParticles2D:
 # ------------------------------------------------------------------ scatter
 
 func fire_scatter() -> bool:
-	if float(_cooldowns.get("scatter", 0.0)) > 0.0 or not Runes.spend(float(Runes.DEFINITIONS["scatter"]["cost"])):
+	if float(_cooldowns.get("scatter", 0.0)) > 0.0:
+		return false
+	if not Runes.take_shell():
+		if not Runes.is_reloading() and not Runes.start_reload():
+			_click_empty()
 		return false
 	_cooldowns["scatter"] = SCATTER_COOLDOWN
 	EventBus.sfx_requested.emit("shotgun")
@@ -165,6 +170,14 @@ func fire_scatter() -> bool:
 		victim.take_hit(SCATTER_DAMAGE * int(hits[victim]), origin, SCATTER_KNOCKBACK)
 	_rings.append({"radius": 4.0, "age": 0.0, "color": Color("#fff2a0"), "grow": 14.0, "life": 0.12, "at": _player.facing * 10.0, "fill": true})
 	return true
+
+
+## The trigger on an empty gun with no shells to load.
+func _click_empty() -> void:
+	EventBus.sfx_requested.emit("dry_fire")
+	if float(_cooldowns.get("no_shells", 0.0)) <= 0.0:
+		_cooldowns["no_shells"] = 1.5
+		FloatingText.spawn(_player.get_parent(), "NO SHELLS", _player.global_position, Color("#e0d070"))
 
 
 func _first_along(origin: Vector2, direction: Vector2) -> Enemy:
