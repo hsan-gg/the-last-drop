@@ -28,7 +28,7 @@ func _has_point(point: Vector2) -> bool:
 func _draw() -> void:
 	if controls == null:
 		return
-	var alpha := clampf(float(Settings.value("touch_opacity")), 0.2, 1.0)
+	var alpha := clampf(float(Settings.value("touch_opacity")), controls.MIN_OPACITY, 1.0)
 	if controls.mode == controls.Mode.PLAY:
 		_draw_stick(alpha)
 	for button: Dictionary in controls.buttons:

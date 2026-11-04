@@ -32,6 +32,8 @@ const STICK_TOP_MARGIN := 34.0
 ## Small, Normal, Large. Normal gives the sword button about a 13 mm face on
 ## a typical phone, near the size thumbs need to hit it without looking.
 const SIZES: Array[float] = [1.15, 1.4, 1.7]
+## The buttons never fade below this, so they cannot be made invisible.
+const MIN_OPACITY := 0.35
 ## How far outside a button's ring a touch still counts, in game pixels.
 const TOUCH_SLOP := 6.0
 const MOUSE_FREE_ACTIONS: Array[String] = ["attack", "block"]
@@ -54,6 +56,7 @@ var mode := Mode.HIDDEN
 var buttons: Array[Dictionary] = []
 
 var _seen_touch := false
+var _keyboard_used := false
 var _pad: TouchPad
 var _held: Dictionary = {}  # finger index -> button id
 var _held_buttons: Dictionary = {}  # button id -> button (as pressed)
@@ -87,7 +90,9 @@ func _ready() -> void:
 ## whether this device has been touched.
 func refresh_active() -> void:
 	var choice := int(Settings.value("touch_controls"))
-	var want := choice == ALWAYS or (choice == AUTO and _seen_touch)
+	# "Off" only means off once a keyboard has been used: on a phone it would
+	# otherwise leave nothing to press (it once stranded a player in the menu).
+	var want := choice == ALWAYS or (_seen_touch and (choice == AUTO or not _keyboard_used))
 	if want == active:
 		return
 	active = want
@@ -215,6 +220,9 @@ static func is_game_key(key: InputEventKey) -> bool:
 
 
 func _on_real_key() -> void:
+	_keyboard_used = true
+	if int(Settings.value("touch_controls")) == NEVER:
+		refresh_active()
 	if int(Settings.value("touch_controls")) == AUTO and _seen_touch:
 		_seen_touch = false
 		refresh_active()

@@ -14,11 +14,23 @@
 #   bash scripts/build_android.sh
 #
 # Needs: Godot 4.7 with its Android export templates, the Android SDK
-# (ANDROID_HOME, default /opt/android-sdk, with build-tools) and a JDK 17.
+# (ANDROID_HOME, default /opt/android-sdk) with "platforms;android-36" and
+# "build-tools;36.1.0", and a JDK 17. It is a Gradle build: the template is
+# unpacked into android/build/ (not in git) and our own Android code from
+# android/overlay/ is laid over it (the volume buttons, see GodotApp.java).
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
 godot="${GODOT:-godot}"
+templates="$HOME/.local/share/godot/export_templates/$("$godot" --version | sed -E 's/^([0-9.]+\.[a-z]+).*/\1/')"
+if [[ ! -f android/.build_version ]] || ! cmp -s android/.build_version "$templates/version.txt"; then
+	rm -rf android/build
+	mkdir -p android/build
+	unzip -q "$templates/android_source.zip" -d android/build
+	cp "$templates/version.txt" android/.build_version
+	touch android/build/.gdignore
+fi
+cp -r android/overlay/. android/build/
 export GODOT_ANDROID_SDK_PATH="${GODOT_ANDROID_SDK_PATH:-${ANDROID_HOME:-/opt/android-sdk}}"
 mkdir -p build/android
 

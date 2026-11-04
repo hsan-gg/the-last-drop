@@ -3,8 +3,10 @@ extends MiniGame
 ## Match the pairs: each waste item with where it belongs. Arrows move, E turns
 ## a card. A few misses are free; after that every miss costs a little health.
 
-const CARD := Vector2(66, 26)
-const COLUMNS := 4
+const GAP := 4.0
+const TEXT_SIZE := 8
+const SMALL_TEXT_SIZE := 6
+const LINE_HEIGHT := 10.0
 
 var board: MemoryBoard
 var cursor := 0
@@ -39,10 +41,11 @@ func _process(delta: float) -> void:
 func _board_input(event: InputEvent) -> void:
 	var step := arrow_step(event)
 	if step != Vector2i.ZERO:
-		var rows := ceili(board.cards.size() / float(COLUMNS))
-		var column := clampi(cursor % COLUMNS + step.x, 0, COLUMNS - 1)
-		var row := clampi(cursor / COLUMNS + step.y, 0, rows - 1)
-		cursor = mini(row * COLUMNS + column, board.cards.size() - 1)
+		var grid := layout()
+		var columns: int = grid["columns"]
+		var column := clampi(cursor % columns + step.x, 0, columns - 1)
+		var row := clampi(cursor / columns + step.y, 0, int(grid["rows"]) - 1)
+		cursor = mini(row * columns + column, board.cards.size() - 1)
 		EventBus.sfx_requested.emit("ui_move")
 	elif is_confirm(event):
 		turn(cursor)
@@ -51,14 +54,46 @@ func _board_input(event: InputEvent) -> void:
 func card_at(point: Vector2) -> int:
 	if board == null:
 		return -1
-	var rows := ceili(board.cards.size() / float(COLUMNS))
-	var total := Vector2(COLUMNS * (CARD.x + 4) - 4, rows * (CARD.y + 4) - 4)
-	var origin := ((_board.size - total) / 2.0).floor()
 	for index in board.cards.size():
-		var at := origin + Vector2(index % COLUMNS * (CARD.x + 4), index / COLUMNS * (CARD.y + 4))
-		if Rect2(at, CARD).has_point(point):
+		if card_rect(index).has_point(point):
 			return index
 	return -1
+
+
+## How the cards sit on the board: as few rows as keep them wide enough to
+## read (two rows for up to twelve cards), each card as big as the board allows.
+func layout() -> Dictionary:
+	var count := board.cards.size() if board != null else 0
+	var rows := 2 if count <= 12 else ceili(count / 6.0)
+	var columns := maxi(ceili(count / float(rows)), 1)
+	var card := Vector2((_board.size.x - GAP * (columns - 1)) / columns, (_board.size.y - GAP * (rows - 1)) / rows).floor()
+	var total := Vector2(columns * (card.x + GAP) - GAP, rows * (card.y + GAP) - GAP)
+	return {"rows": rows, "columns": columns, "card": card, "origin": ((_board.size - total) / 2.0).floor()}
+
+
+func card_rect(index: int) -> Rect2:
+	var grid := layout()
+	var card: Vector2 = grid["card"]
+	var columns: int = grid["columns"]
+	return Rect2(grid["origin"] + Vector2(index % columns * (card.x + GAP), index / columns * (card.y + GAP)), card)
+
+
+## A card's words broken into lines at spaces, and the size they fit at.
+static func wrap_words(text: String, width: float) -> Dictionary:
+	for size in [TEXT_SIZE, SMALL_TEXT_SIZE]:
+		var lines: Array[String] = []
+		var fits := true
+		for word in text.split(" ", false):
+			if UiTheme.FONT_FILE.get_string_size(word, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x > width:
+				fits = false
+			var joined := word if lines.is_empty() else lines[-1] + " " + word
+			if not lines.is_empty() and UiTheme.FONT_FILE.get_string_size(joined, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x <= width:
+				lines[-1] = joined
+			else:
+				lines.append(word)
+		if fits or size == SMALL_TEXT_SIZE:
+			return {"lines": lines, "size": size}
+	return {}
 
 
 func _board_tap(point: Vector2) -> void:
@@ -93,23 +128,22 @@ func turn(index: int) -> void:
 func _draw_board() -> void:
 	if board == null:
 		return
-	var rows := ceili(board.cards.size() / float(COLUMNS))
-	var total := Vector2(COLUMNS * (CARD.x + 4) - 4, rows * (CARD.y + 4) - 4)
-	var origin := ((_board.size - total) / 2.0).floor()
 	for index in board.cards.size():
 		var card: Dictionary = board.cards[index]
-		var at := origin + Vector2(index % COLUMNS * (CARD.x + 4), index / COLUMNS * (CARD.y + 4))
+		var box := card_rect(index)
 		var face_up: bool = card["up"] or card["done"]
 		var fill := Color("#1d3a2a") if card["done"] else (Color("#26303c") if face_up else Color("#3a2a48"))
-		_board.draw_rect(Rect2(at, CARD), fill)
+		_board.draw_rect(box, fill)
 		if not face_up:
-			_board.draw_rect(Rect2(at + Vector2(4, 4), CARD - Vector2(8, 8)), Color("#4a3a5a"), false, 1.0)
-			_text(at + Vector2(0, 17), "?", Color("#7a6a8a"), 8, CARD.x, HORIZONTAL_ALIGNMENT_CENTER)
+			_board.draw_rect(box.grow(-4.0), Color("#4a3a5a"), false, 1.0)
+			_text(Vector2(box.position.x, box.get_center().y + 4), "?", Color("#7a6a8a"), 8, box.size.x, HORIZONTAL_ALIGNMENT_CENTER)
 		else:
-			_text(at + Vector2(2, 11), str(card["text"]).substr(0, 8), UiTheme.COLOR_TEXT, 8, CARD.x - 4, HORIZONTAL_ALIGNMENT_CENTER)
-			if str(card["text"]).length() > 8:
-				_text(at + Vector2(2, 21), str(card["text"]).substr(8, 8), UiTheme.COLOR_TEXT, 8, CARD.x - 4, HORIZONTAL_ALIGNMENT_CENTER)
+			var wrapped := wrap_words(str(card["text"]), box.size.x - 6.0)
+			var lines: Array = wrapped["lines"]
+			var top := box.get_center().y - (lines.size() * LINE_HEIGHT) / 2.0 + LINE_HEIGHT - 2.0
+			for line_index in lines.size():
+				_text(Vector2(box.position.x, top + line_index * LINE_HEIGHT), lines[line_index], UiTheme.COLOR_TEXT, int(wrapped["size"]), box.size.x, HORIZONTAL_ALIGNMENT_CENTER)
 		var border := UiTheme.COLOR_GREEN if card["done"] else Color("#5a4a6a")
 		if index == cursor and _phase == Phase.PLAYING:
 			border = Color(1, 1, 1, 0.6 + 0.4 * sin(_clock * 8.0))
-		_board.draw_rect(Rect2(at, CARD), border, false, 1.0)
+		_board.draw_rect(box, border, false, 1.0)

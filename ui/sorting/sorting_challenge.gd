@@ -127,6 +127,18 @@ func leave() -> void:
 	if _phase == Phase.SUMMARY:
 		_close()
 		return
+	if _session.is_complete():
+		# Knocked away after the last item but before the summary: the pile is
+		# done, not "0 left" (which could never be opened again).
+		_record_finished_pile()
+		var finished := _pile_id
+		_phase = Phase.IDLE
+		visible = false
+		if pauses_game:
+			get_tree().paused = false
+		_session = null
+		EventBus.sorting_finished.emit(finished)
+		return
 	for item_id in _session.recovered_items():
 		Inventory.add(item_id)
 	var remaining := _session.remaining_items()
@@ -217,13 +229,19 @@ func _lessons_of(item_ids: Array[String]) -> Array[String]:
 	return lessons
 
 
-func _show_summary() -> void:
+## Pays out a fully sorted pile: what was recovered, and the pile marked done.
+func _record_finished_pile() -> Array[String]:
 	if _session.mistakes() == 0:
 		GameState.add_to_counter("perfect_piles")
 	var recovered := _session.recovered_items()
 	for item_id in recovered:
 		Inventory.add(item_id)
 	GameState.set_flag("pile_sorted_%s" % _pile_id)
+	return recovered
+
+
+func _show_summary() -> void:
+	var recovered := _record_finished_pile()
 
 	var names: Array[String] = []
 	for item_id in recovered:

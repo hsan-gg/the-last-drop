@@ -50,6 +50,7 @@ Music="*res://autoload/music.gd"
 Polish="*res://autoload/polish.gd"
 TouchControls="*res://autoload/touch_controls.gd"
 WebPlatform="*res://autoload/web_platform.gd"
+VolumeBar="*res://autoload/volume_bar.gd"
 
 [display]
 

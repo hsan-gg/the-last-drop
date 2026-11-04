@@ -28,7 +28,8 @@ func volume_text(key: String) -> String:
 
 
 func step_volume(key: String, direction: int) -> void:
-	var next := clampf(snappedf(float(Settings.value(key)) + VOLUME_STEP * direction, VOLUME_STEP), 0.0, 1.0)
+	var lowest := TouchControls.MIN_OPACITY if key == "touch_opacity" else 0.0
+	var next := clampf(snappedf(float(Settings.value(key)) + VOLUME_STEP * direction, VOLUME_STEP), lowest, 1.0)
 	Settings.set_value(key, next)
 
 
@@ -63,7 +64,8 @@ func _build() -> void:
 	_toggle_row("Fullscreen", "fullscreen")
 	_toggle_row("Battery saver (30 fps)", "battery_saver")
 	_heading("TOUCH SCREEN")
-	_cycle_row("On-screen controls", "touch_controls", TOUCH_NAMES)
+	# The phone app has no "Off": with no keyboard, it would leave nothing to press.
+	_cycle_row("On-screen controls", "touch_controls", TOUCH_NAMES.slice(0, 2) if OS.has_feature("mobile") else TOUCH_NAMES)
 	_cycle_row("Button size", "touch_size", SIZE_NAMES)
 	_volume_row("Button opacity", "touch_opacity")
 	_toggle_row("Left-handed layout", "touch_left_handed")

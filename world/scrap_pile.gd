@@ -34,9 +34,14 @@ func _on_interacted(_by: Node) -> void:
 
 
 func _on_sorting_left(left_pile_id: String, remaining: Array) -> void:
-	if left_pile_id == pile_id:
-		item_ids.assign(remaining)
-		set_prompt("Finish sorting the pile (%d left)" % item_ids.size())
+	if left_pile_id != pile_id:
+		return
+	if remaining.is_empty():  # nothing left to sort: the pile is done
+		GameState.set_flag(flag_name())
+		queue_free()
+		return
+	item_ids.assign(remaining)
+	set_prompt("Finish sorting the pile (%d left)" % item_ids.size())
 
 
 func _on_sorting_finished(finished_pile_id: String) -> void:

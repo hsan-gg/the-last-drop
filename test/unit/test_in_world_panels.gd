@@ -39,6 +39,38 @@ func test_a_blow_from_outside_knocks_you_off_the_pile() -> void:
 	assert_eq(Inventory.count("scrap_metal"), 1, "what you sorted is kept")
 
 
+func test_a_blow_after_the_last_item_still_finishes_the_pile() -> void:
+	# Regression: hit after sorting the last item (before the summary), the pile
+	# was left with "0 left" and could never be opened or finished again.
+	GameState.reset()
+	var sorting = SORTING_SCENE.instantiate()
+	add_child_autofree(sorting)
+	var finished: Array[String] = []
+	var on_finished := func(pile_id: String) -> void: finished.append(pile_id)
+	EventBus.sorting_finished.connect(on_finished)
+	var items: Array[String] = ["scrap_metal", "cardboard"]
+	sorting.open("pile", items)
+	for item in items:
+		sorting.choose_bin(SortingRules.correct_bin(item))
+		if item != items[-1]:
+			sorting.continue_flow()
+	EventBus.player_hit.emit("hit", 8)
+	EventBus.sorting_finished.disconnect(on_finished)
+	assert_false(sorting.visible)
+	assert_true(GameState.has_flag("pile_sorted_pile"), "the pile counts as sorted")
+	assert_eq(finished, ["pile"] as Array[String], "and it is cleared away")
+	assert_eq(Inventory.count("scrap_metal"), 1, "what you recovered is yours")
+
+
+func test_a_pile_left_with_nothing_on_it_is_done() -> void:
+	GameState.reset()
+	var pile := ScrapPile.new()
+	pile.pile_id = "empty_pile"
+	add_child_autofree(pile)
+	EventBus.sorting_left.emit("empty_pile", [])
+	assert_true(GameState.has_flag("pile_sorted_empty_pile"))
+
+
 func test_a_wrong_bin_does_not_knock_you_off() -> void:
 	var sorting = SORTING_SCENE.instantiate()
 	add_child_autofree(sorting)

@@ -15,6 +15,7 @@ func before_each() -> void:
 func after_each() -> void:
 	TouchControls.release_all()
 	TouchControls._seen_touch = false
+	TouchControls._keyboard_used = false
 	Settings.set_value("touch_controls", _saved_choice)
 	TouchControls.refresh_active()
 	Survival.reset()
@@ -198,11 +199,8 @@ func _open(game: MiniGame, puzzle_id: String) -> MiniGame:
 
 func test_tapping_a_memory_card_turns_it() -> void:
 	var game: MemoryGame = await _open(MemoryGame.new(), "hazmat_pairs")
-	var rows := ceili(game.board.cards.size() / float(MemoryGame.COLUMNS))
-	var total := Vector2(MemoryGame.COLUMNS * (MemoryGame.CARD.x + 4) - 4, rows * (MemoryGame.CARD.y + 4) - 4)
-	var origin := ((game._board.size - total) / 2.0).floor()
-	assert_eq(game.card_at(origin + Vector2(3, 3)), 0)
-	game._board_tap(origin + Vector2(MemoryGame.CARD.x + 8, 3))
+	assert_eq(game.card_at(game.card_rect(0).position + Vector2(3, 3)), 0)
+	game._board_tap(game.card_rect(1).get_center())
 	assert_eq(game.cursor, 1)
 	assert_true(game.board.cards[1]["up"], "the tapped card is face up")
 
@@ -376,3 +374,35 @@ func test_the_phones_volume_buttons_do_not_hide_the_touch_controls() -> void:
 		TouchControls._input(key)
 	assert_true(TouchControls.active, "still on touch")
 	assert_eq(get_tree().root.content_scale_aspect, Window.CONTENT_SCALE_ASPECT_EXPAND, "still filling the phone's screen")
+
+
+func test_the_games_own_volume_bar_shows_the_level_then_fades() -> void:
+	VolumeBar.show_level(60)
+	assert_true(VolumeBar.is_showing())
+	await wait_seconds(VolumeBar.SHOW_SECONDS + VolumeBar.FADE_SECONDS + 0.2)
+	assert_false(VolumeBar.is_showing(), "gone again by itself")
+
+
+func test_off_never_strands_a_player_without_a_keyboard() -> void:
+	# Regression: "Off" on a phone left no controls at all.
+	TouchControls._keyboard_used = false
+	TouchControls._seen_touch = true
+	Settings.set_value("touch_controls", TouchControls.NEVER)
+	assert_true(TouchControls.active, "still there: no keyboard has been used")
+	var key := InputEventKey.new()
+	key.keycode = KEY_W
+	key.physical_keycode = KEY_W
+	key.pressed = true
+	TouchControls._input(key)
+	assert_false(TouchControls.active, "off once a keyboard is in use")
+	TouchControls._keyboard_used = false
+
+
+func test_the_buttons_cannot_be_faded_out_of_sight() -> void:
+	var tab := OptionsTab.new()
+	add_child_autofree(tab)
+	Settings.set_value("touch_opacity", 0.5)
+	for _i in 10:
+		tab.step_volume("touch_opacity", -1)
+	assert_gte(float(Settings.value("touch_opacity")), TouchControls.MIN_OPACITY)
+	Settings.set_value("touch_opacity", 0.6)

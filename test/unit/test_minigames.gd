@@ -140,3 +140,18 @@ func test_every_mini_game_draws_above_the_hud_like_other_panels() -> void:
 		assert_eq(game.layer, 16, "%s sits above the HUD" % game.kind)
 		assert_eq(game.process_mode, Node.PROCESS_MODE_ALWAYS)
 		game.free()
+
+
+func test_memory_cards_are_big_and_never_cut_a_word() -> void:
+	# Regression: Jory's seed chart chopped words at eight letters ("Fix nitr").
+	var game: MemoryGame = _open(MemoryGame.new(), "seed_pairs")
+	await wait_process_frames(2)
+	var card := game.card_rect(0)
+	assert_gt(card.size.y, 40.0, "tall enough for three lines")
+	for entry: Dictionary in game.board.cards:
+		var wrapped := MemoryGame.wrap_words(str(entry["text"]), card.size.x - 6.0)
+		assert_eq(" ".join(PackedStringArray(wrapped["lines"])), str(entry["text"]), "%s keeps every word whole" % entry["text"])
+		assert_lte(wrapped["lines"].size() * MemoryGame.LINE_HEIGHT, card.size.y, "%s fits its card" % entry["text"])
+		for line: String in wrapped["lines"]:
+			assert_lte(UiTheme.FONT_FILE.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, wrapped["size"]).x, card.size.x - 6.0, "'%s' fits across" % line)
+	game.leave()
