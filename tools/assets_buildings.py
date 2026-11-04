@@ -13,6 +13,7 @@ bottom centre, which is where the map places the building's marker.
 
 Writes assets/sprites/buildings/<look>.png. Run from game/.
 """
+import json
 import sys
 from pathlib import Path
 
@@ -167,6 +168,21 @@ def stone(w, h, base, seed):
 
 # ------------------------------------------------------------------ building
 
+def shade(img, rows, cols, factor):
+    """Multiplies the colour of a region (a number or a broadcastable array)."""
+    part = img[rows, cols, :3].astype(np.float32) * factor
+    img[rows, cols, :3] = np.clip(part, 0, 255).astype(np.uint8)
+
+
+def solid_rows(spec):
+    """How many tiles up from the ground the house is solid: its wall and a
+    little of the roof's foot. Above that the roof overhangs open ground you
+    can walk on, hidden behind the house (it turns see-through)."""
+    h = spec["tiles"][1] * TILE
+    roof_h = spec.get("roof", h // 2)
+    return max(1, min(spec["tiles"][1], -(-(h - roof_h + 6) // TILE)))
+
+
 def building(spec):
     w, h = spec["tiles"][0] * TILE, spec["tiles"][1] * TILE
     img = canvas(w, h)
@@ -185,13 +201,37 @@ def building(spec):
     fill(img, inset, h - base_h, w - inset, h, rgb(spec.get("base", "#4a4048")))
     fill(img, inset, h - base_h, w - inset, h - base_h + 1, rgb(spec.get("base", "#4a4048")) + 20)
 
-    # Roof: overhangs the walls, a ridge on top, a deep shadow under the eave.
+    # Light from the upper left: walls darken towards the right-hand corner and
+    # towards the ground, so the front reads as a face with depth.
+    wall_rows = slice(wall_top, h)
+    across = np.linspace(1.08, 0.82, w)[None, :, None]
+    shade(img, wall_rows, slice(0, w), across)
+    ground = np.ones((h - wall_top, 1, 1))
+    ground[-6:, 0, 0] = np.linspace(0.95, 0.7, 6)
+    shade(img, wall_rows, slice(0, w), ground)
+
+    # Roof: a hipped roof seen from above and in front. The front slope gets
+    # lighter towards the ridge, the two end slopes are in shade, a bright
+    # ridge runs along the top, and the eave overhangs the wall with a fascia
+    # board and a deep shadow beneath.
     roof = spec["roof_tex"](w, roof_h, seed + 7)
     paste(img, roof, 0, 0)
-    fill(img, 0, 0, w, 2, rgb(spec.get("ridge", "#d8c8a8")))
+    slope = np.linspace(1.18, 0.86, roof_h)[:, None, None]
+    shade(img, slice(0, roof_h), slice(0, w), slope)
+    hip = max(4, min(w // 5, roof_h))
+    for y in range(roof_h - 3):
+        reach = int(round(hip * (1 - y / max(roof_h - 3, 1))))
+        if reach > 0:
+            shade(img, slice(y, y + 1), slice(0, reach), 0.72)
+            shade(img, slice(y, y + 1), slice(w - reach, w), 0.62)
+    ridge = rgb(spec.get("ridge", "#d8c8a8"))
+    fill(img, hip, 0, w - hip, 2, ridge)
+    fill(img, hip, 2, w - hip, 3, ridge - 50)
+    fill(img, 0, roof_h - 3, w, roof_h - 2, rgb(spec.get("ridge", "#d8c8a8")) - 20)  # the fascia board
     fill(img, 0, roof_h - 2, w, roof_h, rgb("#1a1018"))
-    fill(img, inset, roof_h, w - inset, roof_h + 2, rgb("#000000") + 30)
-    img[roof_h:roof_h + 2, inset:w - inset, :3] = (img[roof_h:roof_h + 2, inset:w - inset, :3] * 0.55).astype(np.uint8)
+    under = np.ones((4, 1, 1))
+    under[:, 0, 0] = np.linspace(0.45, 0.85, 4)
+    shade(img, slice(roof_h, roof_h + 4), slice(inset, w - inset), under)
 
     # Windows either side of the door, with a warm glow behind the glass.
     door = pack(spec.get("door", "Door_1_Beige.png"))
@@ -371,8 +411,11 @@ LOOKS = {
 
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
+    shapes = {}
     for look, spec in LOOKS.items():
         write_png(str(OUT / f"{look}.png"), building(spec))
+        shapes[look] = {"tiles": list(spec["tiles"]), "solid_rows": solid_rows(spec)}
+    (ROOT / "data/building_looks.json").write_text(json.dumps(shapes, indent="\t") + "\n")
     print(f"drew {len(LOOKS)} buildings into {OUT}")
 
 

@@ -1,0 +1,86 @@
+{
+	"outpost_house": {
+		"tiles": [
+			5,
+			5
+		],
+		"solid_rows": 3
+	},
+	"outpost_shed": {
+		"tiles": [
+			4,
+			4
+		],
+		"solid_rows": 3
+	},
+	"metro_stairs": {
+		"tiles": [
+			4,
+			3
+		],
+		"solid_rows": 3
+	},
+	"factory_office": {
+		"tiles": [
+			6,
+			5
+		],
+		"solid_rows": 4
+	},
+	"dump_shack": {
+		"tiles": [
+			5,
+			4
+		],
+		"solid_rows": 3
+	},
+	"dump_hall": {
+		"tiles": [
+			6,
+			4
+		],
+		"solid_rows": 3
+	},
+	"river_boathouse": {
+		"tiles": [
+			5,
+			5
+		],
+		"solid_rows": 4
+	},
+	"fields_farmhouse": {
+		"tiles": [
+			6,
+			5
+		],
+		"solid_rows": 3
+	},
+	"fields_barn": {
+		"tiles": [
+			6,
+			5
+		],
+		"solid_rows": 4
+	},
+	"industry_bunker": {
+		"tiles": [
+			5,
+			4
+		],
+		"solid_rows": 3
+	},
+	"mine_mouth": {
+		"tiles": [
+			4,
+			3
+		],
+		"solid_rows": 2
+	},
+	"sanctuary_lab": {
+		"tiles": [
+			6,
+			5
+		],
+		"solid_rows": 4
+	}
+}

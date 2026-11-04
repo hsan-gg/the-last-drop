@@ -420,7 +420,8 @@ func _layout_panel(view: Vector2, s: float) -> void:
 		return _side(Vector2(x, view.y - from_bottom), view)
 	var ok_r: float = column.call(15.0)
 	var back_r: float = column.call(13.0)
-	_add("ok", "action", "interact", false, "OK", "", at.call(ok_r, 10.0 + ok_r), ok_r)
+	var ok_label: String = str(panel.get("touch_ok_label")) if panel != null and panel.get("touch_ok_label") != null else "OK"
+	_add("ok", "action", "interact", false, ok_label, "", at.call(ok_r, 10.0 + ok_r), ok_r)
 	var top := 10.0 + ok_r * 2.0
 	_add("back", "key", KEY_ESCAPE, false, "BACK", "", at.call(back_r, top + 8.0 + back_r), back_r)
 	top += 8.0 + back_r * 2.0

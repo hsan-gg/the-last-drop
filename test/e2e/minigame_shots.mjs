@@ -34,9 +34,10 @@ for (let i = 0; i < 80 && !(s = await state()).area; i++) {
 for (let i = 0; i < 20 && (await state()).dialogue_open; i++) await press("e");
 await drive("peace");
 await sleep(3000);
-for (const id of ["seed_pairs", "shed_fusebox", "halden_safe", "dump_pairs", "compost_mix", "dump_line", "river_pumps"]) {
+for (const id of ["water_cycle_pairs", "seed_pairs", "shed_fusebox", "halden_safe", "dump_pairs", "compost_mix", "dump_line", "river_pumps"]) {
   await drive("puzzle", id);
   await sleep(700);
+  if (id === "water_cycle_pairs") { for (const k of ["e", "ArrowRight", "e"]) await press(k); await sleep(150); }
   if (id === "seed_pairs") { for (const k of ["e", "ArrowRight", "e"]) await press(k); await sleep(150); }
   if (id === "dump_pairs") { await press("e"); await press("ArrowRight"); await press("e"); await sleep(200); }
   if (id === "compost_mix") { await press("ArrowRight"); await press("ArrowRight"); await press("ArrowDown"); await press("ArrowRight"); await press("e"); }

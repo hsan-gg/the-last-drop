@@ -72,6 +72,7 @@ take wrong "$UI/error_006.ogg" $FEEDBACK 0.5
 take sort_bad "$UI/error_004.ogg" $FEEDBACK 0.3
 take sort_ok "$UI/confirmation_001.ogg" $FEEDBACK 0.3
 take denied "$UI/error_001.ogg" $((FEEDBACK - 4)) 0.25
+take warn "$UI/bong_001.ogg" $FEEDBACK 0.5
 take dial "$KENNEY/metalClick.ogg" $((UI_LOUD - 2)) 0.15
 take unlock "$KENNEY/metalClick.ogg" $FEEDBACK 0.45
 take card_flip "$KENNEY/bookFlip1.ogg" $((UI_LOUD - 2)) 0.3

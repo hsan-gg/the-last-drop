@@ -84,10 +84,14 @@ func test_each_building_footprint_matches_its_sprite() -> void:
 			assert_gt(size.x, 0, "%s %s has a sprite" % [region, marker])
 			var door: Vector2i = MapBuilder.markers(layout, marker)[0]["cell"]
 			var left := door.x - size.x / 2 + (1 if size.x % 2 == 0 else 0)
+			var solid := Building.solid_rows(entities[marker]["props"]["look"])
 			for y in range(door.y - size.y + 1, door.y + 1):
 				for x in range(left, left + size.x):
 					var ch := layout[y][x]
-					assert_true(ch == "%" or ch == marker, "%s: %s footprint at (%d,%d) is '%s'" % [region, marker, x, y, ch])
+					if y > door.y - solid:  # the wall and the foot of the roof
+						assert_true(ch == "%" or ch == marker, "%s: %s footprint at (%d,%d) is '%s'" % [region, marker, x, y, ch])
+					else:  # under the overhanging roof: open ground you can walk behind
+						assert_false(MapBuilder.is_solid_char(ch), "%s: behind %s at (%d,%d) is walkable, not '%s'" % [region, marker, x, y, ch])
 			assert_false(MapBuilder.is_solid_char(layout[door.y + 1][door.x]), "%s: the step in front of %s is clear" % [region, marker])
 
 
@@ -97,3 +101,27 @@ func test_puzzle_stations_name_real_puzzles() -> void:
 			if definition["scene"] == "puzzle_station":
 				var puzzle := Content.puzzle(definition["props"]["puzzle_id"])
 				assert_false(puzzle.is_empty(), "%s: puzzle %s" % [room, definition["props"]["puzzle_id"]])
+
+
+func test_you_can_walk_behind_a_house_and_its_roof_turns_see_through() -> void:
+	var building := Building.new()
+	building.look = "outpost_house"
+	add_child_autofree(building)
+	var player := Node2D.new()
+	player.add_to_group("player")
+	add_child_autofree(player)
+	var size := Building.footprint("outpost_house") * MapBuilder.TILE_SIZE
+	var bottom := MapBuilder.TILE_SIZE / 2.0
+	var solid := Building.solid_rows("outpost_house") * MapBuilder.TILE_SIZE
+	var body: CollisionShape2D = building.find_children("*", "CollisionShape2D", true, false)[0]
+	assert_lt(body.shape.size.y, size.y - 20.0, "only the base of the house is solid, not its roof")
+	assert_almost_eq(body.position.y - body.shape.size.y / 2.0, bottom - solid, 6.0, "the solid part starts where the roof's overhang ends")
+	player.global_position = building.global_position + Vector2(0, bottom + 8.0)
+	assert_false(building.player_is_behind(), "in front of the door")
+	player.global_position = building.global_position + Vector2(0, bottom - size.y + 10.0)
+	assert_true(building.player_is_behind(), "behind the house, under its roof's overhang")
+	building._process(1.0)
+	assert_lt(building.get_node("Sprite").modulate.a, 0.6, "the roof fades so you can see yourself")
+	player.global_position = building.global_position + Vector2(300, 0)
+	building._process(1.0)
+	assert_gt(building.get_node("Sprite").modulate.a, 0.95, "solid again once you step away")

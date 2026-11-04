@@ -16,6 +16,9 @@ const BOARD_SIZE := Vector2(430, 120)
 
 ## Which "type" in data/puzzles.json this panel plays.
 var kind := ""
+## The board and panel sizes; a puzzle that needs more room sets these in _init.
+var board_size := BOARD_SIZE
+var panel_size := Vector2(452, 252)
 var _phase := Phase.IDLE
 var _puzzle_id := ""
 var _data: Dictionary = {}
@@ -28,7 +31,7 @@ var _hint: Label
 
 func _ready() -> void:
 	in_world = true
-	_build_shell(Vector2(452, 252), UiTheme.COLOR_TEAL)
+	_build_shell(panel_size, UiTheme.COLOR_TEAL)
 	EventBus.player_collapsed.connect(leave)
 	_title = _label("", UiTheme.COLOR_TEAL)
 	_box.add_child(_title)
@@ -36,7 +39,7 @@ func _ready() -> void:
 	_prompt = _label("", UiTheme.COLOR_TEXT)
 	_box.add_child(_prompt)
 	_board = Control.new()
-	_board.custom_minimum_size = BOARD_SIZE
+	_board.custom_minimum_size = board_size
 	_board.draw.connect(_draw_board)
 	_board.gui_input.connect(_on_board_gui_input)
 	_box.add_child(_board)

@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Stamps the walk-in buildings into the region maps (data/maps/<region>.txt).
 
-A building covers its sprite's footprint with '%' (solid ground the building
-stands on) and puts its marker on the door cell, bottom centre. For each one
+A building covers the solid part of its footprint with '%' (the wall and the
+foot of the roof; the rows above, under the overhanging roof, stay open ground
+you can walk behind) and puts its marker on the door cell, bottom centre. For each one
 this searches outward from a preferred door position for clear open ground
 (no paths, walls, markers or water, and a clear step in front of the door, well
 away from the spawn and the gates), then checks the door can be walked to from
@@ -17,7 +18,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 MAPS = ROOT / "data" / "maps"
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from assets_buildings import LOOKS  # noqa: E402
+from assets_buildings import LOOKS, solid_rows  # noqa: E402
 
 OPEN = set(".,rbMD:")
 # Small things a building may be built over (a dead tree, a crate; in the
@@ -78,10 +79,22 @@ def fits(grid, look, door, keep_away, clearable=CLEARABLE, open_ground=OPEN):
 
 def stamp(grid, look, door, marker):
     xs, ys = span(look)
+    solid = solid_rows(LOOKS[look])
     for dy in ys:
         for dx in xs:
-            grid[door[1] + dy][door[0] + dx] = "%"
+            grid[door[1] + dy][door[0] + dx] = "%" if dy > -solid else "."
     grid[door[1]][door[0]] = marker
+
+
+def open_behind(grid, look, door):
+    """Maps stamped before roofs overhung: the rows above the solid part go back
+    to open ground."""
+    xs, ys = span(look)
+    solid = solid_rows(LOOKS[look])
+    for dy in ys:
+        for dx in xs:
+            if dy <= -solid and grid[door[1] + dy][door[0] + dx] == "%":
+                grid[door[1] + dy][door[0] + dx] = "."
 
 
 def reachable(grid, start):
@@ -118,6 +131,7 @@ def place(name):
     keep_away = find(grid, "@") + find(grid, "^") + find(grid, "J") + find(grid, "G")
     for marker, look, preferred in BUILDINGS.get(name, []):
         if find(grid, marker):
+            open_behind(grid, look, find(grid, marker)[0])
             continue
         spot = None
         for radius in range(0, 30):

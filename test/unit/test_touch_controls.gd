@@ -406,3 +406,23 @@ func test_the_buttons_cannot_be_faded_out_of_sight() -> void:
 		tab.step_volume("touch_opacity", -1)
 	assert_gte(float(Settings.value("touch_opacity")), TouchControls.MIN_OPACITY)
 	Settings.set_value("touch_opacity", 0.6)
+
+
+func test_the_workbenchs_confirm_button_says_make() -> void:
+	Settings.set_value("touch_controls", TouchControls.ALWAYS)
+	var bench := CraftPanel.new()
+	add_child_autofree(bench)
+	bench.open_bench()
+	await wait_process_frames(2)
+	TouchControls.mode = TouchControls.Mode.PANEL
+	TouchControls._layout()
+	assert_eq(_button("ok")["label"], "MAKE", "the workbench's OK is MAKE")
+	bench.leave()
+	var puzzle := ConveyorGame.new()
+	add_child_autofree(puzzle)
+	puzzle.open_game("dump_line")
+	await wait_process_frames(2)
+	TouchControls.mode = TouchControls.Mode.PANEL
+	TouchControls._layout()
+	assert_eq(_button("ok")["label"], "OK", "other panels keep OK")
+	puzzle.leave()

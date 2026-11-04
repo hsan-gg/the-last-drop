@@ -11,6 +11,8 @@ extends CanvasLayer
 ## On touch screens: numbered buttons for panels you answer with 1, 2, 3...
 ## (everything else on a panel is tapped directly).
 var touch_digits := 0
+## What the confirm button on a touch screen says for this panel ("OK", "MAKE").
+var touch_ok_label := "OK"
 var in_world := false
 
 var _health_meter: Meter

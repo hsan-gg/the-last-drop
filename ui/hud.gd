@@ -280,8 +280,8 @@ func _place_tip_panel() -> void:
 	_tip_panel.anchor_bottom = _tip_panel.anchor_top
 	_tip_panel.offset_left = -96.0 if top_centre else -200.0
 	_tip_panel.offset_right = 96.0 if top_centre else -8.0
-	_tip_panel.offset_top = 26.0 if top_centre else -78.0
-	_tip_panel.offset_bottom = 60.0 if top_centre else -44.0
+	_tip_panel.offset_top = 36.0 if top_centre else -78.0
+	_tip_panel.offset_bottom = 70.0 if top_centre else -44.0
 
 
 func _refresh_quick() -> void:
@@ -362,6 +362,7 @@ func _build() -> void:
 	left.add_child(_lives_row)
 	left.add_child(RuneBar.new())
 	root.add_child(BossBar.new())
+	root.add_child(VitalWarning.new())
 	root.add_child(ChallengeTimer.new())
 	_area_title = AreaTitle.new()
 	root.add_child(_area_title)

@@ -47,6 +47,9 @@ func _on_command(args: Array) -> void:
 		"craft":
 			EventBus.craft_requested.emit()
 			_publish({"craft": true})
+		"water":  # set the water level, to see the thirst warnings
+			Survival.drink(float(argument) - Survival.water())
+			_publish({"water": Survival.water()})
 		"timescale":
 			Engine.time_scale = float(argument)
 			_publish({"timescale": Engine.time_scale})
@@ -160,6 +163,9 @@ func _state() -> Dictionary:
 	state["dialogue_open"] = dialogue != null
 	state["menu_open"] = _first_visible("GameMenu") != null
 	state["paused"] = get_tree().paused
+	var banner := _first_visible("VitalWarning") as VitalWarning
+	state["warning"] = banner.message() if banner != null else ""
+	state["warning_node"] = _find_all("VitalWarning").size()
 	if dialogue != null:
 		state["dialogue_text"] = (dialogue as DialogueBox).current_text()
 	var sorting := _first_visible("SortingChallenge") as SortingChallenge
