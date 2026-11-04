@@ -85,7 +85,7 @@ monsters and people: the Forgotten Outpost, the Battery Factory, the Great Dump,
 the Dead River, the Silent Fields, the Forgotten Industry and the Last Sanctuary.
 The story is written up in `docs/STORY.md` (kept up to date with every change).
 
-Houses are shaded to look three-dimensional (light from the upper left, a hipped roof, a ground shadow) and only their wall is solid: walk round behind one and its roof fades. A banner at the top warns when you are thirsty (water 25% or less), exhausted (no water, so you move slowly) or out of breath (no stamina).
+Houses are shaded to look three-dimensional (light from the upper left, a hipped roof, a ground shadow) and only their wall is solid: walk round behind one and its roof fades. A banner at the top warns when you are thirsty (only once your water is gone and you are slowed) or out of breath (no stamina).
 
 - **People:** eleven characters (`data/npcs.json`) with conversations that follow
   the story; a gold "!" means they have something new to say.

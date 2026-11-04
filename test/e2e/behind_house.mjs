@@ -64,11 +64,11 @@ await drive("water", "20");
 await sleep(500);
 await page.screenshot({ path: `${OUT}/warning_thirsty.png` });
 { const w = await state(); console.log("thirsty ->", JSON.stringify(w.warning), "nodes", w.warning_node, "water", w.water);
-  check("a thirst warning shows at 20 water", String(w.warning).startsWith("THIRSTY")); }
+  check("no warning yet at 20 water", String(w.warning) === ""); }
 await drive("water", "0");
 await sleep(500);
 await page.screenshot({ path: `${OUT}/warning_exhausted.png` });
-{ const w = await state(); check("an exhaustion warning shows at 0 water", String(w.warning).startsWith("EXHAUSTED")); }
+{ const w = await state(); check("the warning shows once slowed, at 0 water", String(w.warning).startsWith("THIRSTY")); }
 
 const passed = checks.filter(Boolean).length;
 console.log(`${passed}/${checks.length} checks passed`);

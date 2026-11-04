@@ -12,48 +12,34 @@ func after_each() -> void:
 	Survival.set_process(true)
 
 
-func test_no_warning_while_you_have_plenty_of_water() -> void:
+func test_no_warning_until_the_game_actually_slows_you() -> void:
 	var rules := VitalWarnings.new()
-	assert_eq(rules.update(100.0), VitalWarnings.Kind.NONE)
-	assert_eq(rules.update(40.0), VitalWarnings.Kind.NONE)
-
-
-func test_thirsty_when_water_runs_low_and_exhausted_when_it_is_gone() -> void:
-	var rules := VitalWarnings.new()
-	assert_eq(rules.update(VitalWarnings.THIRSTY_AT), VitalWarnings.Kind.THIRSTY)
-	assert_eq(rules.update(5.0), VitalWarnings.Kind.THIRSTY)
+	for water in [100.0, 60.0, 25.0, 10.0, 1.0]:
+		assert_eq(rules.update(water), VitalWarnings.Kind.NONE, "%d water: low, but not slowed yet" % water)
 	assert_eq(rules.update(0.0), VitalWarnings.Kind.EXHAUSTED)
+	assert_true(Survival.is_exhausted() == (Survival.water() <= 0.0), "the same condition that slows you")
 
 
-func test_a_warning_does_not_flicker_at_its_edge() -> void:
-	var rules := VitalWarnings.new()
-	rules.update(20.0)
-	assert_eq(rules.update(VitalWarnings.THIRSTY_AT + 2.0), VitalWarnings.Kind.THIRSTY, "still warning just above the line")
-	assert_eq(rules.update(VitalWarnings.THIRSTY_CLEARS_AT), VitalWarnings.Kind.NONE, "clears a little higher")
-
-
-func test_drinking_after_exhaustion_steps_back_through_thirsty() -> void:
+func test_the_warning_goes_the_moment_you_drink() -> void:
 	var rules := VitalWarnings.new()
 	rules.update(0.0)
-	assert_eq(rules.update(10.0), VitalWarnings.Kind.THIRSTY)
-	assert_eq(rules.update(60.0), VitalWarnings.Kind.NONE)
+	assert_eq(rules.update(10.0), VitalWarnings.Kind.NONE)
 
 
 func test_the_words_say_what_to_do() -> void:
-	assert_true(VitalWarnings.text_for(VitalWarnings.Kind.THIRSTY, "G").contains("drink water (G)"))
-	assert_true(VitalWarnings.text_for(VitalWarnings.Kind.EXHAUSTED, "G").contains("slowed"))
+	var text := VitalWarnings.text_for(VitalWarnings.Kind.EXHAUSTED, "G")
+	assert_true(text.contains("THIRSTY") and text.contains("slowed") and text.contains("Drink water (G)"))
 	assert_eq(VitalWarnings.text_for(VitalWarnings.Kind.NONE, "G"), "")
 
 
-func test_the_banner_shows_when_you_get_thirsty_then_exhausted_and_goes_when_you_drink() -> void:
+func test_the_banner_shows_only_once_you_are_slowed_and_goes_when_you_drink() -> void:
 	var banner := VitalWarning.new()
 	add_child_autofree(banner)
 	assert_false(banner.is_warning())
 	EventBus.survival_changed.emit(20.0, 100.0)
-	assert_true(banner.is_warning())
-	assert_true(banner.message().begins_with("THIRSTY"))
+	assert_false(banner.is_warning(), "low water is not a warning yet")
 	EventBus.survival_changed.emit(0.0, 100.0)
-	assert_true(banner.message().begins_with("EXHAUSTED"))
+	assert_true(banner.message().begins_with("THIRSTY"), "now you are slowed")
 	EventBus.survival_changed.emit(80.0, 100.0)
 	assert_false(banner.is_warning(), "drinking clears it")
 
@@ -62,12 +48,11 @@ func test_the_banner_makes_a_cue_once_when_a_warning_first_appears() -> void:
 	var banner := VitalWarning.new()
 	add_child_autofree(banner)
 	AudioManager.played.clear()
-	EventBus.survival_changed.emit(24.0, 100.0)
-	EventBus.survival_changed.emit(23.0, 100.0)
-	EventBus.survival_changed.emit(22.0, 100.0)
-	assert_eq(AudioManager.played.count("warn"), 1, "one cue, not one per tick")
+	EventBus.survival_changed.emit(20.0, 100.0)
+	assert_eq(AudioManager.played.count("warn"), 0, "silent while you are not slowed")
 	EventBus.survival_changed.emit(0.0, 100.0)
-	assert_eq(AudioManager.played.count("warn"), 2, "and another when it gets worse")
+	EventBus.survival_changed.emit(0.0, 99.0)
+	assert_eq(AudioManager.played.count("warn"), 1, "one cue when it appears, not one per tick")
 
 
 func test_running_out_of_stamina_says_out_of_breath_for_a_moment() -> void:
@@ -82,7 +67,7 @@ func test_running_out_of_stamina_says_out_of_breath_for_a_moment() -> void:
 func test_a_real_drop_in_water_triggers_the_warning() -> void:
 	var banner := VitalWarning.new()
 	add_child_autofree(banner)
-	Survival.tick(300.0)  # long enough for the water to drain right down
+	Survival.tick(500.0)  # long enough to drain every drop
 	assert_true(banner.is_warning(), "Survival's own signal reaches the banner")
 
 

@@ -1,7 +1,7 @@
 class_name VitalWarning
 extends Control
-## The banner that tells you that you are thirsty or exhausted (water low or
-## gone), or out of breath (no stamina to swing or guard). It pulses so it is
+## The banner that tells you that you are thirsty and slowed (no water left),
+## or out of breath (no stamina to swing or guard). It pulses so it is
 ## hard to miss, makes a cue once when a warning first appears, and sits above
 ## the top of the screen.
 
@@ -56,7 +56,7 @@ func _on_survival_changed(water: float, _health: float) -> void:
 	var before := rules.current
 	rules.update(water)
 	if rules.current != before and rules.current != VitalWarnings.Kind.NONE and rules.current > _shown:
-		EventBus.sfx_requested.emit("warn")  # a cue when it first appears or gets worse
+		EventBus.sfx_requested.emit("warn")  # a cue when it first appears
 	_shown = rules.current
 	_refresh()
 
