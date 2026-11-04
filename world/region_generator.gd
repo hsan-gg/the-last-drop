@@ -56,7 +56,7 @@ func _on_interacted(_by: Node) -> void:
 
 func _start() -> void:
 	GameState.set_flag(lit_flag(region_id))
-	EventBus.sfx_requested.emit("repair")
+	EventBus.sfx_requested.emit("generator_start")
 	EventBus.celebrate.emit(global_position)
 	Progress.add_xp(REWARD_XP)
 	Survival.heal(Survival.max_health())

@@ -31,8 +31,10 @@ func _on_interacted(_by: Node) -> void:
 		return
 	GameState.set_flag(_flag())
 	GameState.add_to_counter("chests_opened")
-	EventBus.sfx_requested.emit("loot")
+	EventBus.sfx_requested.emit("chest_open")
+	get_tree().create_timer(0.25).timeout.connect(EventBus.sfx_requested.emit.bind("loot"))
 	EventBus.celebrate.emit(global_position)
+	_pop_lid()
 	var found: Array[String] = []
 	for gear_id in gear:
 		if Gear.grant(gear_id):
@@ -43,6 +45,14 @@ func _on_interacted(_by: Node) -> void:
 		found.append("%s x%d" % [ItemDB.display_name(item_id), int(items[item_id])])
 	_refresh()
 	EventBus.loot_found.emit("Chest: %s" % (", ".join(found) if not found.is_empty() else "empty"))
+
+
+## The lid springs: a quick squash and stretch so opening feels physical.
+func _pop_lid() -> void:
+	var tween := _sprite.create_tween()
+	tween.tween_property(_sprite, "scale", Vector2(1.2, 0.8), 0.06)
+	tween.tween_property(_sprite, "scale", Vector2(0.9, 1.15), 0.08)
+	tween.tween_property(_sprite, "scale", Vector2.ONE, 0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 
 func _flag() -> String:

@@ -12,6 +12,8 @@ const STRIKE_FORGIVENESS := 8.0
 const PARRY_STAGGER_SECONDS := 1.3
 const HIT_STAGGER_SECONDS := 0.3
 const POISE_BREAK_DAMAGE := 20.0
+## How much a hit still pushes a zombie that is mid-swing (it holds its ground).
+const COMMITTED_KNOCKBACK := 0.25
 const SEPARATION_RADIUS := 12.0
 const PHYSICS_LAYER := 4
 ## A zombie stops this far short of its reach instead of pressing into the player.
@@ -122,6 +124,13 @@ func take_hit(damage: float, from_position: Vector2, knockback: float) -> void:
 	_update_bar()
 	if _hp <= 0.0:
 		_die()
+		return
+	if randf() < 0.5:
+		EventBus.sfx_requested.emit("enemy_hurt")
+	# Once a zombie has begun its swing it is committed: hitting it does not
+	# cancel the attack, so trading blows is a choice with a cost.
+	if _state == State.WINDUP or _state == State.STRIKE:
+		_knockback *= COMMITTED_KNOCKBACK
 		return
 	var poise: bool = _def.get("poise", false)
 	if not poise or damage >= POISE_BREAK_DAMAGE:
@@ -358,13 +367,22 @@ func _strike() -> void:
 func _move() -> void:
 	var desired := Vector2.ZERO
 	if _state == State.CHASE and _player != null and _distance() > float(_def["reach"]) * STANDOFF:
-		desired = (_player.global_position - global_position).normalized() * float(_def["speed"])
+		desired = _chase_direction() * float(_def["speed"])
 		desired += _separation() * float(_def["speed"]) * 0.6
 	elif _state == State.RECOVER and _player != null and _distance() < float(_def["reach"]) * STANDOFF:
 		# step back after a swing so it never stays glued to the player
 		desired = (global_position - _player.global_position).normalized() * float(_def["speed"]) * 0.5
 	velocity = desired + _knockback
 	move_and_slide()
+
+
+## Towards the player, round rivers and walls when they are in the way.
+func _chase_direction() -> Vector2:
+	var area := get_tree().current_scene as GameArea
+	if area == null or area.nav == null:
+		return (_player.global_position - global_position).normalized()
+	var way := area.nav.direction(global_position, _player.global_position)
+	return way if way != Vector2.ZERO else (_player.global_position - global_position).normalized()
 
 
 ## A gentle push away from other enemies so a pack spreads out instead of stacking.

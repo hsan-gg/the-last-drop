@@ -75,7 +75,7 @@ func choose(option: String) -> void:
 		_feedback.text = ""
 	else:
 		GameState.add_to_counter("puzzle_mistakes")
-		EventBus.sfx_requested.emit("sort_bad")
+		EventBus.sfx_requested.emit("wrong")
 		var damage := WRONG_DAMAGE * Difficulty.value("penalty")
 		Survival.damage(damage)
 		_feedback.text = "[color=#e0584a]NOT THAT ONE  -%d health[/color]\nStart again from the first step." % int(round(damage))

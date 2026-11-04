@@ -7,22 +7,36 @@ extends Node2D
 
 const SWORD_TEXTURE := preload("res://assets/sprites/sword.png")
 const SWEEP_RADIANS := 1.25
-const TRAIL_RADIUS := 17.0
 const GUARD_RADIUS := 14.0
 const GUARD_COLOR := Color(0.5, 0.9, 1.0, 0.75)
 const RAISE_SECONDS := 0.09
 const SPARK_COUNT := 9
+## How far the blade pulls back before the sweep.
+const WINDUP_EXTRA := 0.45
+const BLADE_LENGTH := 15.0
+const HAND_DISTANCE := 4.0
+const FOLLOW_THROUGH_SECONDS := 0.16
+const SMEAR_INNER := 6.0
+const SMEAR_OUTER := 19.0
+const STEEL := Color("#dfe8f0")
+const STEEL_EDGE := Color("#ffffff")
+const STEEL_SHADE := Color("#7f8ea0")
+const HILT := Color("#8a5a2c")
+const GUARD_METAL := Color("#e0b040")
 
 var _blade: Sprite2D
 var _guarding := false
 var _guard_angle := 0.0
 var _guard_strength := 0.0
-var _trail_angle := 0.0
-var _trail_from := 0.0
-var _trail_alpha := 0.0
 var _flash := 0.0
 var _tint := Color.WHITE
 var _raise_tween: Tween
+var _swinging := false
+var _swing_time := 0.0
+var _swing_windup := 0.07
+var _swing_sweep := 0.12
+var _swing_base := 0.0
+var _swing_facing := Vector2.DOWN
 
 
 func _ready() -> void:
@@ -36,22 +50,40 @@ func _ready() -> void:
 	add_child(_blade)
 
 
+## A full swing over `seconds`: a short pull back (anticipation), a fast
+## sweep with a crescent smear behind the blade, then a follow-through where
+## the blade lingers and fades. Drawn in _draw so it stays crisp at any angle.
 func swing(facing: Vector2, seconds: float, tint: Color) -> void:
-	var base := facing.angle()
 	_tint = tint
-	_trail_from = base - SWEEP_RADIANS
-	_trail_alpha = 0.9
-	_blade.visible = true
-	_blade.scale = Vector2.ONE
-	_blade.modulate = tint
-	_blade.position = facing * 3.0 + Vector2(8, 0).rotated(base)
-	_blade.rotation = base - SWEEP_RADIANS
-	var tween := create_tween().set_parallel()
-	tween.tween_property(_blade, "rotation", base + SWEEP_RADIANS, seconds).set_ease(Tween.EASE_OUT)
-	tween.tween_property(self, "_trail_alpha", 0.0, seconds * 1.6)
-	tween.chain().tween_callback(func() -> void: _blade.visible = false)
-	var angle_tween := create_tween()
-	angle_tween.tween_method(func(value: float) -> void: _trail_angle = value, base - SWEEP_RADIANS, base + SWEEP_RADIANS, seconds).set_ease(Tween.EASE_OUT)
+	_swing_base = facing.angle()
+	_swing_facing = facing
+	_swing_time = 0.0
+	_swing_windup = seconds * 0.35
+	_swing_sweep = seconds * 0.65
+	_swinging = true
+	_blade.visible = false
+	_put_behind_body(facing.y < -0.5)  # facing away: the blade is behind the body
+
+
+## Behind the body means drawn before the player's sprite at the same depth
+## (a negative z_index would sink it under the ground as well).
+func _put_behind_body(behind: bool) -> void:
+	z_index = 0 if behind else 5
+	if behind and get_parent() != null:
+		get_parent().move_child(self, 0)
+
+
+## Blade angle (radians) at swing time `t`, and how much of the sweep is done.
+func swing_pose(t: float) -> Dictionary:
+	var back := _swing_base - SWEEP_RADIANS
+	var wind := back - WINDUP_EXTRA
+	var finish := _swing_base + SWEEP_RADIANS
+	if t < _swing_windup:
+		var k := t / maxf(_swing_windup, 0.001)
+		return {"angle": lerpf(back, wind, ease(k, 0.5)), "sweep": 0.0}
+	var k2 := clampf((t - _swing_windup) / maxf(_swing_sweep, 0.001), 0.0, 1.0)
+	var eased := 1.0 - pow(1.0 - k2, 3.0)
+	return {"angle": lerpf(wind, finish, eased), "sweep": eased}
 
 
 ## Raises or lowers the guard. Raising snaps the blade up across the body.
@@ -66,7 +98,7 @@ func guard(active: bool, facing: Vector2) -> void:
 		_raise_tween.kill()
 	if active:
 		_blade.visible = true
-		_blade.modulate = Gear.weapon_color()
+		_blade.modulate = Color.WHITE.lerp(Gear.weapon_color(), 0.3)
 		_blade.scale = Vector2.ONE
 		_blade.rotation = _guard_angle
 		_blade.position = facing * 3.0
@@ -128,15 +160,73 @@ func _spark_burst(at: Vector2, color: Color, count: int) -> void:
 
 func _process(delta: float) -> void:
 	_flash = maxf(_flash - delta, 0.0)
+	if _swinging:
+		_swing_time += delta
+		if _swing_time > _swing_windup + _swing_sweep + FOLLOW_THROUGH_SECONDS:
+			_swinging = false
+			_put_behind_body(false)
 	queue_redraw()
 
 
 func _draw() -> void:
-	if _trail_alpha > 0.01:
-		var color := Color(_tint.r, _tint.g, _tint.b, _trail_alpha * 0.6)
-		draw_arc(Vector2.ZERO, TRAIL_RADIUS, _trail_from, _trail_angle, 14, color, 3.0)
+	if _swinging:
+		_draw_swing()
 	if _guarding:
 		var glow := Color(GUARD_COLOR.r, GUARD_COLOR.g, GUARD_COLOR.b, GUARD_COLOR.a * _guard_strength)
 		draw_arc(Vector2.ZERO, GUARD_RADIUS, _guard_angle - 0.95, _guard_angle + 0.95, 12, glow, 2.0)
 	if _flash > 0.0:
 		draw_circle(Vector2.ZERO, 12.0 + (0.25 - _flash) * 40.0, Color(1, 1, 1, _flash * 2.0))
+
+
+func _draw_swing() -> void:
+	var pose := swing_pose(_swing_time)
+	var angle: float = pose["angle"]
+	var after := maxf(_swing_time - _swing_windup - _swing_sweep, 0.0)
+	var fade := 1.0 - clampf(after / FOLLOW_THROUGH_SECONDS, 0.0, 1.0)
+	var hand := _swing_facing * HAND_DISTANCE
+	if float(pose["sweep"]) > 0.0:
+		_draw_smear(_swing_base - SWEEP_RADIANS - WINDUP_EXTRA, angle, fade)
+	_draw_blade(hand, angle, fade)
+
+
+## The crescent of motion behind the blade: brightest at the edge, thinning
+## towards its tail, like the smear frames hand-drawn games use.
+func _draw_smear(from_angle: float, to_angle: float, fade: float) -> void:
+	var slices := 10
+	var span := to_angle - from_angle
+	for index in slices:
+		var a0 := from_angle + span * float(index) / slices
+		var a1 := from_angle + span * float(index + 1) / slices
+		var strength := float(index + 1) / slices  # newest slice is strongest
+		var inner := SMEAR_INNER + (1.0 - strength) * 6.0
+		var points := PackedVector2Array([
+			Vector2.from_angle(a0) * inner, Vector2.from_angle(a0) * SMEAR_OUTER,
+			Vector2.from_angle(a1) * SMEAR_OUTER, Vector2.from_angle(a1) * inner,
+		])
+		var color := _tint.lerp(STEEL_EDGE, 0.75)
+		color.a = 0.7 * strength * strength * fade
+		draw_colored_polygon(points, color)
+	var rim := STEEL_EDGE
+	rim.a = 0.8 * fade
+	draw_arc(Vector2.ZERO, SMEAR_OUTER, to_angle - span * 0.35, to_angle, 6, rim, 1.0)
+
+
+func _draw_blade(hand: Vector2, angle: float, fade: float) -> void:
+	var along := Vector2.from_angle(angle)
+	var side := along.orthogonal()
+	var tip := hand + along * BLADE_LENGTH
+	var steel := STEEL.lerp(_tint, 0.25)
+	steel.a = fade
+	var shade := STEEL_SHADE
+	shade.a = fade
+	var edge := STEEL_EDGE
+	edge.a = fade
+	draw_line(hand + along * 3.0, tip, shade, 2.0)
+	draw_line(hand + along * 3.0, tip - along, steel, 1.0)
+	draw_line(hand + along * 6.0, tip - along * 3.0, edge, 1.0)
+	var guard_color := GUARD_METAL
+	guard_color.a = fade
+	draw_line(hand + along * 2.5 - side * 3.0, hand + along * 2.5 + side * 3.0, guard_color, 1.5)
+	var hilt := HILT
+	hilt.a = fade
+	draw_line(hand - along * 1.0, hand + along * 2.0, hilt, 2.0)

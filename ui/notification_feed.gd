@@ -26,7 +26,7 @@ const INK := Color("#f6ecd6")
 ## kind -> headline colour, icon, chime
 const KINDS := {
 	"objective_new": {"color": Color("#f2b45a"), "icon": "flag", "sound": "note_new"},
-	"objective_done": {"color": Color("#8fd27a"), "icon": "check", "sound": "note_quest"},
+	"objective_done": {"color": Color("#8fd27a"), "icon": "check", "sound": "task_done"},
 	"quest": {"color": Color("#f2d16b"), "icon": "star", "sound": "note_quest"},
 	"loot": {"color": Color("#7fd0e8"), "icon": "bag", "sound": "note_loot"},
 	"xp": {"color": Color("#b9e07a"), "icon": "spark", "sound": "note_xp"},

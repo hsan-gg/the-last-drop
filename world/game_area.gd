@@ -38,6 +38,8 @@ var _lit_tint := Color.WHITE
 var _hazard_timer := 0.0
 var _spawned := 0
 var ambience: Ambience
+## The way to the player round walls and water, shared by every zombie here.
+var nav: NavField
 var _reveal_timer := 0.0
 
 @onready var _entities: Node2D = $Entities
@@ -54,6 +56,7 @@ func _ready() -> void:
 
 	var layout := MapBuilder.load_layout(config["layout"])
 	_layout = layout
+	nav = NavField.new(layout)
 	_lit_tint = Color(config.get("lit_tint", "#f0e0c8"))
 	var definitions: Dictionary = config.get("entities", {})
 	var marker_chars := MapBuilder.SPAWN_MARKER + "".join(PackedStringArray(definitions.keys()))
@@ -116,6 +119,11 @@ func _check_hazards(delta: float) -> void:
 		Survival.damage(TOXIC_DAMAGE * Difficulty.value("penalty"))
 		EventBus.sfx_requested.emit("hurt")
 		FloatingText.spawn(_entities, "TOXIC!", _player.global_position, Color("#9be04a"))
+
+
+func _physics_process(_delta: float) -> void:
+	if nav != null and _player != null:
+		nav.set_target(_player.global_position)
 
 
 func _process(delta: float) -> void:

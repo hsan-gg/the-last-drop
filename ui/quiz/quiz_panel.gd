@@ -65,7 +65,7 @@ func answer(index: int) -> void:
 		EventBus.sfx_requested.emit("sort_ok")
 		_feedback.text = "[color=#7bc043]CORRECT[/color]  +water\n%s" % _quiz["explanation"]
 	else:
-		EventBus.sfx_requested.emit("sort_bad")
+		EventBus.sfx_requested.emit("wrong")
 		var correct_text: String = _quiz["options"][int(_quiz["answer"])]
 		var damage := WRONG_DAMAGE * Difficulty.value("penalty")
 		Survival.damage(damage)

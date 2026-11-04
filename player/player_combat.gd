@@ -115,6 +115,8 @@ func can_attack() -> bool:
 
 
 func attack() -> bool:
+	if state == State.BLOCK and stamina >= ATTACK_COST:
+		lower_guard()  # an attack cancels the guard: swing straight out of it
 	if state != State.IDLE:
 		return false
 	if stamina < ATTACK_COST:

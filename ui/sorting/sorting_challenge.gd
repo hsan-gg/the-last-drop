@@ -101,7 +101,7 @@ func choose_bin(bin_id: String) -> void:
 		_set_feedback(Phase.FEEDBACK_RIGHT, "[color=#7bc043]CORRECT[/color]\n%s\n[color=#f2c94c]In real life:[/color] %s" % [lesson.get("right", ""), lesson.get("real_life", "")])
 	else:
 		GameState.add_to_counter("sort_mistakes")
-		EventBus.sfx_requested.emit("sort_bad")
+		EventBus.sfx_requested.emit("wrong")
 		_streak = 0
 		_mistake_run += 1
 		var hurt := WRONG_SORT_DAMAGE * Difficulty.value("penalty")

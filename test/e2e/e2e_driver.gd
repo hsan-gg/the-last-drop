@@ -36,6 +36,14 @@ func _on_command(args: Array) -> void:
 		"flag":
 			GameState.set_flag(argument)
 			_publish({"flag": argument})
+		"warp":  # "x,y" in world pixels
+			var players := _find_all("Player")
+			if not players.is_empty():
+				(players[0] as Node2D).global_position = Vector2(float(argument.get_slice(",", 0)), float(argument.get_slice(",", 1)))
+			_publish({"warped": argument})
+		"timescale":
+			Engine.time_scale = float(argument)
+			_publish({"timescale": Engine.time_scale})
 		"scene":
 			SceneManager.change_scene("res://world/%s.tscn" % argument)
 			_publish({"scene": argument})
@@ -154,8 +162,10 @@ func _puzzle_state(puzzle: PuzzlePanel) -> Dictionary:
 func _player_state() -> Dictionary:
 	var players := _find_all("Player")
 	var position := (players[0] as Node2D).global_position if not players.is_empty() else Vector2.ZERO
+	var on_screen := (players[0] as Node2D).get_global_transform_with_canvas().origin / get_viewport().get_visible_rect().size if not players.is_empty() else Vector2.ZERO
 	return {
 		"x": position.x, "y": position.y,
+		"screen_u": on_screen.x, "screen_v": on_screen.y,
 		"health": Survival.health(), "max_health": Survival.max_health(),
 		"level": Progress.level, "xp": Progress.xp, "lives": Lives.lives,
 		"weapon": Gear.equipped("weapon"), "armor": Gear.armor(),

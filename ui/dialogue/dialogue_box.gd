@@ -32,6 +32,8 @@ var _opened_on_frame := -1
 var _anchor := Vector2.INF
 var _last_source: Node2D
 var _last_source_frame := -1
+var _voice_pitch := 1.0
+var _last_blip := -1
 
 var _root: Control
 var _stripe: ColorRect
@@ -104,6 +106,7 @@ func show_speech(lines: Array, speaker: Dictionary) -> void:
 	_name.add_theme_color_override("font_color", speaker.get("color", Color.WHITE))
 	_portrait.texture = speaker.get("portrait", null)
 	_portrait_frame.visible = _portrait.texture != null
+	_voice_pitch = voice_pitch_for(_name.text)
 
 
 ## Ends the conversation without finishing it, e.g. because the player was hit.
@@ -180,6 +183,7 @@ func _apply_speaker(speaker: Dictionary) -> void:
 	var icon_path: String = ICON_PATH_FORMAT % speaker["icon"] if speaker["icon"] != "" else ""
 	_portrait.texture = load(icon_path) if not icon_path.is_empty() and ResourceLoader.exists(icon_path) else null
 	_portrait_frame.visible = _portrait.texture != null
+	_voice_pitch = voice_pitch_for(String(speaker["name"]))
 
 
 func _show_line() -> void:
@@ -190,6 +194,7 @@ func _show_line() -> void:
 	_hint.text = "%d/%d   [E] %s" % [_index + 1, _lines.size(), "Close" if last else "Continue"]
 	if _typing != null:
 		_typing.kill()
+	_last_blip = -1
 	_typing = create_tween()
 	_typing.tween_method(_reveal, 0, line.length(), maxf(line.length() / (CHARS_PER_SECOND * Settings.text_speed_multiplier()), 0.05))
 	_typing.finished.connect(func() -> void: _text.visible_characters = -1)
@@ -198,8 +203,23 @@ func _show_line() -> void:
 func _reveal(count: Variant) -> void:
 	var characters := int(count)
 	_text.visible_characters = characters
-	if characters % BLIP_EVERY_N_CHARS == 0:
-		EventBus.sfx_requested.emit("blip")
+	# The tween reports the same count over several frames: speak each step once,
+	# and stay quiet on spaces so the voice follows the words.
+	if characters == _last_blip or characters % BLIP_EVERY_N_CHARS != 0:
+		return
+	_last_blip = characters
+	var line := _text.text
+	if characters > 0 and characters <= line.length() and line[characters - 1] == " ":
+		return
+	AudioManager.play("voice", _voice_pitch * randf_range(0.94, 1.06))
+
+
+## Everyone has their own voice: a pitch picked from their name, so Kip chirps
+## and Vex rumbles, the same every time.
+static func voice_pitch_for(speaker_name: String) -> float:
+	if speaker_name.is_empty():
+		return 1.0
+	return 0.75 + float(absi(speaker_name.hash()) % 1000) / 1000.0 * 0.6
 
 
 func _is_typing() -> bool:

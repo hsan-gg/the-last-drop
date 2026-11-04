@@ -28,7 +28,9 @@ func _ready() -> void:
 	collision_layer = Player.PHYSICS_LAYER
 	collision_mask = 1 | Enemy.PHYSICS_LAYER
 	motion_mode = CharacterBody2D.MOTION_MODE_FLOATING
-	add_child(SwordSwing.new())
+	var swing := SwordSwing.new()
+	swing.name = "Swing"  # PlayerCombat finds it by this name
+	add_child(swing)
 	combat = PlayerCombat.new()
 	combat.name = "Combat"
 	add_child(combat)

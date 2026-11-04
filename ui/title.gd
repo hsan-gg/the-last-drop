@@ -24,7 +24,6 @@ func _ready() -> void:
 
 
 func _on_start_pressed() -> void:
-	EventBus.sfx_requested.emit("click")
 	_picker.open_picker()
 
 
@@ -66,9 +65,7 @@ func _build() -> void:
 	_continue.custom_minimum_size = Vector2(120, 24)
 	_continue.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	_continue.visible = SaveGame.has_save()
-	_continue.pressed.connect(func() -> void:
-		EventBus.sfx_requested.emit("click")
-		SceneManager.continue_game())
+	_continue.pressed.connect(SceneManager.continue_game)
 	column.add_child(_continue)
 
 	_start = Button.new()

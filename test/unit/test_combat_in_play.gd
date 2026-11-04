@@ -183,11 +183,41 @@ func test_blocking_and_attacking_slow_the_player() -> void:
 	assert_lt(_player.combat.move_factor(), 1.0)
 
 
-func test_you_cannot_attack_while_blocking() -> void:
-	_player.combat.raise_guard()
+func test_the_sword_swing_is_drawn_when_attacking() -> void:
+	Gear.grant("rusty_sword")
+	var swing := _player.get_node_or_null("Swing") as SwordSwing
+	assert_not_null(swing, "combat finds the swing visuals by name")
 	_player.combat.attack()
-	assert_true(_player.combat.is_blocking())
-	assert_false(_player.combat.is_busy())
+	assert_true(swing._swinging, "attacking starts the blade animation")
+	var start: float = swing.swing_pose(0.0)["angle"]
+	var later: float = swing.swing_pose(0.15)["angle"]
+	assert_gt(absf(later - start), 1.5, "the blade sweeps through a wide arc")
+
+
+func test_attacking_cancels_the_guard_into_a_swing() -> void:
+	_player.combat.raise_guard()
+	assert_true(_player.combat.attack(), "an attack breaks out of the guard")
+	assert_false(_player.combat.is_blocking())
+	assert_true(_player.combat.is_busy())
+
+
+func test_a_zombie_mid_swing_is_not_interrupted_by_a_hit() -> void:
+	Gear.grant("rusty_sword")
+	var enemy := _enemy("walker", Vector2(14, 0))
+	_advance(enemy, 0.1)
+	assert_eq(enemy.state(), Enemy.State.WINDUP)
+	enemy.take_hit(5.0, Vector2.ZERO, 120.0)
+	assert_eq(enemy.state(), Enemy.State.WINDUP, "its attack is committed")
+	_advance(enemy, 0.7)
+	assert_lt(Survival.health(), Survival.max_health(), "and the blow still lands")
+
+
+func test_a_zombie_that_is_only_walking_still_flinches() -> void:
+	var enemy := _enemy("walker", Vector2(40, 0))
+	_advance(enemy, 0.1)
+	assert_eq(enemy.state(), Enemy.State.CHASE)
+	enemy.take_hit(5.0, Vector2.ZERO, 120.0)
+	assert_eq(enemy.state(), Enemy.State.STAGGER)
 
 
 # ------------------------------------------------------------- stamina and the guard
