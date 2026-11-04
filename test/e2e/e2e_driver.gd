@@ -41,6 +41,12 @@ func _on_command(args: Array) -> void:
 			if not players.is_empty():
 				(players[0] as Node2D).global_position = Vector2(float(argument.get_slice(",", 0)), float(argument.get_slice(",", 1)))
 			_publish({"warped": argument})
+		"puzzle":
+			EventBus.puzzle_requested.emit(argument)
+			_publish({"puzzle": argument})
+		"craft":
+			EventBus.craft_requested.emit()
+			_publish({"craft": true})
 		"timescale":
 			Engine.time_scale = float(argument)
 			_publish({"timescale": Engine.time_scale})

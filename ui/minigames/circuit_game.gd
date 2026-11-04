@@ -3,7 +3,7 @@ extends MiniGame
 ## Reconnect the line: turn each wire (or pipe) piece until every lamp (or tap)
 ## is joined to the source. Arrows move, E turns the piece under the cursor.
 
-const CELL := 18.0
+const CELL := 24.0
 const WIRE_ON := Color("#ffd84a")
 const PIPE_ON := Color("#5fd0ff")
 const OFF := Color("#5a5f6a")

@@ -108,7 +108,7 @@
 		"type": "circuit",
 		"style": "wire",
 		"size": [
-			4,
+			5,
 			3
 		],
 		"seed": 3,

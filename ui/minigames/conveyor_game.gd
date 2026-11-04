@@ -14,6 +14,7 @@ var queue: Array[String] = []
 var positions: Array[float] = []
 var correct := 0
 var missed := 0
+var _icons: Array[TextureRect] = []  ## one per item on the belt, moved each frame
 var _speed := 34.0
 var _need := 8
 var _total := 10
@@ -38,6 +39,18 @@ func _start(data: Dictionary) -> void:
 		positions.append(BELT_START - index * SPACING)
 	correct = 0
 	missed = 0
+	for icon in _icons:
+		icon.queue_free()
+	_icons.clear()
+	for item_id in queue:
+		var icon := TextureRect.new()
+		icon.texture = ItemDB.icon(item_id)
+		icon.size = Vector2(16, 16)
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		icon.visible = false
+		_board.add_child(icon)
+		_icons.append(icon)
 	_hint.text = "1 General  2 Hazardous  3 Recover  4 Compost   Esc leave"
 
 
@@ -77,6 +90,8 @@ func sort_front(bin_id: String) -> void:
 func _drop_front(right: bool) -> void:
 	queue.remove_at(0)
 	positions.remove_at(0)
+	if not _icons.is_empty():
+		_icons.pop_front().queue_free()
 	if right:
 		correct += 1
 	else:
@@ -103,14 +118,12 @@ func _draw_board() -> void:
 	_text(Vector2(BELT_END - 20, BELT_Y + 32), "SHREDDER", Color("#e0584a"), 8)
 	for index in queue.size():
 		var x := positions[index]
+		var at := Vector2(x - 8, BELT_Y - 16)
+		if index < _icons.size():
+			_icons[index].position = at
+			_icons[index].visible = x >= BELT_START - 16
 		if x < BELT_START - 16:
 			continue
-		var icon := ItemDB.icon(queue[index])
-		var at := Vector2(x - 8, BELT_Y - 16)
-		if icon != null:
-			_board.draw_texture_rect(icon, Rect2(at, Vector2(16, 16)), false)
-		else:
-			_board.draw_rect(Rect2(at, Vector2(14, 14)), Color("#a0a0a0"))
 		if index == 0:
 			_board.draw_rect(Rect2(at - Vector2(2, 2), Vector2(20, 20)), Color(1, 1, 1, 0.7), false, 1.0)
 	if not queue.is_empty() and positions[0] >= BELT_START:
