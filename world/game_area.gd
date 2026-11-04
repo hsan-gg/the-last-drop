@@ -341,7 +341,7 @@ func _on_penalty_spawn(reason: String) -> void:
 func _typed(value: Variant, current: Variant) -> Variant:
 	if value is Array and current is Vector2:
 		return Vector2(value[0], value[1])
-	if value is Array:
+	if value is Array and current is Array and (current as Array).get_typed_builtin() == TYPE_STRING:
 		var strings: Array[String] = []
 		strings.assign(value)
 		return strings

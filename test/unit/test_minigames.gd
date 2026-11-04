@@ -133,3 +133,10 @@ func test_winning_reports_through_puzzle_finished() -> void:
 	game.try_code()
 	game.leave()
 	assert_signal_emitted_with_parameters(EventBus, "puzzle_finished", ["barn_lock", true])
+
+
+func test_every_mini_game_draws_above_the_hud_like_other_panels() -> void:
+	for game: MiniGame in [CircuitGame.new(), LockGame.new(), MemoryGame.new(), MixGame.new(), ConveyorGame.new(), SignalGame.new()]:
+		assert_eq(game.layer, 16, "%s sits above the HUD" % game.kind)
+		assert_eq(game.process_mode, Node.PROCESS_MODE_ALWAYS)
+		game.free()

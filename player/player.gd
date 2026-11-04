@@ -44,6 +44,8 @@ func _ready() -> void:
 	visuals.name = "GearVisuals"
 	add_child(visuals)
 	_spawn_position = global_position
+	var area := get_tree().current_scene as GameArea
+	_indoors = area != null and Content.area(area.area_id).get("kind", "") == "interior"
 	EventBus.player_collapsed.connect(respawn)
 	EventBus.damage_taken.connect(_shake)
 
@@ -80,7 +82,25 @@ func receive_hit(raw_damage: float, from_position: Vector2) -> Dictionary:
 	return combat.receive_hit(raw_damage, from_position)
 
 
-func _physics_process(_delta: float) -> void:
+## Footsteps while walking: wood indoors, earth outside, never quite the same twice.
+const STEP_SECONDS := 0.34
+var _step_clock := 0.0
+var _indoors := false
+
+
+func _step_sounds(delta: float, moving: bool) -> void:
+	if not moving:
+		_step_clock = STEP_SECONDS * 0.6
+		return
+	_step_clock -= delta
+	if _step_clock > 0.0:
+		return
+	_step_clock = STEP_SECONDS
+	var sound := "step_wood_%d" % randi_range(1, 3) if _indoors else "step_%d" % randi_range(1, 4)
+	AudioManager.play(sound, randf_range(0.9, 1.1))
+
+
+func _physics_process(delta: float) -> void:
 	var direction := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	if Modal.any_open(get_tree()):  # busy at a panel: the world moves, you do not
 		direction = Vector2.ZERO
@@ -88,6 +108,7 @@ func _physics_process(_delta: float) -> void:
 		facing = direction.normalized()
 	velocity = direction * SPEED * Survival.speed_multiplier() * combat.move_factor()
 	move_and_slide()
+	_step_sounds(delta, velocity.length() > 5.0)
 	if not combat.is_busy():
 		_sprite.face(facing if combat.is_blocking() else direction, direction != Vector2.ZERO)
 	_sprite.scale = Vector2(1.08, 0.92) if combat.is_blocking() else Vector2.ONE

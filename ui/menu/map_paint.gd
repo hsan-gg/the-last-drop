@@ -15,6 +15,7 @@ const FOG := Color("#c4a874")
 const FOG_LINE := Color("#b0925e")
 const GOLD := Color("#e0a030")
 const RED := Color("#b8483a")
+const ROOF := Color("#a86a4a")
 
 
 ## A sheet of parchment: a darker rim and a few faint stains.
@@ -86,6 +87,11 @@ static func icon(canvas: CanvasItem, kind: String, at: Vector2, t: float, lit :=
 			canvas.draw_circle(at + Vector2(0, hop), 5.0, GOLD)
 			canvas.draw_rect(Rect2(at + Vector2(-1, -3 + hop), Vector2(2, 4)), INK)
 			canvas.draw_rect(Rect2(at + Vector2(-1, 2 + hop), Vector2(2, 1)), INK)
+		"house":  # a door you can go through
+			canvas.draw_colored_polygon(PackedVector2Array([at + Vector2(-5, -1), at + Vector2(0, -6), at + Vector2(5, -1)]), INK)
+			canvas.draw_rect(Rect2(at + Vector2(-4, -1), Vector2(8, 6)), Color("#f6e8c4"))
+			canvas.draw_rect(Rect2(at + Vector2(-4, -1), Vector2(8, 6)), INK, false, 1.0)
+			canvas.draw_rect(Rect2(at + Vector2(-1, 1), Vector2(3, 4)), INK)
 		"objective":
 			var pulse := 0.5 + 0.5 * sin(t * 4.0)
 			canvas.draw_arc(at, 5.0 + 2.0 * pulse, 0.0, TAU, 16, RED, 1.5)

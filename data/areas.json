@@ -1682,7 +1682,13 @@
 					"secret": true,
 					"persist": true,
 					"drops": {},
-					"xp": 20
+					"xp": 20,
+					"hides": [
+						13,
+						1,
+						17,
+						6
+					]
 				}
 			},
 			"c": {
@@ -1863,7 +1869,13 @@
 					"secret": true,
 					"persist": true,
 					"drops": {},
-					"xp": 20
+					"xp": 20,
+					"hides": [
+						9,
+						21,
+						15,
+						22
+					]
 				}
 			},
 			"k": {
@@ -2145,7 +2157,13 @@
 					"secret": true,
 					"persist": true,
 					"drops": {},
-					"xp": 20
+					"xp": 20,
+					"hides": [
+						10,
+						1,
+						12,
+						5
+					]
 				}
 			},
 			"c": {
@@ -2579,7 +2597,13 @@
 					"secret": true,
 					"persist": true,
 					"drops": {},
-					"xp": 20
+					"xp": 20,
+					"hides": [
+						42,
+						14,
+						42,
+						19
+					]
 				}
 			},
 			"o": {

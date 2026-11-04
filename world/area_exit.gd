@@ -43,7 +43,7 @@ func _on_interacted(_by: Node) -> void:
 			"Clear the zombies here and start the generator, then the gate will open.",
 		] as Array[String])
 		return
-	EventBus.sfx_requested.emit("click")
+	EventBus.sfx_requested.emit("door_open")
 	SceneManager.arrival_marker = arrive_marker
 	if cutscene.is_empty() or Cutscenes.has_seen(cutscene):
 		SceneManager.change_scene(target_scene)

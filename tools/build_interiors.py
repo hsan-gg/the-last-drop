@@ -127,8 +127,11 @@ def note(note_id, title, lines):
     return {"scene": "note", "props": {"note_id": note_id, "title": title, "lines": lines}}
 
 
-def cracked(tileset, part="top", drops=None):
-    return {"scene": "breakable", "props": {"sprite_name": f"cracked_{tileset}_{part}", "hits": 3, "secret": True, "persist": True, "drops": drops or {}, "xp": 20}}
+def cracked(tileset, part="top", hides=None, drops=None):
+    props = {"sprite_name": f"cracked_{tileset}_{part}", "hits": 3, "secret": True, "persist": True, "drops": drops or {}, "xp": 20}
+    if hides:
+        props["hides"] = list(hides)
+    return {"scene": "breakable", "props": props}
 
 
 def vein(kind, item, count=2):
@@ -180,7 +183,7 @@ def tobi_house():
             "A voice through the static: '...anyone on this band, the river is still moving...'",
             "Then nothing. But somebody is out there.",
         ]),
-        "x": cracked("home", "top"),
+        "x": cracked("home", "top", (13, 1, 17, 6)),
         "c": chest({"energy_bar": 2, "purified_water": 1, "textile_scrap": 2}),
     }, tint="#f0dcc0")
 
@@ -239,7 +242,7 @@ def metro():
         "|": gate("metro_key", "A service gate. A blue tag on the lock reads: MAINTENANCE KEY."),
         "c": chest({"rune_battery": 2, "coal": 2}, ["tire_vest"]),
         "l": chest({"bandage": 2, "energy_bar": 1}, ["scrap_blade"]),
-        "x": cracked("metro", "face"),
+        "x": cracked("metro", "face", (9, 21, 15, 22)),
         "k": vein("crystal", "crystal_shard", 2),
         "o": vein("copper", "copper_ore", 2),
         "q": vein("coal", "coal", 2),
@@ -306,7 +309,7 @@ def nana_shack():
             "Columns of trades in tiny writing: 'Six bottles: one tin of beans. One battery, sealed: two days of water.'",
             "On the last page: 'Kip's birthday. Find him something that is not rubbish.'",
         ]),
-        "x": cracked("shack", "face"),
+        "x": cracked("shack", "face", (10, 1, 12, 5)),
         "c": chest({"rune_battery": 1, "crystal_shard": 1}, ["hard_hat"]),
     }, tint="#e0c8a8")
 
@@ -431,7 +434,7 @@ def slag_mine():
         ]),
         "c": chest({"coal": 3, "copper_ore": 2}, ["scrap_plate"]),
         "l": chest({"crystal_shard": 3, "rune_battery": 2}, ["recycled_edge"]),
-        "x": cracked("cave", "face"),
+        "x": cracked("cave", "face", (42, 14, 42, 19)),
         "o": vein("copper", "copper_ore", 2), "i": vein("iron", "iron_ore", 2),
         "k": vein("crystal", "crystal_shard", 1), "q": vein("coal", "coal", 2),
         "Y": enemy("walker"), "Q": enemy("runner"), "R": enemy("rust_brute"),

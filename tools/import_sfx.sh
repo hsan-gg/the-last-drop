@@ -46,6 +46,14 @@ take rock_break "$RPG/stones_01.ogg" -3 0.7
 take dig "$V2/sfx100v2_wood_hit_01.ogg" -8 0.35 pitch -400
 take secret "$RPG/spell_02.ogg" -6 1.2
 
+# Footsteps: soft outdoors, hollow wood indoors.
+for i in 0 1 2 3; do
+	take "step_$((i + 1))" "$KENNEY/footstep0$i.ogg" -16 0.25
+done
+for i in 1 2 3; do
+	take "step_wood_$i" "$V2/sfx100v2_footstep_wood_0$i.ogg" -14 0.25
+done
+
 # Combat
 take swing "$PACK/battle/swing.wav" -7 0.25
 take hit "$RPG/blade_01.ogg" -5 0.3

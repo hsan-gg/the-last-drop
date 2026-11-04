@@ -13,6 +13,7 @@ var selected := 0
 
 
 func _init() -> void:
+	super()
 	kind = "mix"
 
 

@@ -790,5 +790,345 @@
 		"reward": {
 			"xp": 70
 		}
+	},
+	{
+		"id": "lights_on_at_tobis",
+		"area": "outpost",
+		"title": "Lights in the Shed",
+		"text": "Fix the fuse box in the Outpost's tool shed.",
+		"difficulty": "easy",
+		"category": "puzzle",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"puzzle_shed_fusebox_solved"
+			]
+		},
+		"reward": {
+			"xp": 30
+		}
+	},
+	{
+		"id": "radio_answer",
+		"area": "outpost",
+		"title": "Someone Is Out There",
+		"text": "Answer the signal on Tobi's old radio.",
+		"difficulty": "easy",
+		"category": "puzzle",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"puzzle_radio_handshake_solved"
+			]
+		},
+		"reward": {
+			"xp": 30,
+			"water": 10
+		}
+	},
+	{
+		"id": "into_the_metro",
+		"area": "outpost",
+		"title": "Under the Yard",
+		"text": "Wake the signal box in the old metro beneath the Outpost.",
+		"difficulty": "medium",
+		"category": "explore",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"puzzle_metro_lights_solved"
+			]
+		},
+		"reward": {
+			"xp": 60,
+			"health": 20
+		}
+	},
+	{
+		"id": "first_ore",
+		"area": "outpost",
+		"title": "Pick and Shovel",
+		"text": "Mine 3 ore veins with the pickaxe.",
+		"difficulty": "easy",
+		"category": "explore",
+		"goal": {
+			"type": "counter",
+			"key": "ore_mined",
+			"target": 3
+		},
+		"reward": {
+			"xp": 30
+		}
+	},
+	{
+		"id": "deep_miner",
+		"area": "industry",
+		"title": "Deep Miner",
+		"text": "Mine 15 ore veins.",
+		"difficulty": "hard",
+		"category": "explore",
+		"goal": {
+			"type": "counter",
+			"key": "ore_mined",
+			"target": 15
+		},
+		"reward": {
+			"xp": 120,
+			"health": 30
+		}
+	},
+	{
+		"id": "hidden_rooms",
+		"area": "outpost",
+		"title": "Walled Up",
+		"text": "Find 2 hidden rooms behind cracked walls.",
+		"difficulty": "medium",
+		"category": "explore",
+		"goal": {
+			"type": "counter",
+			"key": "secrets_found",
+			"target": 2
+		},
+		"reward": {
+			"xp": 60
+		}
+	},
+	{
+		"id": "all_hidden_rooms",
+		"area": "sanctuary",
+		"title": "Every Secret",
+		"text": "Find all 4 hidden rooms.",
+		"difficulty": "hard",
+		"category": "explore",
+		"goal": {
+			"type": "counter",
+			"key": "secrets_found",
+			"target": 4
+		},
+		"reward": {
+			"xp": 150,
+			"health": 40
+		}
+	},
+	{
+		"id": "handmade",
+		"area": "outpost",
+		"title": "Handmade",
+		"text": "Make something at a workbench.",
+		"difficulty": "easy",
+		"category": "learn",
+		"goal": {
+			"type": "counter",
+			"key": "items_crafted",
+			"target": 1
+		},
+		"reward": {
+			"xp": 25
+		}
+	},
+	{
+		"id": "master_maker",
+		"area": "industry",
+		"title": "Master Maker",
+		"text": "Make 6 things at a workbench.",
+		"difficulty": "hard",
+		"category": "learn",
+		"goal": {
+			"type": "counter",
+			"key": "items_crafted",
+			"target": 6
+		},
+		"reward": {
+			"xp": 120
+		}
+	},
+	{
+		"id": "reader",
+		"area": "factory",
+		"title": "Paper Trail",
+		"text": "Read 6 notes, letters and logs.",
+		"difficulty": "medium",
+		"category": "learn",
+		"goal": {
+			"type": "counter",
+			"key": "notes_read",
+			"target": 6
+		},
+		"reward": {
+			"xp": 50
+		}
+	},
+	{
+		"id": "hands_on",
+		"area": "dump",
+		"title": "Hands On",
+		"text": "Solve 5 hands-on puzzles (circuits, locks, boards, mixes, lines).",
+		"difficulty": "medium",
+		"category": "puzzle",
+		"goal": {
+			"type": "counter",
+			"key": "minigames_won",
+			"target": 5
+		},
+		"reward": {
+			"xp": 60,
+			"water": 15
+		}
+	},
+	{
+		"id": "fixer",
+		"area": "sanctuary",
+		"title": "The Fixer",
+		"text": "Solve 12 hands-on puzzles.",
+		"difficulty": "hard",
+		"category": "puzzle",
+		"goal": {
+			"type": "counter",
+			"key": "minigames_won",
+			"target": 12
+		},
+		"reward": {
+			"xp": 150,
+			"health": 40
+		}
+	},
+	{
+		"id": "halden_secret",
+		"area": "factory",
+		"title": "For Asha",
+		"text": "Open Halden's safe. Someone at the river kept the code.",
+		"difficulty": "medium",
+		"category": "puzzle",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"puzzle_halden_safe_solved"
+			]
+		},
+		"reward": {
+			"xp": 60
+		}
+	},
+	{
+		"id": "line_runner",
+		"area": "dump",
+		"title": "Line Runner",
+		"text": "Run the Recycling Hall's sorting line.",
+		"difficulty": "medium",
+		"category": "sort",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"puzzle_dump_line_solved"
+			]
+		},
+		"reward": {
+			"xp": 50
+		}
+	},
+	{
+		"id": "clear_water_tap",
+		"area": "river",
+		"title": "Clear From the Tap",
+		"text": "Open the boathouse pumps and pack the filter barrel.",
+		"difficulty": "medium",
+		"category": "learn",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"puzzle_river_pumps_solved",
+				"puzzle_filter_bed_solved"
+			]
+		},
+		"reward": {
+			"xp": 70,
+			"water": 30
+		}
+	},
+	{
+		"id": "living_heap",
+		"area": "fields",
+		"title": "A Living Heap",
+		"text": "Mix compost that will turn to soil in Lena's farmhouse.",
+		"difficulty": "easy",
+		"category": "learn",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"puzzle_compost_mix_solved"
+			]
+		},
+		"reward": {
+			"xp": 40
+		}
+	},
+	{
+		"id": "ask_the_robot",
+		"area": "fields",
+		"title": "Ask the Robot",
+		"text": "Open the barn's stall padlock. The sign says to ask the robot.",
+		"difficulty": "medium",
+		"category": "puzzle",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"puzzle_barn_lock_solved"
+			]
+		},
+		"reward": {
+			"xp": 60
+		}
+	},
+	{
+		"id": "maintenance",
+		"area": "industry",
+		"title": "Maintenance",
+		"text": "Run Unit-7's diagnostic.",
+		"difficulty": "easy",
+		"category": "puzzle",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"puzzle_unit7_diagnostic_solved"
+			]
+		},
+		"reward": {
+			"xp": 40
+		}
+	},
+	{
+		"id": "lift_power",
+		"area": "industry",
+		"title": "Lift Power",
+		"text": "Restore the Slag Mine's lift.",
+		"difficulty": "hard",
+		"category": "puzzle",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"puzzle_mine_lift_solved"
+			]
+		},
+		"reward": {
+			"xp": 90,
+			"health": 25
+		}
+	},
+	{
+		"id": "the_day_we_met",
+		"area": "sanctuary",
+		"title": "The Day We Met",
+		"text": "Open Ines's vault.",
+		"difficulty": "hard",
+		"category": "puzzle",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"puzzle_ines_vault_solved"
+			]
+		},
+		"reward": {
+			"xp": 120
+		}
 	}
 ]

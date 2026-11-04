@@ -20,6 +20,7 @@ var _total := 10
 
 
 func _init() -> void:
+	super()
 	kind = "conveyor"
 
 

@@ -18,10 +18,14 @@ const SPRITE_FORMAT := "res://assets/sprites/breakables/%s.png"
 ## Broken stays broken (walls). Ore leaves this off and grows back.
 @export var persist: bool = true
 @export var xp: int = 4
+## Map cells [x0, y0, x1, y1] of the room behind a secret wall: kept in
+## darkness until the wall breaks, so a hidden room is actually hidden.
+@export var hides: Array = []
 @export var spawn_key: String = ""
 
 var _left := 0
 var _sprite: Sprite2D
+var _cover: ColorRect
 
 
 func _ready() -> void:
@@ -43,6 +47,20 @@ func _ready() -> void:
 	collider.shape = shape
 	collider.position = Vector2(0, MapBuilder.TILE_SIZE / 2.0 - shape.size.y / 2.0)
 	add_child(collider)
+	if hides.size() == 4:
+		call_deferred("_cover_hidden_room")
+
+
+## Darkness over the room behind the wall, drawn above everything in it.
+func _cover_hidden_room() -> void:
+	var tile := float(MapBuilder.TILE_SIZE)
+	_cover = ColorRect.new()
+	_cover.color = Color("#0a0808")
+	_cover.position = Vector2(float(hides[0]), float(hides[1])) * tile
+	_cover.size = Vector2(float(hides[2]) - float(hides[0]) + 1.0, float(hides[3]) - float(hides[1]) + 1.0) * tile
+	_cover.z_index = 20
+	_cover.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	get_parent().get_parent().add_child(_cover)
 
 
 func is_ore() -> bool:
@@ -89,6 +107,10 @@ func _break() -> void:
 		GameState.add_to_counter("ore_mined")
 	if not found.is_empty():
 		EventBus.loot_found.emit(", ".join(found))
+	if _cover != null:
+		var reveal := _cover.create_tween()
+		reveal.tween_property(_cover, "modulate:a", 0.0, 0.8)
+		reveal.tween_callback(_cover.queue_free)
 	if secret:
 		GameState.add_to_counter("secrets_found")
 		EventBus.sfx_requested.emit("secret")

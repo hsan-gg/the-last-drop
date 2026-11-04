@@ -26,6 +26,9 @@ const MARKERS := [
 	{"group": "scene_repair_station", "icon": "repair"},
 	{"group": "scene_archive_terminal", "icon": "terminal"},
 	{"group": "scene_region_generator", "icon": "generator"},
+	{"group": "scene_building", "icon": "house"},
+	{"group": "scene_puzzle_station", "icon": "terminal"},
+	{"group": "scene_workbench", "icon": "repair"},
 ]
 
 var page := Page.AREA
@@ -105,7 +108,7 @@ func _draw_area(space: Rect2) -> void:
 		for x in map_size.x:
 			_draw_cell(origin, cell, x, y)
 	draw_rect(Rect2(origin, Vector2(map_size) * cell), MapPaint.INK, false, 1.0)
-	MapPaint.banner(self, origin + Vector2(map_size.x * cell / 2.0, -5), String(AREA_NAMES.get(_area_id, _area_id.capitalize())))
+	MapPaint.banner(self, origin + Vector2(map_size.x * cell / 2.0, -5), String(AREA_NAMES.get(_area_id, Content.area(_area_id).get("title", _area_id.capitalize()))))
 	_draw_area_markers(origin, cell)
 	MapPaint.compass(self, origin + Vector2(map_size.x * cell - 12, 14))
 	_draw_legend(Vector2(origin.x + map_size.x * cell + 10, origin.y + 2))
@@ -126,6 +129,8 @@ func _draw_cell(origin: Vector2, cell: int, x: int, y: int) -> void:
 		color = MapPaint.TOXIC
 	elif ch == "=":
 		color = MapPaint.ROAD
+	elif ch == MapBuilder.FOOTPRINT_CHAR:
+		color = MapPaint.ROOF
 	elif MapBuilder.is_solid_char(ch):
 		color = MapPaint.INK_SOFT
 	elif (x * 7 + y * 3) % 11 == 0:

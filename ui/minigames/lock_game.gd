@@ -12,6 +12,7 @@ var _code := ""
 
 
 func _init() -> void:
+	super()
 	kind = "lock"
 
 

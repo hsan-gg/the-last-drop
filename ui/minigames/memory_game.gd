@@ -15,6 +15,7 @@ var _clock := 0.0
 
 
 func _init() -> void:
+	super()
 	kind = "memory"
 
 

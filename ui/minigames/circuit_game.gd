@@ -14,6 +14,7 @@ var _style := "wire"
 
 
 func _init() -> void:
+	super()
 	kind = "circuit"
 
 

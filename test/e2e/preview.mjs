@@ -18,7 +18,9 @@ await page.goto(URL, { waitUntil: "load" });
 await page.waitForSelector("canvas", { timeout: 60000 });
 await page.waitForTimeout(4000);
 await page.mouse.click(480, 270);
-for (let i = 0; i < 8; i++) {
+// Rooms: skip the E presses that close the arrival dialogue (E at the door
+// would walk straight back out).
+for (let i = 0; i < (process.env.NO_E ? 0 : 8); i++) {
   await page.keyboard.press("e");
   await page.waitForTimeout(450);
 }

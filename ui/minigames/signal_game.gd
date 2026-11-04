@@ -17,6 +17,7 @@ var _lit_clock := 0.0
 
 
 func _init() -> void:
+	super()
 	kind = "signal"
 
 
@@ -104,6 +105,6 @@ func _draw_board() -> void:
 			_board.draw_circle(at, 18.0, Color(color.r, color.g, color.b, 0.35))
 		_board.draw_circle(at, 12.0, color if lit else color.darkened(0.65))
 		_board.draw_arc(at, 12.0, 0.0, TAU, 20, color.darkened(0.2), 1.0)
-		_text(at + Vector2(-20, 24 if index != 0 else -16), "%d %s" % [index + 1, ARROWS[index]], UiTheme.COLOR_MUTED, 8, 40, HORIZONTAL_ALIGNMENT_CENTER)
+		_text(at + Vector2(-32, 24 if index != 0 else -16), "%d %s" % [index + 1, ARROWS[index]], UiTheme.COLOR_MUTED, 8, 64, HORIZONTAL_ALIGNMENT_CENTER)
 	if sequence != null:
 		_text(Vector2(8, 14), "LENGTH %d / %d" % [sequence.sequence.size(), sequence.target_length], UiTheme.COLOR_MUTED)

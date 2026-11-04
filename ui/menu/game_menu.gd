@@ -159,6 +159,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		if _tabs[_index].tab_input(event):
 			get_viewport().set_input_as_handled()
 		return
+	# A panel in the world (a puzzle, the workbench, the sorting screen) owns Esc
+	# and the menu keys while it is open; the menu waits until it closes.
+	if not visible and Modal.any_open(get_tree()):
+		return
 	var hotkeys := {"equipment": INVENTORY, "journal": QUESTS, "map": MAP}
 	if not title_mode:
 		for action: String in hotkeys:

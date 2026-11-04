@@ -113,6 +113,17 @@
 				}
 			},
 			{
+				"id": "vault_code",
+				"lines": [
+					"The sixth of December. I don't know why I remember that.",
+					"Yes I do. That was the day I met her. Ines. At a bus stop in the rain.",
+					"If she locked something away, she'd use that day. Zero, six, one, two."
+				],
+				"flags": [
+					"tobi_remembered"
+				]
+			},
+			{
 				"id": "chatter",
 				"lines": [
 					"Mind the green puddles. My boots learned the hard way.",
@@ -221,6 +232,37 @@
 				]
 			},
 			{
+				"id": "copper_request",
+				"lines": [
+					"You have been digging. I can tell by the dirt.",
+					"Copper. Three pieces, if you find them. My lab's wiring is mostly hope.",
+					"Bring them and I'll rewire the lab lights, and make you something."
+				],
+				"flags": [
+					"power_restored"
+				],
+				"not_flags": [
+					"talked_halden_copper_thanks"
+				]
+			},
+			{
+				"id": "copper_thanks",
+				"lines": [
+					"Copper! Real copper. The lab will have light by tonight.",
+					"Here: crystal cells. I charged them from the lab. They feed your runes."
+				],
+				"items": {
+					"copper_ore": 3
+				},
+				"take": true,
+				"gives": {
+					"items": {
+						"rune_battery": 2
+					},
+					"xp": 60
+				}
+			},
+			{
 				"id": "chatter",
 				"lines": [
 					"Batteries are tiny chemistry sets. Treat them like it.",
@@ -275,6 +317,34 @@
 					"items": {
 						"purified_water": 1
 					}
+				}
+			},
+			{
+				"id": "crystal_trade",
+				"lines": [
+					"Crystal. From the deep mine, in the Industry. Bring me two.",
+					"Kip's birthday is coming. A child should have one thing that shines and isn't rubbish."
+				],
+				"flags": [
+					"region_lit_dump"
+				],
+				"not_flags": [
+					"talked_nana_ru_crystal_thanks"
+				]
+			},
+			{
+				"id": "crystal_thanks",
+				"lines": [
+					"Two crystals. You don't haggle. Bad trader. Good person.",
+					"Take this plate. A soldier's, from before. Kip will never know where the crystals came from."
+				],
+				"items": {
+					"crystal_shard": 2
+				},
+				"take": true,
+				"gives": {
+					"gear": "scrap_plate",
+					"xp": 70
 				}
 			},
 			{
@@ -419,6 +489,16 @@
 				]
 			},
 			{
+				"id": "note_for_tobi",
+				"lines": [
+					"If you go back to the Outpost, tell Tobi the river still remembers the two of them swimming.",
+					"No. Don't tell him. Just... see if he smiles."
+				],
+				"flags": [
+					"river_clean"
+				]
+			},
+			{
 				"id": "chatter",
 				"lines": [
 					"Boiling kills germs. It doesn't kill poison. Remember that.",
@@ -470,6 +550,34 @@
 					"items": {
 						"energy_bar": 2
 					}
+				}
+			},
+			{
+				"id": "water_request",
+				"lines": [
+					"The seedlings need clean water. Not the river, not yet.",
+					"Two flasks of purified water. A workbench can make them: sand, charcoal, a jar."
+				],
+				"not_flags": [
+					"talked_lena_water_thanks"
+				]
+			},
+			{
+				"id": "water_thanks",
+				"lines": [
+					"Clean water. Look at them drink.",
+					"Jory wants you to have these. He packed them himself. Badly."
+				],
+				"items": {
+					"purified_water": 2
+				},
+				"take": true,
+				"gives": {
+					"items": {
+						"energy_bar": 3,
+						"food_scraps": 2
+					},
+					"xp": 60
 				}
 			},
 			{
@@ -572,6 +680,33 @@
 				]
 			},
 			{
+				"id": "coal_request",
+				"lines": [
+					"My people are cold. The furnaces want coal and the mine is crawling.",
+					"Four lumps. You dig, I'll owe you."
+				],
+				"not_flags": [
+					"talked_vex_coal_thanks"
+				]
+			},
+			{
+				"id": "coal_thanks",
+				"lines": [
+					"Four lumps. The furnace will hold a week. My people will sleep warm.",
+					"I don't say this. Thank you. Take the key I found in the barn crate; I've no use for farms."
+				],
+				"items": {
+					"coal": 4
+				},
+				"take": true,
+				"gives": {
+					"items": {
+						"rusty_key": 1
+					},
+					"xp": 70
+				}
+			},
+			{
 				"id": "chatter",
 				"lines": [
 					"Read the labels, kid. Flammable, corrosive, toxic. The barrels don't lie.",
@@ -663,6 +798,13 @@
 						"bandage": 1
 					}
 				}
+			},
+			{
+				"id": "barn_reset",
+				"lines": [
+					"QUERY: Did the farmer find the padlock code? I logged it in my bunker. Entry 4,411.",
+					"I log everything. Nobody reads the logs. I log that too."
+				]
 			},
 			{
 				"id": "chatter",

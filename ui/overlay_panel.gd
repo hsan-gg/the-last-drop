@@ -72,12 +72,14 @@ func _add_health_row() -> HBoxContainer:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 4)
 	var heart := _label("HEALTH", UiTheme.COLOR_RED, 8)
+	heart.autowrap_mode = TextServer.AUTOWRAP_OFF
 	row.add_child(heart)
 	_health_meter = Meter.new()
 	_health_meter.custom_minimum_size = Vector2(90, 6)
 	_health_meter.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	row.add_child(_health_meter)
 	_health_label = _label("", UiTheme.COLOR_TEXT, 8)
+	_health_label.autowrap_mode = TextServer.AUTOWRAP_OFF
 	row.add_child(_health_label)
 	_box.add_child(row)
 	_on_survival_changed(Survival.water(), Survival.health())

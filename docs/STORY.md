@@ -111,6 +111,40 @@ systems you restored and the people you helped.
   wave tests the light.
 - **Unit-7's last log** (Sanctuary): found after the ending choice.
 
+## 6b. Places to walk into
+
+Every region has buildings you can enter (Stardew-style: the door is at the
+front, the room is its own place). Each holds a hands-on puzzle, something
+written down, and usually a secret.
+
+| Building | Region | Inside | Its little story |
+|---|---|---|---|
+| **Old Tobi's House** | Outpost | Workbench, Tobi's radio (signal puzzle), Tobi's diary, a walled-up pantry. | His diary lists what he must not forget: "Her name was Ines." He walled up the pantry and does not remember why. |
+| **The Tool Shed** | Outpost | Fuse box (circuit puzzle) that gives the **pickaxe**; a torn metro notice. | The pickaxe opens mining everywhere. |
+| **The Old Metro** (dungeon) | Under the Outpost | Ticket hall, concourse, platform; the signal box (signal puzzle) gives the metro key; a gated east platform; a sealed room behind the tunnel wall; coal, copper, crystal veins. | Where the last trains left. "They said the water would be fine by spring." |
+| **Halden's Office** | Factory | His wall safe (lock), the hazard board (memory), his memo. | The safe code is his daughter Asha's birthday. Only Osei, at the river, wrote it down. |
+| **The Recycling Hall** | Dump | The sorting line (conveyor), the pickers' board (memory), Kip's drawing. | "NANA RU AND ME AND THE SUN COMING BACK." |
+| **Nana Ru's Shack** | Dump | Her ledger, a hidden stash. | She is saving something for Kip's birthday. |
+| **Osei's Boathouse** | River | Pump valves (pipe circuit), the filter barrel (mix), Osei's ledger. | The ledger holds Halden's safe code: the cross-region key. |
+| **Lena's Farmhouse** | Fields | The compost heap (mix), Jory's seed chart (memory), Jory's drawing dated tomorrow. | Jory cannot speak, so he draws the future he wants. |
+| **The Old Barn** | Fields | A padlocked stall (lock); a gated back stall. | "Code from the plant, ask the robot." The code is in Unit-7's log in the Industry. |
+| **Vex's Bunker** | Industry | Workbench, Unit-7's diagnostic (signal), Unit-7's maintenance log. | Unit-7 logs everything. Nobody reads the logs. |
+| **The Slag Mine** (dungeon) | Industry | Long gallery with rails, two cuts, the lift power (circuit), a crystal grotto behind a hollow wall; iron, copper, crystal, coal. | "Rule 4: the wall at the far end of the east cut is hollow. Don't tell Vex." |
+| **Ines's Lab** | Sanctuary | Her vault (lock), the water-cycle board (memory), her letter to Tobi. | The vault code is the day she met Tobi. Only Tobi, once he remembers, can tell you: 0-6-1-2. Inside: the Solar Saber. |
+
+**Codes and chains across regions** (bring something, learn something elsewhere):
+- Halden's safe (Factory) <- Osei's ledger (River).
+- The barn padlock (Fields) <- Unit-7's log (Industry).
+- Ines's vault (Sanctuary) <- Tobi's memory (all five photographs returned).
+- Halden wants copper (mines); Nana Ru wants crystal for Kip (Slag Mine);
+  Lena wants purified water (workbench: sand, charcoal, a jar); Vex wants coal
+  for his people's furnaces and gives the barn's rusty key.
+
+**Mining and making.** Ore veins (copper, iron, crystal, coal) need the pickaxe
+and grow back each visit. The workbench (Tobi's house, Vex's bunker) makes
+water filters, bandages, rune batteries and gear up to the Solar Saber. The
+lesson: every metal you recycle is a hole you did not have to dig.
+
 ## 7. Monsters
 
 | Monster | Region | Behaviour | Teaches |
@@ -144,6 +178,9 @@ bar), which refills over time and with kills.
 | Arrivals, recordings, terminals, repairs | `data/dialogue.json` |
 | Gate cutscenes | `data/cutscenes.json` (`to_fields`, `to_industry`, `to_sanctuary`) |
 | Region looks, people and monsters | `data/areas.json` and `tools/generate_maps.py` |
+| Buildings, rooms, dungeons | `tools/place_buildings.py`, `tools/build_interiors.py` (maps, notes, puzzles' places) |
+| Hands-on puzzles and codes | `data/puzzles.json` (`type`: order, circuit, lock, memory, mix, conveyor, signal) |
+| What the workbench makes | `data/recipes.json` |
 | What ends the game | `data/chapters.json` (`ending_requires` on the Sanctuary) |
 
 ## 10. Changelog
@@ -161,3 +198,9 @@ bar), which refills over time and with kills.
   Unit-7's combat certification (3 kills in 60 s), and the Night of the Spoiled
   (lighting a region's generator draws one final wave). The epilogue now names
   what you changed: the restored systems, Tobi, Mira's radio, Vex sharing power.
+- 2026-11-04: Places to walk into: twelve rooms and dungeons with their own
+  architecture and stories (section 6b), hidden rooms, keys, mining, the
+  workbench, six new kinds of puzzle (circuits, locks, memory boards, mixes,
+  the sorting line, signals), codes that live in other regions, and four
+  cross-region requests (Halden's copper, Nana Ru's crystals for Kip, Lena's
+  clean water, Vex's coal). Tobi, once he remembers, gives the vault code.
