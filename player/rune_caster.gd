@@ -30,6 +30,10 @@ var _flame_tick := 0.0
 var _cooldowns := {}
 var _tracers: Array[Dictionary] = []
 var _rings: Array[Dictionary] = []
+## The flamethrower's fuel gauge beside the player: shown only while breathing
+## fire (and fading out just after), so the screen is clear the rest of the time.
+var _gauge := 0.0
+var _clock := 0.0
 
 
 func _ready() -> void:
@@ -56,6 +60,9 @@ func _physics_process(delta: float) -> void:
 				fire_scatter()
 			elif rune == "tide" and Input.is_action_just_pressed(action):
 				cast_tide()
+	_clock += delta
+	var holding_ember := _holding("ember")
+	_gauge = move_toward(_gauge, 1.0 if holding_ember else 0.0, delta / (0.12 if holding_ember else 0.5))
 	_flames.emitting = breathing
 	_flame_light.energy = lerpf(_flame_light.energy, 2.2 if breathing else 0.0, 0.25)
 	if breathing:
@@ -64,12 +71,20 @@ func _physics_process(delta: float) -> void:
 	queue_redraw()
 
 
-## True while a menu, quiz, puzzle or the sorting screen is open.
-func _blocked() -> bool:
-	for node in get_tree().get_nodes_in_group("modal"):
-		if (node as CanvasItem).visible if node is CanvasItem else (node as CanvasLayer).visible:
+func _holding(rune: String) -> bool:
+	for slot in [1, 2, 3]:
+		if Runes.in_slot(slot) == rune and Input.is_action_pressed("rune_%d" % slot) and not _blocked():
 			return true
 	return false
+
+
+func gauge_visible() -> bool:
+	return _gauge > 0.01
+
+
+## True while a menu, quiz, puzzle or the sorting screen is open.
+func _blocked() -> bool:
+	return Modal.any_open(get_tree())
 
 
 # ------------------------------------------------------------------ ember
@@ -231,6 +246,8 @@ func _age_effects(delta: float) -> void:
 
 
 func _draw() -> void:
+	if _gauge > 0.01:
+		_draw_fuel_gauge()
 	for tracer in _tracers:
 		var fade := 1.0 - float(tracer["age"]) / 0.14
 		draw_line(tracer["from"], tracer["to"], Color(1.0, 0.85, 0.4, fade * 0.5), 3.0)
@@ -247,3 +264,26 @@ func _draw() -> void:
 		else:
 			draw_arc(ring["at"], radius, 0.0, TAU, 40, Color(color.r, color.g, color.b, (1.0 - progress) * 0.9), float(ring.get("width", 2.0)))
 			draw_circle(ring["at"], radius, Color(color.r, color.g, color.b, (1.0 - progress) * 0.12))
+
+
+## A slim upright tank beside the head: fuel in fire colours that flickers at
+## the top, a little flame on the cap, and a red blink when it runs low.
+func _draw_fuel_gauge() -> void:
+	var alpha := _gauge
+	var at := Vector2(9, -14)
+	var tank := Rect2(at, Vector2(4, 16))
+	var fuel := clampf(Runes.energy / Runes.MAX_ENERGY, 0.0, 1.0)
+	var low := fuel < 0.25
+	draw_rect(tank.grow(1.0), Color(0.05, 0.03, 0.06, 0.85 * alpha))
+	var height := tank.size.y * fuel
+	var top := tank.end.y - height
+	var flicker := 0.5 + 0.5 * sin(_clock * 18.0)
+	draw_rect(Rect2(Vector2(tank.position.x, top), Vector2(tank.size.x, height)), Color(0.85, 0.22, 0.08, alpha))
+	draw_rect(Rect2(Vector2(tank.position.x, top), Vector2(tank.size.x, minf(height, 3.0))), Color(1.0, 0.6 + 0.2 * flicker, 0.2, alpha))
+	draw_rect(Rect2(Vector2(tank.position.x + 1, top), Vector2(1, height)), Color(1.0, 0.85, 0.5, 0.5 * alpha))
+	var frame := Color("#ff4a3a") if low and int(_clock * 6.0) % 2 == 0 else Color("#ffb070")
+	frame.a = alpha
+	draw_rect(tank.grow(1.0), frame, false, 1.0)
+	var cap := at + Vector2(2, -4)
+	draw_colored_polygon(PackedVector2Array([cap + Vector2(0, -4 - flicker), cap + Vector2(-2.5, 1), cap + Vector2(2.5, 1)]), Color(1.0, 0.45, 0.1, alpha))
+	draw_colored_polygon(PackedVector2Array([cap + Vector2(0, -1.5 - flicker), cap + Vector2(-1.2, 1), cap + Vector2(1.2, 1)]), Color(1.0, 0.95, 0.6, alpha))

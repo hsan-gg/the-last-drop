@@ -88,3 +88,17 @@ func test_the_tide_heals_and_puts_out_fires() -> void:
 	assert_true(caster.cast_tide())
 	assert_gt(Survival.health(), before)
 	assert_false(enemy.is_burning())
+
+
+func test_the_rune_bar_stays_hidden_until_a_rune_is_used() -> void:
+	Runes.reset()
+	var bar := RuneBar.new()
+	add_child_autofree(bar)
+	assert_false(bar.visible, "nothing to show without a rune")
+	Runes.grant("ember")
+	assert_true(bar.is_shown(), "a new rune is shown off")
+	bar._clock += 60.0
+	assert_false(bar.is_shown(), "then it gets out of the way")
+	bar.show_for()
+	assert_true(bar.is_shown(), "using a rune brings it back")
+	Runes.reset()

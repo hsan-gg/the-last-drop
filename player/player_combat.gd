@@ -162,9 +162,10 @@ func lower_guard() -> void:
 
 func _physics_process(delta: float) -> void:
 	_clock += delta
-	if Input.is_action_just_pressed("attack"):
+	var hands_free := not Modal.any_open(get_tree())
+	if hands_free and Input.is_action_just_pressed("attack"):
 		attack()
-	if Input.is_action_just_pressed("block"):
+	if hands_free and Input.is_action_just_pressed("block"):
 		raise_guard()
 	if state == State.BLOCK:
 		_hold_guard(delta, Input.is_action_pressed("block"))

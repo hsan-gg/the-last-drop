@@ -1,42 +1,62 @@
 class_name RuneBar
 extends HBoxContainer
-## The runes on the HUD: a purple energy bar and a slot per rune, showing its
-## key and its picture, dimmed while you cannot afford it. Hidden until you own one.
+## The runes on the HUD: a slot per rune, each with its pixel icon, key, and
+## energy filling it from below. It stays out of the way: it fades in when you
+## use a rune (or find a new one) and fades out a moment after you stop.
 
-const SLOT := Vector2(14, 14)
+const SLOT := Vector2(16, 16)
+const LINGER_SECONDS := 2.2
+const FADE_SECONDS := 0.35
 
-var _energy: Meter
-var _slots: Array[Control] = []
+var _slots: Array[RuneSlot] = []
+var _shown_until := -1.0
+var _clock := 0.0
 
 
 func _ready() -> void:
 	add_theme_constant_override("separation", 3)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_energy = Meter.new()
-	_energy.custom_minimum_size = Vector2(40, 5)
-	_energy.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	_energy.fill_color = Color("#b070f0")
-	add_child(_energy)
+	modulate.a = 0.0
 	for slot in 3:
 		var view := RuneSlot.new()
 		view.slot = slot + 1
 		view.custom_minimum_size = SLOT
 		_slots.append(view)
 		add_child(view)
-	EventBus.runes_changed.connect(_refresh)
-	EventBus.energy_changed.connect(func(value: float, maximum: float) -> void: _energy.ratio = value / maximum)
+	EventBus.runes_changed.connect(_on_runes_changed)
 	_refresh()
+
+
+func is_shown() -> bool:
+	return _clock < _shown_until
+
+
+## Brings the bar up for a while (used when a rune key is pressed or one is found).
+func show_for(seconds: float = LINGER_SECONDS) -> void:
+	_shown_until = maxf(_shown_until, _clock + seconds)
+
+
+func _on_runes_changed() -> void:
+	_refresh()
+	if not Runes.owned.is_empty():
+		show_for(LINGER_SECONDS * 2.0)
 
 
 func _refresh() -> void:
 	visible = not Runes.owned.is_empty()
-	_energy.ratio = Runes.energy / Runes.MAX_ENERGY
 	for view in _slots:
-		view.visible = not Runes.in_slot((view as RuneSlot).slot).is_empty()
+		view.visible = not Runes.in_slot(view.slot).is_empty()
 		view.queue_redraw()
 
 
-func _process(_delta: float) -> void:
-	if visible:
-		for view in _slots:
-			view.queue_redraw()
+func _process(delta: float) -> void:
+	_clock += delta
+	if not visible:
+		return
+	for view in _slots:
+		view.active = Input.is_action_pressed("rune_%d" % view.slot) and not Runes.in_slot(view.slot).is_empty()
+		if view.active:
+			show_for()
+		view.queue_redraw()
+	var target := 1.0 if is_shown() else 0.0
+	modulate.a = move_toward(modulate.a, target, delta / FADE_SECONDS)

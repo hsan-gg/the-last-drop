@@ -20,7 +20,8 @@ var _hint: Label
 
 
 func _ready() -> void:
-	_build_shell(Vector2(420, 190), UiTheme.COLOR_ORANGE)
+	in_world = true
+	_build_shell(Vector2(420, 204), UiTheme.COLOR_ORANGE)
 	EventBus.player_collapsed.connect(abandon)
 	_build_contents()
 	EventBus.quiz_requested.connect(_on_quiz_requested)
@@ -69,6 +70,7 @@ func answer(index: int) -> void:
 		var correct_text: String = _quiz["options"][int(_quiz["answer"])]
 		var damage := WRONG_DAMAGE * Difficulty.value("penalty")
 		Survival.damage(damage)
+		_flash_health(damage)
 		_feedback.text = "[color=#e0584a]NOT QUITE  -%d health[/color]\nThe answer: %s\n%s" % [int(round(damage)), correct_text, _quiz["explanation"]]
 	# Counters last, so a quest that completes on this answer fires after the feedback is set.
 	if not _was_correct:
@@ -94,6 +96,10 @@ func abandon() -> void:
 	_hide_panel()
 
 
+func leave() -> void:
+	abandon()
+
+
 func _on_quiz_requested(lesson_ids: Array) -> void:
 	open_quiz(QuizRules.pick(lesson_ids))
 
@@ -112,6 +118,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _build_contents() -> void:
 	_box.add_child(_label("FIELD CHECK", UiTheme.COLOR_ORANGE))
+	_add_health_row()
 	_question = _label("", UiTheme.COLOR_TEXT, 8)
 	_question.custom_minimum_size = Vector2(0, 20)
 	_box.add_child(_question)

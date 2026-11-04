@@ -82,6 +82,8 @@ func receive_hit(raw_damage: float, from_position: Vector2) -> Dictionary:
 
 func _physics_process(_delta: float) -> void:
 	var direction := Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	if Modal.any_open(get_tree()):  # busy at a panel: the world moves, you do not
+		direction = Vector2.ZERO
 	if direction != Vector2.ZERO and not combat.is_busy():
 		facing = direction.normalized()
 	velocity = direction * SPEED * Survival.speed_multiplier() * combat.move_factor()

@@ -8,8 +8,11 @@ const FADE_SECONDS := 1.4
 const PLAYING_DB := -3.0
 const SILENT_DB := -60.0
 const COMBAT_TRACK := "combat"
-## Seconds of calm before leaving the combat track.
-const CALM_SECONDS := 4.0
+## Seconds of calm before leaving the combat track: short, so the fight music
+## stops soon after the fight does instead of droning on.
+const CALM_SECONDS := 1.2
+## The fight is over: the combat track drops away quickly.
+const COMBAT_EXIT_FADE := 0.6
 const POLL_SECONDS := 0.4
 
 var _players: Array[AudioStreamPlayer] = []
@@ -44,7 +47,7 @@ func area_track() -> String:
 
 
 ## Crossfades to a track. Unknown tracks and repeats are ignored.
-func play(track: String, loop: bool = true) -> void:
+func play(track: String, loop: bool = true, fade_seconds: float = FADE_SECONDS) -> void:
 	if track == _current:
 		return
 	var path := PATH_FORMAT % track
@@ -62,7 +65,7 @@ func play(track: String, loop: bool = true) -> void:
 	_current = track
 	var fade := create_tween().set_parallel()
 	fade.tween_property(incoming, "volume_db", PLAYING_DB, FADE_SECONDS)
-	fade.tween_property(outgoing, "volume_db", SILENT_DB, FADE_SECONDS)
+	fade.tween_property(outgoing, "volume_db", SILENT_DB, fade_seconds)
 	fade.chain().tween_callback(outgoing.stop)
 
 
@@ -96,4 +99,4 @@ func _process(delta: float) -> void:
 	if wants_combat(hunters, _calm_for, _current == COMBAT_TRACK):
 		play(COMBAT_TRACK)
 	elif _current == COMBAT_TRACK:
-		play(_area_track)
+		play(_area_track, true, COMBAT_EXIT_FADE)

@@ -25,8 +25,9 @@ const BIN_KEYS := {
 	KEY_4: SortingRules.BIN_COMPOST,
 }
 
-## Tests turn this off so the tree keeps running.
-@export var pauses_game: bool = true
+## Sorting happens in the world: time does not stop, so keep an eye out.
+## (A zombie's blow knocks you away from the pile; what you sorted is kept.)
+@export var pauses_game: bool = false
 
 var _phase := Phase.IDLE
 var _pile_id := ""
@@ -59,6 +60,10 @@ func _ready() -> void:
 	EventBus.sorting_requested.connect(open)
 	EventBus.survival_changed.connect(_on_survival_changed)
 	EventBus.player_collapsed.connect(leave)
+	EventBus.player_hit.connect(func(_outcome: String, _damage: Variant) -> void:
+		if visible:
+			leave()
+			EventBus.tip_requested.emit("Attacked! You were knocked away from the pile."))
 
 
 func phase() -> Phase:
@@ -284,7 +289,7 @@ func _build() -> void:
 	add_child(_root)
 
 	var dim := ColorRect.new()
-	dim.color = Color(0, 0, 0, 0.62)
+	dim.color = Color(0, 0, 0, 0.32)
 	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_root.add_child(dim)
 

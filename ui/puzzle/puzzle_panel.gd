@@ -24,7 +24,8 @@ var _hint: Label
 
 
 func _ready() -> void:
-	_build_shell(Vector2(452, 230), UiTheme.COLOR_TEAL)
+	in_world = true
+	_build_shell(Vector2(452, 244), UiTheme.COLOR_TEAL)
 	EventBus.player_collapsed.connect(leave)
 	_build_contents()
 	EventBus.puzzle_requested.connect(_on_puzzle_requested)
@@ -78,6 +79,7 @@ func choose(option: String) -> void:
 		EventBus.sfx_requested.emit("wrong")
 		var damage := WRONG_DAMAGE * Difficulty.value("penalty")
 		Survival.damage(damage)
+		_flash_health(damage)
 		_feedback.text = "[color=#e0584a]NOT THAT ONE  -%d health[/color]\nStart again from the first step." % int(round(damage))
 	_refresh()
 
@@ -146,6 +148,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func _build_contents() -> void:
 	_title = _label("", UiTheme.COLOR_TEAL)
 	_box.add_child(_title)
+	_add_health_row()
 	_prompt = _label("", UiTheme.COLOR_TEXT)
 	_prompt.custom_minimum_size = Vector2(0, 20)
 	_box.add_child(_prompt)
