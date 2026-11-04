@@ -295,3 +295,36 @@ func test_the_android_back_button_is_the_games_back_not_quit() -> void:
 	var back := TouchControls.key_event(KEY_ESCAPE, true)
 	assert_true(back.is_action_pressed("menu"), "it opens or closes the menu")
 	assert_true(back.is_action_pressed("ui_cancel"), "it leaves a panel")
+
+
+func test_panel_buttons_stand_beside_the_panel_not_over_it() -> void:
+	# Regression: on a phone the buttons covered the menu's map and footer.
+	Settings.set_value("touch_controls", TouchControls.ALWAYS)
+	var game := ConveyorGame.new()
+	add_child_autofree(game)
+	game.open_game("dump_line")
+	await wait_process_frames(2)
+	TouchControls.mode = TouchControls.Mode.PANEL
+	TouchControls._layout()
+	var frame := game.panel_rect()
+	assert_gt(frame.size.x, 0.0)
+	for button in TouchControls.buttons:
+		var centre: Vector2 = button["center"]
+		var reach: float = button["radius"]
+		assert_true(centre.x - reach >= frame.end.x - 0.5 or centre.x + reach <= frame.position.x + 0.5, "%s is clear of the panel" % button["id"])
+	game.leave()
+
+
+func test_play_buttons_do_not_overlap_each_other_or_the_use_prompt() -> void:
+	_play_layout()
+	var view := TouchControls.get_viewport().get_visible_rect().size
+	var lane := TouchControls.bottom_lane()
+	var prompt := Rect2(lane.x, view.y - 32.0, view.x - lane.x - lane.y, 24.0)  # the HUD's "USE: ..." strip
+	var list := TouchControls.buttons
+	for i in list.size():
+		var a: Dictionary = list[i]
+		var box := Rect2(a["center"] - Vector2.ONE * a["radius"], Vector2.ONE * a["radius"] * 2.0)
+		assert_false(box.intersects(prompt), "%s is clear of the prompt" % a["id"])
+		for j in range(i + 1, list.size()):
+			var b: Dictionary = list[j]
+			assert_gt((a["center"] as Vector2).distance_to(b["center"]), float(a["radius"]) + float(b["radius"]), "%s and %s apart" % [a["id"], b["id"]])

@@ -131,7 +131,3 @@ func _draw_icon(icon: String, c: Vector2, r: float, ink: Color) -> void:
 			draw_polyline(fold, ink, 1.0, true)
 			draw_line(c + Vector2(-1.5, -5) * u, c + Vector2(-1.5, 4) * u, ink, 1.0)
 			draw_line(c + Vector2(1.5, -4) * u, c + Vector2(1.5, 5) * u, ink, 1.0)
-		"up", "down", "left", "right":
-			var dir := {"up": Vector2.UP, "down": Vector2.DOWN, "left": Vector2.LEFT, "right": Vector2.RIGHT}[icon] as Vector2
-			var tip := c + dir * 4.5 * u
-			draw_colored_polygon(PackedVector2Array([tip, c - dir * 2.5 * u + dir.orthogonal() * 4.5 * u, c - dir * 2.5 * u - dir.orthogonal() * 4.5 * u]), ink)

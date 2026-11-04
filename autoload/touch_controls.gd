@@ -29,7 +29,11 @@ const KEYBOARD_DEVICE := 16
 const SENT_BY_TOUCH := &"sent_by_touch"
 const STICK_RADIUS := 24.0
 const STICK_TOP_MARGIN := 34.0
-const SIZES: Array[float] = [0.85, 1.0, 1.2]
+## Small, Normal, Large. Normal gives the sword button about a 13 mm face on
+## a typical phone, near the size thumbs need to hit it without looking.
+const SIZES: Array[float] = [1.15, 1.4, 1.7]
+## How far outside a button's ring a touch still counts, in game pixels.
+const TOUCH_SLOP := 6.0
 const MOUSE_FREE_ACTIONS: Array[String] = ["attack", "block"]
 const TAP_BUZZ_MS := 12
 ## Buttons whose action already makes a sound (a swing, a guard, a rune, a
@@ -105,6 +109,15 @@ func hint(keyboard: String, touch: String) -> String:
 	return touch if active else keyboard
 
 
+## The free strip along the bottom edge between the stick and the buttons, as
+## (space taken on the left, space taken on the right), in game pixels.
+func bottom_lane() -> Vector2:
+	var s := _scale()
+	var stick_side := (50.0 + STICK_RADIUS) * s + 6.0
+	var button_side := (108.0 + 8.0) * s + 6.0
+	return Vector2(button_side, stick_side) if bool(Settings.value("touch_left_handed")) else Vector2(stick_side, button_side)
+
+
 func stick_vector() -> Vector2:
 	return TouchStick.knob(_stick_offset, STICK_RADIUS * _scale()) if _stick_finger >= 0 else Vector2.ZERO
 
@@ -123,7 +136,7 @@ func prompt_ready() -> bool:
 
 func button_at(point: Vector2) -> Dictionary:
 	for button in buttons:
-		var reach: float = button["radius"] + 4.0
+		var reach: float = button["radius"] + TOUCH_SLOP
 		if point.distance_to(button["center"]) <= reach:
 			return button
 	return {}
@@ -363,8 +376,9 @@ func _layout_play(view: Vector2, s: float) -> void:
 	for slot in range(1, 4):
 		if not Runes.in_slot(slot).is_empty():
 			_add("rune_%d" % slot, "action", "rune_%d" % slot, true, "", "rune", right.call(rune_spots[slot - 1].x, rune_spots[slot - 1].y), 10 * s)
-	_add("quick_heal", "action", "quick_heal", false, "", "bandage", right.call(116, 14), 8 * s)
-	_add("quick_drink", "action", "quick_drink", false, "", "drop", right.call(136, 14), 8 * s)
+	# A column beside the guard, clear of the "USE: ..." prompt at the bottom.
+	_add("quick_heal", "action", "quick_heal", false, "", "bandage", right.call(108, 31), 8 * s)
+	_add("quick_drink", "action", "quick_drink", false, "", "drop", right.call(108, 52), 8 * s)
 	# Up top, left of the task list (which opens with a tap of its own).
 	var top := func(dx: float) -> Vector2: return _side(Vector2(view.x - dx, 14 * s), view)
 	_add("menu", "action", "menu", false, "", "bars", top.call(104 + 10 * s), 9 * s)
@@ -373,22 +387,35 @@ func _layout_play(view: Vector2, s: float) -> void:
 
 func _layout_panel(view: Vector2, s: float) -> void:
 	var panel := _open_panel()
-	var right := func(dx: float, dy: float) -> Vector2: return _side(Vector2(view.x - dx * s, view.y - dy * s), view)
-	var left := func(dx: float, dy: float) -> Vector2: return _side(Vector2(dx * s, view.y - dy * s), view)
 	# OK is "interact", which every panel takes as confirm (Enter would be
 	# swallowed by whichever menu button happens to hold the focus).
-	_add("ok", "action", "interact", false, "OK", "", right.call(26, 28), 15 * s)
+	# The buttons stand in the strip beside the open panel, never over it: a
+	# column centred in that strip, sized to fit it.
+	var strip := _strip_beside(panel, view)
+	var column := func(radius: float) -> float: return minf(radius * s, strip / 2.0 - 3.0) if strip > 0.0 else radius * s
+	var at := func(radius: float, from_bottom: float) -> Vector2:
+		var x := view.x - (strip / 2.0 if strip > 0.0 else radius + 6.0)
+		return _side(Vector2(x, view.y - from_bottom), view)
+	var ok_r: float = column.call(15.0)
+	var back_r: float = column.call(13.0)
+	_add("ok", "action", "interact", false, "OK", "", at.call(ok_r, 10.0 + ok_r), ok_r)
 	var back_label := "SKIP" if _any_visible("cutscene_ui") else "BACK"
+	var top := 10.0 + ok_r * 2.0
 	if not _any_visible("dialogue_ui") or panel != null:
-		_add("back", "key", KEY_ESCAPE, false, back_label, "", right.call(24, 68), 13 * s)
-	if panel != null and bool(panel.get("touch_dpad")):
-		_add("up", "key", KEY_UP, false, "", "up", left.call(36, 64), 11 * s)
-		_add("down", "key", KEY_DOWN, false, "", "down", left.call(36, 20), 11 * s)
-		_add("left", "key", KEY_LEFT, false, "", "left", left.call(14, 42), 11 * s)
-		_add("right", "key", KEY_RIGHT, false, "", "right", left.call(58, 42), 11 * s)
+		_add("back", "key", KEY_ESCAPE, false, back_label, "", at.call(back_r, top + 8.0 + back_r), back_r)
+		top += 8.0 + back_r * 2.0
 	var digits := int(panel.get("touch_digits")) if panel != null and panel.get("touch_digits") != null else 0
+	var digit_r: float = column.call(11.0)
 	for i in digits:
-		_add("digit_%d" % (i + 1), "key", KEY_1 + i, false, str(i + 1), "", right.call(22, 98 + 24 * i), 10 * s)
+		_add("digit_%d" % (i + 1), "key", KEY_1 + i, false, str(i + 1), "", at.call(digit_r, top + 8.0 + digit_r + i * (digit_r * 2.0 + 5.0)), digit_r)
+
+
+## How wide the empty strip is between the open panel and the screen's edge.
+func _strip_beside(panel: Node, view: Vector2) -> float:
+	if panel == null or not panel.has_method("panel_rect"):
+		return 0.0
+	var rect: Rect2 = panel.panel_rect()
+	return maxf(view.x - rect.end.x, 0.0) if rect.size.x > 0.0 else 0.0
 
 
 func _add(id: String, kind: String, target: Variant, hold: bool, label: String, icon: String, center: Vector2, radius: float) -> void:

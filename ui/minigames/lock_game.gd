@@ -13,7 +13,6 @@ var _code := ""
 
 func _init() -> void:
 	super()
-	touch_dpad = true
 	kind = "lock"
 
 

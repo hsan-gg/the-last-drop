@@ -123,6 +123,7 @@ func _flash_damage(amount: float) -> void:
 func _on_prompt_changed(text: String) -> void:
 	_prompt_panel.visible = not text.is_empty()
 	_prompt_label.text = "%s %s" % [TouchControls.hint("[E]", "USE:"), text]
+	_prompt_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 
 
 func _on_survival_changed(water: float, health: float) -> void:
@@ -242,6 +243,29 @@ func _on_settings_changed() -> void:
 	_tracker.refresh()
 	_refresh_quick()
 	_place_tip_panel()
+	_place_prompt_panel()
+
+
+## The "E: talk" prompt sits bottom centre; on touch it fits the lane between
+## the stick and the buttons, so neither covers the other.
+func _place_prompt_panel() -> void:
+	if _prompt_panel == null:
+		return
+	_prompt_panel.anchor_top = 1.0
+	_prompt_panel.anchor_bottom = 1.0
+	_prompt_panel.offset_top = -32.0
+	_prompt_panel.offset_bottom = -8.0
+	if TouchControls.active:
+		var lane: Vector2 = TouchControls.bottom_lane()
+		_prompt_panel.anchor_left = 0.0
+		_prompt_panel.anchor_right = 1.0
+		_prompt_panel.offset_left = lane.x
+		_prompt_panel.offset_right = -lane.y
+	else:
+		_prompt_panel.anchor_left = 0.5
+		_prompt_panel.anchor_right = 0.5
+		_prompt_panel.offset_left = -130.0
+		_prompt_panel.offset_right = 130.0
 
 
 ## Tips sit bottom right, or top centre on a touch screen, where the bottom
@@ -361,17 +385,12 @@ func _build() -> void:
 	tip_row.add_child(_tip_label)
 
 	_prompt_panel = PanelContainer.new()
-	_prompt_panel.anchor_left = 0.5
-	_prompt_panel.anchor_right = 0.5
-	_prompt_panel.anchor_top = 1.0
-	_prompt_panel.anchor_bottom = 1.0
-	_prompt_panel.offset_left = -130.0
-	_prompt_panel.offset_right = 130.0
-	_prompt_panel.offset_top = -32.0
-	_prompt_panel.offset_bottom = -8.0
+	_place_prompt_panel()
 	_prompt_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.add_child(_prompt_panel)
 	_prompt_label = Label.new()
+	_prompt_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS  # never wider than its lane
+	_prompt_label.clip_text = true
 	_prompt_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_prompt_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_prompt_panel.add_child(_prompt_label)

@@ -16,7 +16,6 @@ var _clock := 0.0
 
 func _init() -> void:
 	super()
-	touch_dpad = true
 	kind = "memory"
 
 
@@ -26,7 +25,7 @@ func _start(data: Dictionary) -> void:
 	_misses = 0
 	_free_misses = int(data.get("free_misses", board.cards.size() / 2))
 	_hide_at = -1.0
-	_hint.text = TouchControls.hint("Arrows move   E turn a card   Esc leave", "Tap a card, or arrows + OK   BACK leave")
+	_hint.text = TouchControls.hint("Arrows move   E turn a card   Esc leave", "Tap the cards to turn them   BACK leave")
 
 
 func _process(delta: float) -> void:

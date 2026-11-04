@@ -18,14 +18,13 @@ var _list: VBoxContainer
 
 
 func _ready() -> void:
-	touch_dpad = true
 	_build_shell(Vector2(240, 190), UiTheme.COLOR_YELLOW)
 	_box.add_child(_label("RAIL CART", UiTheme.COLOR_YELLOW))
 	_box.add_child(_label("Where to? Only lit regions have power for the cart.", UiTheme.COLOR_MUTED))
 	_list = VBoxContainer.new()
 	_list.add_theme_constant_override("separation", 2)
 	_box.add_child(_list)
-	_box.add_child(_label(TouchControls.hint("Up/Down or 1-7: choose   E: go   Esc: stay", "Tap a stop, or arrows + OK   BACK: stay"), UiTheme.COLOR_MUTED))
+	_box.add_child(_label(TouchControls.hint("Up/Down or 1-7: choose   E: go   Esc: stay", "Tap a stop, then tap it again to go   BACK: stay"), UiTheme.COLOR_MUTED))
 
 
 ## The regions the cart can reach from `here`: lit, visited, and not here.

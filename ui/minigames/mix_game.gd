@@ -14,7 +14,6 @@ var selected := 0
 
 func _init() -> void:
 	super()
-	touch_dpad = true
 	kind = "mix"
 
 

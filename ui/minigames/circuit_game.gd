@@ -15,7 +15,6 @@ var _style := "wire"
 
 func _init() -> void:
 	super()
-	touch_dpad = true
 	kind = "circuit"
 
 
@@ -24,7 +23,7 @@ func _start(data: Dictionary) -> void:
 	board = CircuitBoard.new(int(size[0]), int(size[1]), int(data.get("seed", 1)))
 	_style = data.get("style", "wire")
 	cursor = board.source
-	_hint.text = TouchControls.hint("Arrows move   E turn   Esc leave", "Tap a tile to turn it, or arrows + OK   BACK leave")
+	_hint.text = TouchControls.hint("Arrows move   E turn   Esc leave", "Tap a tile to turn it   BACK leave")
 
 
 func _board_input(event: InputEvent) -> void:

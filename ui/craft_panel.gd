@@ -12,7 +12,6 @@ var _open := false
 
 
 func _ready() -> void:
-	touch_dpad = true
 	in_world = true
 	_build_shell(Vector2(440, 240), UiTheme.COLOR_YELLOW)
 	_box.add_child(_label("WORKBENCH", UiTheme.COLOR_YELLOW))

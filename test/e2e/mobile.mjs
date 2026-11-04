@@ -147,7 +147,7 @@ await sleep(400);
 s = await state();
 check("the menu button opens the menu", s.menu_open);
 t = await touch();
-check("over the menu the buttons turn into OK, BACK and arrows", t.mode === "PANEL" && Boolean(button(t, "back")) && Boolean(button(t, "up")));
+check("over the menu the buttons turn into OK and BACK", t.mode === "PANEL" && Boolean(button(t, "back")) && Boolean(button(t, "ok")));
 await shot("6_menu");
 check("the OPTIONS tab answers a tap", await tapText("OPTIONS"));
 await sleep(300);
