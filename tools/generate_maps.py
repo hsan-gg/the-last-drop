@@ -25,6 +25,8 @@ from collections import deque
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import place_buildings  # noqa: E402
 MAPS = ROOT / "data" / "maps"
 
 BLOCKING = set("#~CFPtBSH")
@@ -490,6 +492,7 @@ def main():
         check_reachable(name, grid)
         (MAPS / f"{name}.txt").write_text(grid.text())
         print(f"{name}: {grid.w}x{grid.h} ok, every interactable is reachable")
+        place_buildings.place(name)  # the walk-in buildings go back on
 
 
 if __name__ == "__main__":

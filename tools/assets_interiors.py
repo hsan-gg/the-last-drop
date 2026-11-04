@@ -337,11 +337,11 @@ def cave():
     floor = "#4a3e36"
     return atlas([
         dirt(floor, 24, 3), dirt("#463a32", 25, 4), dirt("#4e423a", 26, 2),
-        dirt(floor, 27, 9), wall_top("#241c18"), water("#2a4a5a", 28),
+        dirt(floor, 27, 9), wall_top("#120e0c"), water("#2a4a5a", 28),
         debris(floor, ["#4a7a4a", "#5a8a5a"], 29), stone_floor("#5a5048", 30), rails(floor, 31),
-        counter("#7a5a3a", "#4a3a2a"), rock_face("#5a4e46", 32),
+        counter("#7a5a3a", "#4a3a2a"), rock_face("#7a6a5c", 32),
         table("#6a4a2a", "#3a2a1a"), floorboards("#5a4030", 33), dirt("#2e2622", 34), toxic(floor),
-        stalagmite("#6a5e54"), rock_face("#4e443c", 35), machine("#4a4a50", "#f0a030"),
+        stalagmite("#6a5e54"), rock_face("#7e6e60", 35), machine("#4a4a50", "#f0a030"),
         debris(floor, ["#d8d0c0", "#6a6058"], 36), boulder("#6a6058"),
     ])
 

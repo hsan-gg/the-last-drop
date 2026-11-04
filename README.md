@@ -24,6 +24,9 @@ Open `game/` in Godot and press F5, or run the web build (see Export).
 | I / Q / M | Open the menu on Inventory / Quests / Map |
 | Tab or PgDn (in the menu) | Next page |
 | 1 / 2 / 3 / 4 or click (while sorting) | Choose a bin (4 is compost); Esc leaves the pile for later |
+| E at a door | Go into a building; walk onto the doormat to go back out |
+| J at an ore vein or a cracked wall | Mine it (ore needs the pickaxe) or break through to a hidden room |
+| Arrows + E (in a hands-on puzzle) | Move, turn, flip, set a dial; 1-4 on the sorting line; Esc steps away |
 
 Every key except the menu and fixed shortcuts can be rebound in Menu > Controls.
 
@@ -105,6 +108,10 @@ one life, packs of fast zombies that hit very hard, a tiny parry window and fier
 - **Field Check quizzes:** after each sorted pile, one multiple-choice question about what you just handled (`data/quizzes.json`). A right answer restores water; a wrong one only teaches.
 - **Side quests:** `data/quests.json`, shown in the journal (Q). Progress comes from counters and flags, so a quest is data; finishing one pays out water or health.
 - **Terminal puzzles:** ordering puzzles (`data/puzzles.json`) guard the archive terminals: the safe route for hazardous waste, and the waste hierarchy.
+- **Hands-on puzzles (seven kinds):** wire and pipe circuits to reconnect, combination locks whose codes are written down in other regions, memory boards, balance mixes (a compost heap, a water filter), a sorting conveyor racing the shredder, and signal patterns to repeat. They run in the world: time keeps going, your health is on the panel, and a zombie's blow knocks you away.
+- **Buildings, rooms and dungeons:** every region has buildings in its own style (brick cottages, scrap shacks, a stilt boathouse, a farmhouse and barn, a concrete bunker, a white stone lab) that you walk into, Stardew-style. Two dungeons, the old metro under the Outpost and the Slag Mine, have locked gates, keys and hidden rooms behind cracked walls.
+- **Mining and the workbench:** the pickaxe (from the tool shed's fuse box) breaks copper, iron, crystal and coal veins, which grow back each visit. Workbenches in Tobi's house and Vex's bunker turn ore and salvage into water filters, bandages, rune batteries and gear up to the Solar Saber (`data/recipes.json`).
+- **Requests across regions:** Halden wants copper, Nana Ru crystal for Kip, Lena clean water, Vex coal; codes for Halden's safe, the barn and Ines's vault are found in other regions.
 - **Hidden finds:** pickups lying around the dump, tracked by the Scavenger quest.
 
 ## Project layout
@@ -112,7 +119,7 @@ one life, packs of fast zombies that hit very hard, a tiny parry window and fier
 | Folder | Contents |
 |---|---|
 | `autoload/` | `EventBus` (signals), `ItemDB`, `Content` (lessons, dialogue, repairs, objectives, areas), `Chapters` (campaign order, ending trigger), `GameState` (flags, counters), `Inventory`, `Survival`, `SceneManager`, `AudioManager`, `Polish` (vignette, hurt feedback), `Juicee` (game-feel addon) |
-| `systems/` | Pure logic, no scene dependencies: `SortingRules`, `SortingSession`, `RepairRules`, `ObjectivesTracker`, `EndingRules`, `QuizRules`, `OrderPuzzle`, `QuestRules`, `DataLoader` |
+| `systems/` | Pure logic, no scene dependencies: `SortingRules`, `SortingSession`, `RepairRules`, `ObjectivesTracker`, `EndingRules`, `QuizRules`, `OrderPuzzle`, `QuestRules`, `DataLoader`, `CircuitBoard`, `MemoryBoard`, `SignalSequence`, `MixRules`, `RecipeBook` |
 | `world/` | `GameArea` (builds a level from data), `MapBuilder`, and the interactable objects |
 | `interaction/` | `Interactable` and `Interactor` |
 | `player/` | Player, sprite animation |
@@ -136,6 +143,8 @@ one life, packs of fast zombies that hit very hard, a tiny parry window and fier
 - **A new repair:** add it to `data/repairs.json`; place its marker in a map and config entry. Never require hazardous items (a test enforces this).
 - **A new area:** write `data/maps/<name>.txt`, add an entry to `data/areas.json`, and add a scene that inherits `world/game_area.tscn` with `area_id` set. Map legend is in `tools/generate_maps.py`.
 - **Dialogue:** `data/dialogue.json`; show it with `EventBus.dialogue_requested.emit("<id>")`.
+- **A building and its room:** add a look to `LOOKS` in `tools/assets_buildings.py`, its marker to `BUILDINGS` in `tools/place_buildings.py`, and the room to `tools/build_interiors.py` (its map, notes, puzzles and the door back). Then run, from `game/`: `python3 tools/assets_buildings.py && python3 tools/place_buildings.py && python3 tools/build_interiors.py`. The builders check that every door, chest and puzzle can be reached.
+- **A hands-on puzzle:** add it to `data/puzzles.json` with a `type` (`circuit`, `lock`, `memory`, `mix`, `conveyor`, `signal`) and put a `puzzle_station` on a map.
 
 ## Tests
 
@@ -144,6 +153,7 @@ bash scripts/test.sh     # GUT unit + integration, headless
 bash scripts/e2e.sh      # exports the web build and smoke-tests it in Chromium
 bash scripts/playthrough.sh   # plays all four areas to the ending in a real browser
 bash scripts/playthrough.sh combat.mjs   # fights with real key presses
+bash scripts/playthrough.sh rooms.mjs    # walks into buildings and down into the metro
 ```
 
 `bash scripts/test.sh` also fails if any script fails to compile, which GUT alone only warns about.
@@ -184,6 +194,6 @@ uses it unchanged. See `CREDITS.md` for the font licence.
 
 ## Known limits
 
-- There is no save/load; a run is a single sitting of about 10 to 15 minutes.
-- Four areas are playable (outpost, battery factory, Great Dump, Dead River). The fields, industry and sanctuary chapters have script data in `data/` but no maps or mechanics yet (see `docs/GAME_SCRIPT.md`).
+- One save slot (the game saves on entering an area, when a region is lit, and every minute).
+- Sound effects come from CC0 packs (see `CREDITS.md`); the music is generated.
 - Keyboard-first. Mouse works in menus and the sorting minigame; there is no touch layout.
