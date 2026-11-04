@@ -36,6 +36,7 @@ var _xp_meter: Meter
 var _stats_label: Label
 var _feed: NotificationFeed
 var _reward: RewardCard
+var _area_title: AreaTitle
 var _quick_label: Label
 var _tip_panel: PanelContainer
 var _tip_label: Label
@@ -99,6 +100,8 @@ func set_area(new_area_id: String) -> void:
 	_last_objective_id = ""
 	_last_objective_text = ""
 	_refresh_objective()
+	if _area_title != null:
+		_area_title.show_area(new_area_id)
 
 
 func _flash_damage(amount: float) -> void:
@@ -293,6 +296,8 @@ func _build() -> void:
 	left.add_child(_lives_row)
 	left.add_child(RuneBar.new())
 	root.add_child(BossBar.new())
+	_area_title = AreaTitle.new()
+	root.add_child(_area_title)
 
 	_tip_panel = PanelContainer.new()
 	_tip_panel.add_theme_stylebox_override("panel", UiTheme.banner_style())
