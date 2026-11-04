@@ -106,6 +106,14 @@ func _process(_delta: float) -> void:
 		_board.queue_redraw()
 
 
+func waiting_to_continue() -> bool:
+	return _phase == Phase.WON
+
+
+func continue_from_tap() -> void:
+	leave()
+
+
 ## A tap or click on the board (touch screens play every board by tapping).
 func tap(point: Vector2) -> void:
 	if not visible or _just_opened():
@@ -135,7 +143,7 @@ func _win() -> void:
 		Progress.add_xp(xp)
 	EventBus.sfx_requested.emit("task_done")
 	_feedback.text = "[color=#7bc043]DONE[/color]  %s" % _data.get("explanation", "")
-	_hint.text = TouchControls.hint("E  continue", "OK  continue")
+	_hint.text = TouchControls.hint("E  continue", "Tap anywhere to continue")
 
 
 func _mistake(text: String, damage: float = 6.0) -> void:

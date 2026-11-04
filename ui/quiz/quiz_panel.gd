@@ -77,7 +77,15 @@ func answer(index: int) -> void:
 		EventBus.penalty_spawn.emit("quiz")
 	GameState.add_to_counter("quiz_correct" if _was_correct else "quiz_wrong")
 	_continue.visible = true
-	_hint.text = TouchControls.hint("Press E to continue", "Tap OK to continue")
+	_hint.text = TouchControls.hint("Press E to continue", "Tap anywhere to continue")
+
+
+func waiting_to_continue() -> bool:
+	return _phase == Phase.FEEDBACK
+
+
+func continue_from_tap() -> void:
+	continue_flow()
 
 
 func continue_flow() -> void:

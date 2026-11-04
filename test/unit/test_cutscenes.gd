@@ -146,3 +146,16 @@ func test_scenes_are_acted_by_the_game_sprites() -> void:
 	for kind in CutsceneScenes.SCENES:
 		actors.stage(kind)
 		assert_gt(actors.actor_count(), 0, "%s has a cast" % kind)
+
+
+func test_a_click_or_tap_anywhere_steps_the_cutscene_on() -> void:
+	# Regression: the stage and text box swallowed clicks as GUI input, so they
+	# never reached the handler that moves the cutscene on.
+	Cutscenes.pending_id = "test"
+	var player := _player(Cutscenes.beats("to_dump"))
+	player.advance()  # the first press completes the typing
+	var click := InputEventMouseButton.new()
+	click.button_index = MOUSE_BUTTON_LEFT
+	click.pressed = true
+	player._input(click)
+	assert_eq(player.index(), 1, "the click moved it on")

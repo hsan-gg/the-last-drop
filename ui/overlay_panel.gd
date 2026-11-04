@@ -37,11 +37,13 @@ func _build_shell(panel_size: Vector2, border: Color = UiTheme.COLOR_BORDER) -> 
 	var dim := ColorRect.new()
 	dim.color = Color(0, 0, 0, 0.32 if in_world else 0.62)
 	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
+	dim.gui_input.connect(_on_background_input)
 	_root.add_child(dim)
 
 	var panel := PanelContainer.new()
 	panel.add_theme_stylebox_override("panel", UiTheme.panel_style(border))
 	panel.set_anchors_preset(Control.PRESET_CENTER)
+	panel.gui_input.connect(_on_background_input)
 	panel.offset_left = -panel_size.x / 2.0
 	panel.offset_right = panel_size.x / 2.0
 	panel.offset_top = -panel_size.y / 2.0
@@ -172,3 +174,21 @@ func panel_rect() -> Rect2:
 	if _box == null or not visible:
 		return Rect2()
 	return (_box.get_parent() as Control).get_global_rect()
+
+
+## True while the panel only waits for "continue" (a puzzle solved, an answer
+## explained): then a tap anywhere on the screen moves on, not just on OK.
+func waiting_to_continue() -> bool:
+	return false
+
+
+## What "continue" does for this panel.
+func continue_from_tap() -> void:
+	pass
+
+
+func _on_background_input(event: InputEvent) -> void:
+	var click := event as InputEventMouseButton
+	if click != null and click.pressed and click.button_index == MOUSE_BUTTON_LEFT and visible and not _just_opened() and waiting_to_continue():
+		get_viewport().set_input_as_handled()
+		continue_from_tap()

@@ -112,6 +112,7 @@ func test_a_real_key_press_hides_the_controls_in_auto() -> void:
 	assert_true(TouchControls.active)
 	var key := InputEventKey.new()
 	key.keycode = KEY_W
+	key.physical_keycode = KEY_W  # a real key press carries both
 	key.pressed = true
 	TouchControls._input(key)
 	assert_false(TouchControls.active, "a keyboard player gets the screen back")
@@ -328,3 +329,50 @@ func test_play_buttons_do_not_overlap_each_other_or_the_use_prompt() -> void:
 		for j in range(i + 1, list.size()):
 			var b: Dictionary = list[j]
 			assert_gt((a["center"] as Vector2).distance_to(b["center"]), float(a["radius"]) + float(b["radius"]), "%s and %s apart" % [a["id"], b["id"]])
+
+
+# ------------------------------------------------------------------ tap anywhere to move on
+
+func _click() -> InputEventMouseButton:
+	var click := InputEventMouseButton.new()
+	click.button_index = MOUSE_BUTTON_LEFT
+	click.pressed = true
+	return click
+
+
+func test_a_conversation_has_no_buttons_and_moves_on_with_a_tap_anywhere() -> void:
+	Settings.set_value("touch_controls", TouchControls.ALWAYS)
+	var box := DialogueBox.new()
+	add_child_autofree(box)
+	box.show_lines(["One.", "Two."] as Array[String], "")
+	await wait_process_frames(2)
+	TouchControls.mode = TouchControls.Mode.PANEL
+	TouchControls._layout()
+	assert_eq(TouchControls.buttons.size(), 0, "no OK or SKIP over a conversation")
+	box._typing.kill()
+	box._text.visible_characters = -1
+	box._on_panel_gui_input(_click())  # the full-screen catcher feeds the same handler
+	assert_true(box.current_text().contains("Two"), "the tap moved it on")
+
+
+func test_a_solved_board_continues_with_a_tap_anywhere() -> void:
+	var game: CircuitGame = await _open(CircuitGame.new(), "shed_fusebox")
+	game._win()
+	assert_true(game.waiting_to_continue())
+	game._on_background_input(_click())
+	assert_eq(game.phase(), MiniGame.Phase.IDLE, "tapping the screen continued")
+
+
+func test_the_phones_volume_buttons_do_not_hide_the_touch_controls() -> void:
+	# Regression: a volume press counted as a keyboard and switched the screen
+	# to desktop scaling (black borders, lower resolution).
+	Settings.set_value("touch_controls", TouchControls.AUTO)
+	TouchControls._seen_touch = true
+	TouchControls.refresh_active()
+	for code in [KEY_VOLUMEUP, KEY_VOLUMEDOWN, KEY_VOLUMEMUTE, KEY_MEDIAPLAY]:
+		var key := InputEventKey.new()
+		key.keycode = code
+		key.pressed = true
+		TouchControls._input(key)
+	assert_true(TouchControls.active, "still on touch")
+	assert_eq(get_tree().root.content_scale_aspect, Window.CONTENT_SCALE_ASPECT_EXPAND, "still filling the phone's screen")

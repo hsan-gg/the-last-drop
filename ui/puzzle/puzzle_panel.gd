@@ -70,7 +70,7 @@ func choose(option: String) -> void:
 		EventBus.sfx_requested.emit("repair")
 		_feedback.text = "[color=#7bc043]UNLOCKED[/color]\n%s" % _data["explanation"]
 		_continue.visible = true
-		_hint.text = TouchControls.hint("Press E to continue", "Tap OK to continue")
+		_hint.text = TouchControls.hint("Press E to continue", "Tap anywhere to continue")
 	elif result["correct"]:
 		EventBus.sfx_requested.emit("sort_ok")
 		_feedback.text = ""
@@ -82,6 +82,14 @@ func choose(option: String) -> void:
 		_flash_health(damage)
 		_feedback.text = "[color=#e0584a]NOT THAT ONE  -%d health[/color]\nStart again from the first step." % int(round(damage))
 	_refresh()
+
+
+func waiting_to_continue() -> bool:
+	return _phase == Phase.SOLVED
+
+
+func continue_from_tap() -> void:
+	continue_flow()
 
 
 func continue_flow() -> void:

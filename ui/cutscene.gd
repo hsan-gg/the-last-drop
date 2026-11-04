@@ -92,7 +92,9 @@ func _show_beat() -> void:
 	_text.text = beat.get("text", "")
 	_text.visible_characters = 0
 	var last := _index >= _beats.size() - 1
-	_hint.text = (TouchControls.hint("[E] begin   [Esc] skip", "Tap to begin   SKIP") if last else TouchControls.hint("[E] next   [Esc] skip", "Tap for next   SKIP"))
+	# On a phone the app's back gesture skips; in a phone browser, taps step through.
+	var skip := "   Back: skip" if OS.has_feature("mobile") else ""
+	_hint.text = (TouchControls.hint("[E] begin   [Esc] skip", "Tap to begin" + skip) if last else TouchControls.hint("[E] next   [Esc] skip", "Tap for next" + skip))
 	_pips.text = "".join(PackedStringArray(range(_beats.size()).map(func(i: int) -> String: return "o" if i == _index else ".")))
 	_wipe()
 	if _typing != null:
@@ -170,7 +172,14 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_pressed("menu"):
 		get_viewport().set_input_as_handled()
 		finish()
-	elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+
+
+## A click or tap anywhere steps on. Read before the GUI sees it: the stage and
+## the text box fill the screen and would otherwise swallow every click.
+func _input(event: InputEvent) -> void:
+	var click := event as InputEventMouseButton
+	if not _done and click != null and click.pressed and click.button_index == MOUSE_BUTTON_LEFT:
+		get_viewport().set_input_as_handled()
 		advance()
 
 

@@ -139,6 +139,14 @@ func leave() -> void:
 	EventBus.sorting_left.emit(pile, remaining)
 
 
+## After an answer or the summary, a tap anywhere on the screen continues.
+func _on_background_input(event: InputEvent) -> void:
+	var click := event as InputEventMouseButton
+	if click != null and click.pressed and click.button_index == MOUSE_BUTTON_LEFT and visible and _phase != Phase.CHOOSING:
+		get_viewport().set_input_as_handled()
+		continue_flow()
+
+
 func continue_flow() -> void:
 	match _phase:
 		Phase.FEEDBACK_WRONG:
@@ -291,6 +299,7 @@ func _build() -> void:
 	var dim := ColorRect.new()
 	dim.color = Color(0, 0, 0, 0.32)
 	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
+	dim.gui_input.connect(_on_background_input)
 	_root.add_child(dim)
 
 	var panel := PanelContainer.new()
@@ -299,6 +308,7 @@ func _build() -> void:
 	panel.offset_right = 214.0
 	panel.offset_top = -124.0
 	panel.offset_bottom = 124.0
+	panel.gui_input.connect(_on_background_input)
 	_root.add_child(panel)
 
 	var box := VBoxContainer.new()

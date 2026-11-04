@@ -156,7 +156,8 @@ func release_all() -> void:
 func _input(event: InputEvent) -> void:
 	var key := event as InputEventKey
 	if key != null and key.pressed and not key.has_meta(SENT_BY_TOUCH):
-		_on_real_key()
+		if is_game_key(key):
+			_on_real_key()
 		return
 	var touch := event as InputEventScreenTouch
 	if touch != null:
@@ -200,6 +201,17 @@ func _on_finger_up(touch: InputEventScreenTouch) -> void:
 	elif touch.index == _stick_finger:
 		_end_stick()
 		get_viewport().set_input_as_handled()
+
+
+## Whether a key does something in the game (so pressing it means a keyboard
+## is in use). The phone's volume and media buttons arrive as keys too, and
+## must not take the touch controls away: that switched the screen back to
+## the desktop's pixel scaling, with black borders, whenever the volume moved.
+static func is_game_key(key: InputEventKey) -> bool:
+	for action in InputMap.get_actions():
+		if InputMap.event_is_action(key, action):
+			return true
+	return false
 
 
 func _on_real_key() -> void:
@@ -387,6 +399,8 @@ func _layout_play(view: Vector2, s: float) -> void:
 
 func _layout_panel(view: Vector2, s: float) -> void:
 	var panel := _open_panel()
+	if panel == null and (_any_visible("dialogue_ui") or _any_visible("cutscene_ui")):
+		return  # conversations and cutscenes move on with a tap anywhere: no buttons over them
 	# OK is "interact", which every panel takes as confirm (Enter would be
 	# swallowed by whichever menu button happens to hold the focus).
 	# The buttons stand in the strip beside the open panel, never over it: a
@@ -399,11 +413,9 @@ func _layout_panel(view: Vector2, s: float) -> void:
 	var ok_r: float = column.call(15.0)
 	var back_r: float = column.call(13.0)
 	_add("ok", "action", "interact", false, "OK", "", at.call(ok_r, 10.0 + ok_r), ok_r)
-	var back_label := "SKIP" if _any_visible("cutscene_ui") else "BACK"
 	var top := 10.0 + ok_r * 2.0
-	if not _any_visible("dialogue_ui") or panel != null:
-		_add("back", "key", KEY_ESCAPE, false, back_label, "", at.call(back_r, top + 8.0 + back_r), back_r)
-		top += 8.0 + back_r * 2.0
+	_add("back", "key", KEY_ESCAPE, false, "BACK", "", at.call(back_r, top + 8.0 + back_r), back_r)
+	top += 8.0 + back_r * 2.0
 	var digits := int(panel.get("touch_digits")) if panel != null and panel.get("touch_digits") != null else 0
 	var digit_r: float = column.call(11.0)
 	for i in digits:

@@ -241,6 +241,12 @@ func _build() -> void:
 	_root.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_root)
+	# The whole screen is the "next" button while someone is talking.
+	var anywhere := Control.new()
+	anywhere.set_anchors_preset(Control.PRESET_FULL_RECT)
+	anywhere.mouse_filter = Control.MOUSE_FILTER_STOP
+	anywhere.gui_input.connect(_on_panel_gui_input)
+	_root.add_child(anywhere)
 
 	var panel := PanelContainer.new()
 	panel.add_theme_stylebox_override("panel", UiTheme.banner_style())

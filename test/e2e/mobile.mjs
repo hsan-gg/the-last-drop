@@ -91,17 +91,18 @@ let s;
 for (let i = 0; i < 80 && !(s = await state()).area; i++) {
   if (s.scene === "Cutscene") {
     await shot("3_cutscene");
-    await tapButton("back");
+    await tap(view.w / 2, view.h / 2);  // a tap anywhere steps the cutscene on
   }
   await sleep(250);
 }
 check("the run starts by touch alone", Boolean(s.area));
 await sleep(800);
+check("a conversation has no buttons over it", !(await state()).dialogue_open || (await touch()).buttons.length === 0);
 for (let i = 0; i < 25 && (await state()).dialogue_open; i++) {
-  await tapButton("ok");
+  await tap(view.w * 0.3, view.h * 0.3);  // anywhere, not just on the box
   await sleep(150);
 }
-check("conversations close with the OK button", !(await state()).dialogue_open);
+check("conversations move on with a tap anywhere on the screen", !(await state()).dialogue_open);
 await drive("peace");
 await sleep(400);
 t = await touch();
