@@ -614,6 +614,57 @@
 				}
 			},
 			{
+				"id": "drill",
+				"lines": [
+					"STAFF MEMBER: YOUR COMBAT CERTIFICATION IS OVERDUE.",
+					"NEUTRALISE THREE HOSTILES IN SIXTY SECONDS. TIMER STARTS... NOW."
+				],
+				"flags": [
+					"talked_unit7_intro"
+				],
+				"challenge": {
+					"seconds": 60,
+					"goal_counter": {
+						"key": "kills",
+						"add": 3
+					},
+					"win_flag": "unit7_drill_passed",
+					"lose_flag": "unit7_drill_failed",
+					"label": "Unit-7 drill",
+					"win_text": "CERTIFICATION: PASSED.",
+					"lose_text": "CERTIFICATION: PENDING. UNIT-7 BELIEVES IN YOU."
+				}
+			},
+			{
+				"id": "drill_passed",
+				"lines": [
+					"CERTIFICATION PASSED. EFFICIENCY: ADMIRABLE.",
+					"UNIT-7 HAS PRINTED YOU A BADGE. IT SAYS 'STAFF'. WEAR IT WITH PRIDE."
+				],
+				"flags": [
+					"unit7_drill_passed"
+				],
+				"gives": {
+					"xp": 90,
+					"gear": "welding_mask"
+				}
+			},
+			{
+				"id": "drill_failed",
+				"lines": [
+					"CERTIFICATION PENDING. UNIT-7 HAS LOGGED THIS AS A LEARNING EXPERIENCE.",
+					"LEARNING EXPERIENCES ARE ALSO VALUABLE. HAVE A BANDAGE."
+				],
+				"flags": [
+					"unit7_drill_failed"
+				],
+				"gives": {
+					"items": {
+						"bandage": 1
+					}
+				}
+			},
+			{
 				"id": "chatter",
 				"lines": [
 					"SWEEPING. SWEEPING. SWEEPING.",

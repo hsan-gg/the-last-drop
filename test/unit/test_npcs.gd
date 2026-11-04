@@ -130,3 +130,17 @@ func test_running_out_of_time_loses_the_race() -> void:
 	Challenges._process(1.5)
 	assert_true(GameState.has_flag("test_lost"))
 	assert_true(Challenges.active().is_empty())
+
+
+func test_unit7_drill_counts_kills_from_when_it_starts() -> void:
+	Challenges.reset()
+	GameState.add_to_counter("kills", 5)
+	var unit := _npc("unit7")
+	unit.interact(null)
+	unit.interact(null)
+	assert_eq(Challenges.active().get("label", ""), "Unit-7 drill")
+	GameState.add_to_counter("kills", 2)
+	assert_false(GameState.has_flag("unit7_drill_passed"), "earlier kills do not count")
+	GameState.add_to_counter("kills")
+	assert_true(GameState.has_flag("unit7_drill_passed"))
+	Challenges.reset()

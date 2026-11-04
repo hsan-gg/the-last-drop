@@ -773,5 +773,22 @@
 		"reward": {
 			"xp": 80
 		}
+	},
+	{
+		"id": "certified",
+		"area": "industry",
+		"title": "Certified Staff",
+		"text": "Pass Unit-7's combat drill.",
+		"difficulty": "hard",
+		"category": "combat",
+		"goal": {
+			"type": "flags",
+			"keys": [
+				"unit7_drill_passed"
+			]
+		},
+		"reward": {
+			"xp": 70
+		}
 	}
 ]
