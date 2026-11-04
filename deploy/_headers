@@ -1,0 +1,14 @@
+# Netlify and Cloudflare Pages read this file from the published folder.
+# Godot's file names do not change between builds, so nothing is cached as
+# immutable: browsers revalidate (cheap, by ETag) and always get the new build.
+# The installed app (PWA) keeps its own offline copy through its service worker.
+/*
+  Cache-Control: no-cache
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+/*.wasm
+  Content-Type: application/wasm
+
+/*.pck
+  Content-Type: application/octet-stream

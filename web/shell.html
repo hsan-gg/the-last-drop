@@ -6,7 +6,7 @@
 		     scrolling, a themed loading screen, a "turn your phone" screen in
 		     portrait, a fullscreen button, and the tags that let it be added to a
 		     home screen and open like an app. Godot fills in the $GODOT_ values. -->
-		<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 		<meta name="description" content="THE LAST DROP: a top-down survival adventure. Restore the water, sort the waste, fight the zombies, bring the regions back to life.">
 		<meta name="theme-color" content="#12303a">
 		<meta name="mobile-web-app-capable" content="yes">
@@ -267,6 +267,20 @@ const engine = new Engine(GODOT_CONFIG);
 		}).catch(() => {}).finally(syncClasses);
 	}
 
+	// Keep the screen awake while playing (reading a long conversation or
+	// standing still to plan should not let the phone dim and lock).
+	let wakeLock = null;
+	function keepAwake() {
+		if (!('wakeLock' in navigator) || wakeLock !== null || document.visibilityState !== 'visible') {
+			return;
+		}
+		navigator.wakeLock.request('screen').then((lock) => {
+			wakeLock = lock;
+			lock.addEventListener('release', () => { wakeLock = null; });
+		}).catch(() => {});
+	}
+	document.addEventListener('visibilitychange', keepAwake);
+
 	document.addEventListener('contextmenu', (event) => event.preventDefault());
 	document.addEventListener('gesturestart', (event) => event.preventDefault());
 	document.addEventListener('dblclick', (event) => event.preventDefault());
@@ -278,11 +292,13 @@ const engine = new Engine(GODOT_CONFIG);
 	});
 	// The first tap on a phone goes fullscreen; after that, only the button does.
 	window.addEventListener('touchend', () => {
+		keepAwake();
 		if (coarse && !askedOnce) {
 			askedOnce = true;
 			enterFullscreen();
 		}
 	}, { passive: true });
+	window.addEventListener('pointerdown', keepAwake, { passive: true });
 	syncClasses();
 }());
 

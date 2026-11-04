@@ -25,11 +25,13 @@ const DEFAULTS := {
 	"touch_opacity": 0.6,
 	"touch_left_handed": false,
 	"vibration": true,
+	"battery_saver": false,
 }
 const HINTS_OFF := 0
 const HINTS_SUBTLE := 1
 const HINTS_STRONG := 2
 const TEXT_SPEEDS: Array[float] = [0.6, 1.0, 1.8]
+const BATTERY_SAVER_FPS := 30
 const MUSIC_BUS := "Music"
 const SFX_BUS := "SFX"
 ## Actions the player can rebind, in the order the controls tab lists them.
@@ -175,6 +177,9 @@ func _apply(key: String) -> void:
 			Juicee.accessibility.no_screenshake = not bool(value("screen_shake"))
 		"reduce_flashing":
 			Juicee.accessibility.no_flash = bool(value("reduce_flashing"))
+		"battery_saver":
+			# 30 frames a second halves the work: cooler phones, longer batteries.
+			Engine.max_fps = BATTERY_SAVER_FPS if bool(value("battery_saver")) else 0
 
 
 func _set_bus_volume(bus_name: String, linear: float) -> void:

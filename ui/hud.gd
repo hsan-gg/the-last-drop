@@ -224,6 +224,23 @@ func _on_quest_completed(quest_id: String) -> void:
 func _on_settings_changed() -> void:
 	_tracker.refresh()
 	_refresh_quick()
+	_place_tip_panel()
+
+
+## Tips sit bottom right, or top centre on a touch screen, where the bottom
+## right corner is under the player's thumb and the action buttons.
+func _place_tip_panel() -> void:
+	if _tip_panel == null:
+		return
+	var top_centre := TouchControls.active
+	_tip_panel.anchor_left = 0.5 if top_centre else 1.0
+	_tip_panel.anchor_right = _tip_panel.anchor_left
+	_tip_panel.anchor_top = 0.0 if top_centre else 1.0
+	_tip_panel.anchor_bottom = _tip_panel.anchor_top
+	_tip_panel.offset_left = -96.0 if top_centre else -200.0
+	_tip_panel.offset_right = 96.0 if top_centre else -8.0
+	_tip_panel.offset_top = 26.0 if top_centre else -78.0
+	_tip_panel.offset_bottom = 60.0 if top_centre else -44.0
 
 
 func _refresh_quick() -> void:
@@ -310,14 +327,7 @@ func _build() -> void:
 
 	_tip_panel = PanelContainer.new()
 	_tip_panel.add_theme_stylebox_override("panel", UiTheme.banner_style())
-	_tip_panel.anchor_left = 1.0
-	_tip_panel.anchor_right = 1.0
-	_tip_panel.anchor_top = 1.0
-	_tip_panel.anchor_bottom = 1.0
-	_tip_panel.offset_left = -200.0
-	_tip_panel.offset_right = -8.0
-	_tip_panel.offset_top = -78.0
-	_tip_panel.offset_bottom = -44.0
+	_place_tip_panel()
 	_tip_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_tip_panel.visible = false
 	root.add_child(_tip_panel)

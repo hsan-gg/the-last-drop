@@ -5,7 +5,8 @@ responsibility because you need it to survive: sort waste, recover materials,
 repair water treatment, and uncover why the world collapsed.
 
 Godot 4.7 (GL Compatibility renderer), 2D, 480x270 pixel viewport, integer-scaled.
-Plays in the browser.
+Plays in the browser on desktop and on phones and tablets (touch controls,
+installable as an app, plays offline once loaded).
 
 ## Play
 
@@ -29,6 +30,28 @@ Open `game/` in Godot and press F5, or run the web build (see Export).
 | Arrows + E (in a hands-on puzzle) | Move, turn, flip, set a dial; 1-4 on the sorting line; Esc steps away |
 
 Every key except the menu and fixed shortcuts can be rebound in Menu > Controls.
+
+### On a phone or tablet
+
+Hold the phone sideways (the page asks you to turn it in portrait). The first
+tap goes fullscreen on Android; on an iPhone use Share > Add to Home Screen,
+which opens the game fullscreen like an app.
+
+| Touch | Action |
+|---|---|
+| Drag on the left half | Walk (a stick appears under your thumb; push further to go faster) |
+| Sword (big button, right) | Attack |
+| Shield (hold) | Guard and parry; tap the sword while guarding to strike at once |
+| USE (glows when there is something to use) | Interact, talk, go through doors |
+| Rune buttons (appear when you carry runes) | Runes 1-3 (hold for Ember) |
+| Red cross / blue drop | Bandage / water |
+| Map and menu (top right), "tasks" | Map, the menu, the task list |
+| OK / BACK, arrows, numbers | Over menus, puzzles and conversations; boards also take taps directly |
+
+Several fingers work at once (walk, guard and swing together). Menu > Options >
+Touch screen sets the controls to Auto (they appear on the first touch and hide
+when a keyboard is used), On or Off, plus button size, opacity, a left-handed
+layout and vibration. Display > Battery saver caps the game at 30 fps.
 
 ## The loop
 
@@ -118,16 +141,19 @@ one life, packs of fast zombies that hit very hard, a tiny parry window and fier
 
 | Folder | Contents |
 |---|---|
-| `autoload/` | `EventBus` (signals), `ItemDB`, `Content` (lessons, dialogue, repairs, objectives, areas), `Chapters` (campaign order, ending trigger), `GameState` (flags, counters), `Inventory`, `Survival`, `SceneManager`, `AudioManager`, `Polish` (vignette, hurt feedback), `Juicee` (game-feel addon) |
-| `systems/` | Pure logic, no scene dependencies: `SortingRules`, `SortingSession`, `RepairRules`, `ObjectivesTracker`, `EndingRules`, `QuizRules`, `OrderPuzzle`, `QuestRules`, `DataLoader`, `CircuitBoard`, `MemoryBoard`, `SignalSequence`, `MixRules`, `RecipeBook` |
+| `autoload/` | `EventBus` (signals), `ItemDB`, `Content` (lessons, dialogue, repairs, objectives, areas), `Chapters` (campaign order, ending trigger), `GameState` (flags, counters), `Inventory`, `Survival`, `SceneManager`, `AudioManager`, `Polish` (vignette, hurt feedback), `TouchControls` (on-screen stick and buttons), `WebPlatform` (save and pause when the tab or app is put away, PWA updates), `Juicee` (game-feel addon) |
+| `systems/` | Pure logic, no scene dependencies: `SortingRules`, `SortingSession`, `RepairRules`, `ObjectivesTracker`, `EndingRules`, `QuizRules`, `OrderPuzzle`, `QuestRules`, `DataLoader`, `CircuitBoard`, `MemoryBoard`, `SignalSequence`, `MixRules`, `RecipeBook`, `TouchStick` |
 | `world/` | `GameArea` (builds a level from data), `MapBuilder`, and the interactable objects |
 | `interaction/` | `Interactable` and `Interactor` |
 | `player/` | Player, sprite animation |
-| `ui/` | HUD, dialogue box, sorting minigame, title, ending, theme |
+| `ui/` | HUD, dialogue box, sorting minigame, title, ending, theme, `touch/` (the drawn touch pad) |
 | `data/` | All content as JSON, plus ASCII maps in `data/maps/` |
 | `assets/` | Generated placeholder art and audio (see below) |
 | `test/` | `unit/`, `integration/` (GUT) and `e2e/` (browser) |
-| `tools/` | Generators for art, audio and maps |
+| `tools/` | Generators for art, audio, maps and app icons |
+| `web/` | The page around the web build (`shell.html`) |
+| `deploy/` | Host settings copied into the build (`_headers`, `vercel.json`); see `docs/DEPLOY.md` |
+| `scripts/` | Tests, `build_web.sh`, `build_android.sh` |
 
 ## Conventions
 
@@ -154,6 +180,7 @@ bash scripts/e2e.sh      # exports the web build and smoke-tests it in Chromium
 bash scripts/playthrough.sh   # plays all four areas to the ending in a real browser
 bash scripts/playthrough.sh combat.mjs   # fights with real key presses
 bash scripts/playthrough.sh rooms.mjs    # walks into buildings and down into the metro
+bash scripts/playthrough.sh mobile.mjs   # an emulated phone, touch only: stick, buttons, menus, portrait
 ```
 
 `bash scripts/test.sh` also fails if any script fails to compile, which GUT alone only warns about.
@@ -161,19 +188,23 @@ The unit and integration suites cover the rules, the data, the maps (including a
 
 The e2e script needs `npm install` once in `test/e2e`, a Chromium (set `CHROMIUM_PATH` if not at `/usr/bin/chromium`), and the Godot web export templates.
 
-## Export (web)
+## Export and deploy (web)
 
 Install export templates (Editor > Manage Export Templates), then:
 
 ```bash
-godot --headless --export-release "Web" export/web/index.html
-python3 -m http.server --directory export/web 8000
+bash scripts/build_web.sh                      # -> build/web/ and build/the-last-drop-web.zip
+python3 -m http.server --directory build/web 8000
 ```
 
 The preset uses the single-threaded web build, so any static host works without
-special headers (itch.io, GitHub Pages, Vercel, Cloudflare Pages). The engine is
-about 40 MB raw and about 10 MB compressed, so enable compression on the host.
-The first load takes a few seconds.
+special headers (itch.io, GitHub Pages, Vercel, Netlify, Cloudflare Pages). It
+uses a custom page (`web/shell.html`: loader, rotate screen, fullscreen, wake
+lock) and is a PWA (home-screen icons from `tools/assets_app_icons.py`, offline
+play). The engine is about 40 MB raw and about 10 MB compressed, so enable
+compression on the host. `docs/DEPLOY.md` has step-by-step instructions for
+each host, and `.github/workflows/web.yml` tests, builds and publishes to
+GitHub Pages on every push to main.
 
 `.txt` map files are listed in the preset's include filter. If you add another
 non-resource file type that the game loads at runtime, add it there too, or it
@@ -196,4 +227,5 @@ uses it unchanged. See `CREDITS.md` for the font licence.
 
 - One save slot (the game saves on entering an area, when a region is lit, and every minute).
 - Sound effects come from CC0 packs (see `CREDITS.md`); the music is generated.
-- Keyboard-first. Mouse works in menus and the sorting minigame; there is no touch layout.
+- Touch was tested in an emulated phone (Chromium with touch input), not on real devices; check the button sizes on your own phone.
+- iPhones cannot go fullscreen from a web page or lock the orientation; Add to Home Screen gives the fullscreen app.

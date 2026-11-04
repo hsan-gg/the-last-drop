@@ -39,7 +39,8 @@ var _time := 0.0
 
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
-	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# A tap or click anywhere on the map switches between this area and the world.
+	mouse_filter = Control.MOUSE_FILTER_STOP
 
 
 func refresh() -> void:
@@ -51,11 +52,22 @@ func refresh() -> void:
 
 func tab_input(event: InputEvent) -> bool:
 	if event.is_action_pressed("ui_left") or event.is_action_pressed("ui_right"):
-		page = Page.WORLD if page == Page.AREA else Page.AREA
-		EventBus.sfx_requested.emit("click")
-		queue_redraw()
+		flip_page()
 		return true
 	return false
+
+
+func flip_page() -> void:
+	page = Page.WORLD if page == Page.AREA else Page.AREA
+	EventBus.sfx_requested.emit("click")
+	queue_redraw()
+
+
+func _gui_input(event: InputEvent) -> void:
+	var click := event as InputEventMouseButton
+	if click != null and click.pressed and click.button_index == MOUSE_BUTTON_LEFT:
+		accept_event()
+		flip_page()
 
 
 func _process(delta: float) -> void:
@@ -88,7 +100,7 @@ func _draw() -> void:
 	var font := UiTheme.FONT_FILE as Font
 	var header := "< AREA  |  world >" if page == Page.AREA else "< area  |  WORLD >"
 	draw_string(font, Vector2(4, 9), header, HORIZONTAL_ALIGNMENT_LEFT, -1, 8, UiTheme.COLOR_YELLOW)
-	draw_string(font, Vector2(size.x - 196, 9), "Left / Right: switch page", HORIZONTAL_ALIGNMENT_LEFT, -1, 8, UiTheme.COLOR_MUTED)
+	draw_string(font, Vector2(size.x - 196, 9), TouchControls.hint("Left / Right: switch page", "Tap the map: switch page"), HORIZONTAL_ALIGNMENT_LEFT, -1, 8, UiTheme.COLOR_MUTED)
 	if page == Page.WORLD:
 		_draw_world(sheet.grow(-8))
 	else:

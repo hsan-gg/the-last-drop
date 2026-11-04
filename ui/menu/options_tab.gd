@@ -61,6 +61,7 @@ func _build() -> void:
 	_toggle_row("Mute everything", "muted")
 	_heading("DISPLAY")
 	_toggle_row("Fullscreen", "fullscreen")
+	_toggle_row("Battery saver (30 fps)", "battery_saver")
 	_heading("TOUCH SCREEN")
 	_cycle_row("On-screen controls", "touch_controls", TOUCH_NAMES)
 	_cycle_row("Button size", "touch_size", SIZE_NAMES)

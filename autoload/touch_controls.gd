@@ -55,6 +55,7 @@ var _stick_origin := Vector2.ZERO
 var _stick_offset := Vector2.ZERO
 var _set_aside_events: Dictionary = {}  # action -> Array[InputEvent]
 var _prompt := ""
+var _insets := Vector4.ZERO
 var _default_aspect := Window.CONTENT_SCALE_ASPECT_KEEP
 var _default_stretch := Window.CONTENT_SCALE_STRETCH_INTEGER
 
@@ -312,12 +313,31 @@ func _open_panel() -> Node:
 func _layout() -> void:
 	buttons.clear()
 	var view := get_viewport().get_visible_rect().size
+	_insets = _safe_insets(view)
 	var s := _scale()
 	if mode == Mode.PLAY:
 		_layout_play(view, s)
 	elif mode == Mode.PANEL:
 		_layout_panel(view, s)
 	# A button that moved or vanished while held keeps its press until lifted.
+
+
+## How far the screen's notch and rounded corners reach in, in game pixels
+## (left, top, right, bottom). A browser already keeps the page clear of them;
+## the Android app runs edge to edge and has to step around them itself.
+func _safe_insets(view: Vector2) -> Vector4:
+	if not OS.has_feature("mobile"):
+		return Vector4.ZERO
+	var window := Rect2(DisplayServer.window_get_position(), DisplayServer.window_get_size())
+	if window.size.x <= 0.0 or window.size.y <= 0.0:
+		return Vector4.ZERO
+	var safe := Rect2(DisplayServer.get_display_safe_area())
+	var k := view / window.size
+	return Vector4(
+		maxf(safe.position.x - window.position.x, 0.0) * k.x,
+		maxf(safe.position.y - window.position.y, 0.0) * k.y,
+		maxf(window.end.x - safe.end.x, 0.0) * k.x,
+		maxf(window.end.y - safe.end.y, 0.0) * k.y)
 
 
 func _layout_play(view: Vector2, s: float) -> void:
@@ -361,9 +381,12 @@ func _add(id: String, kind: String, target: Variant, hold: bool, label: String, 
 	buttons.append({"id": id, "kind": kind, "target": target, "hold": hold, "label": label, "icon": icon, "center": center, "radius": radius})
 
 
-## Mirrors a position for left-handed players.
+## Mirrors a position for left-handed players, then steps it in from any notch.
 func _side(point: Vector2, view: Vector2) -> Vector2:
-	return Vector2(view.x - point.x, point.y) if bool(Settings.value("touch_left_handed")) else point
+	var placed := Vector2(view.x - point.x, point.y) if bool(Settings.value("touch_left_handed")) else point
+	placed.x += _insets.x if placed.x < view.x / 2.0 else -_insets.z
+	placed.y += _insets.y if placed.y < view.y / 2.0 else -_insets.w
+	return placed
 
 
 func _stick_rest() -> Vector2:

@@ -258,3 +258,33 @@ func test_the_panel_buttons_speak_to_the_built_in_ui_actions_too() -> void:
 	var one := TouchControls.key_event(KEY_1, true)
 	assert_eq(one.keycode, KEY_1, "numbered panels read the key itself")
 	assert_true(TouchControls.action_event("interact", true).is_action_pressed("interact"), "OK confirms")
+
+
+# ------------------------------------------------------------------ phone comforts
+
+func test_battery_saver_caps_the_frame_rate() -> void:
+	Settings.set_value("battery_saver", true)
+	assert_eq(Engine.max_fps, Settings.BATTERY_SAVER_FPS)
+	Settings.set_value("battery_saver", false)
+	assert_eq(Engine.max_fps, 0, "uncapped again")
+
+
+func test_putting_the_app_away_saves_mutes_and_coming_back_restores_the_sound() -> void:
+	var master := AudioServer.get_bus_index("Master")
+	WebPlatform.on_page_hidden()
+	assert_true(WebPlatform.is_hidden())
+	assert_true(AudioServer.is_bus_mute(master), "quiet while away")
+	WebPlatform.on_page_shown()
+	assert_false(WebPlatform.is_hidden())
+	assert_eq(AudioServer.is_bus_mute(master), bool(Settings.value("muted")), "the player's own mute choice comes back")
+
+
+func test_tapping_the_map_switches_between_the_area_and_the_world() -> void:
+	var map := MapTab.new()
+	add_child_autofree(map)
+	var before: int = map.page
+	var click := InputEventMouseButton.new()
+	click.button_index = MOUSE_BUTTON_LEFT
+	click.pressed = true
+	map._gui_input(click)
+	assert_ne(map.page, before)

@@ -57,6 +57,9 @@ func _on_command(args: Array) -> void:
 			_publish(_touch_state())
 		"button":  # the centre of a visible button with this text, in viewport pixels
 			_publish(_button_centre(argument))
+		"scroll":  # how far the visible scrolling list is scrolled
+			var lists := get_tree().root.find_children("*", "ScrollContainer", true, false).filter(func(n: Node) -> bool: return (n as Control).is_visible_in_tree())
+			_publish({"scroll": (lists[0] as ScrollContainer).scroll_vertical if not lists.is_empty() else -1})
 		_:
 			_publish({"error": "unknown command %s" % command})
 
