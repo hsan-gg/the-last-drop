@@ -20,6 +20,8 @@ static func use(item_id: String) -> bool:
 	Inventory.remove(item_id, 1)
 	Survival.heal(float(effect.get("heal", 0)))
 	Survival.drink(float(effect.get("water", 0)))
+	if effect.get("energy", 0) > 0:
+		Runes.add_energy(float(effect["energy"]))
 	EventBus.sfx_requested.emit("drink")
 	EventBus.loot_found.emit("Used: %s" % item["name"])
 	return true

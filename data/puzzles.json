@@ -91,5 +91,402 @@
 			"systems_thinking",
 			"shared_responsibility"
 		]
+	},
+	{
+		"id": "radio_handshake",
+		"type": "signal",
+		"title": "TOBI'S RADIO",
+		"prompt": "An old handshake: the radio blinks a pattern. Answer it, light for light.",
+		"length": 5,
+		"start": 3,
+		"seed": 11,
+		"xp": 30,
+		"explanation": "Radios once shared warnings between towns. A signal only works if someone answers."
+	},
+	{
+		"id": "shed_fusebox",
+		"type": "circuit",
+		"style": "wire",
+		"size": [
+			4,
+			3
+		],
+		"seed": 3,
+		"title": "THE FUSE BOX",
+		"prompt": "Turn the burnt-out links until every bulb is wired to the supply.",
+		"xp": 30,
+		"explanation": "Repairing a circuit costs a few minutes. Replacing the whole box costs mines, factories and trucks."
+	},
+	{
+		"id": "metro_lights",
+		"type": "signal",
+		"title": "THE SIGNAL BOX",
+		"prompt": "The signal box wants the old start-up sequence. Watch the lamps, then repeat them.",
+		"length": 6,
+		"start": 3,
+		"seed": 23,
+		"xp": 40,
+		"explanation": "Every system has a start-up order. Learn it, and the whole line wakes up."
+	},
+	{
+		"id": "halden_safe",
+		"type": "lock",
+		"code": "147",
+		"clue_flag": "note_osei_ledger_read",
+		"clue": "Osei's ledger: Halden's girl's birthday, 14 July. 1-4-7.",
+		"no_clue": "A three-digit dial. Halden would never write the code down here... but he might have trusted someone with it.",
+		"title": "HALDEN'S SAFE",
+		"prompt": "Three dials. Up and down to turn, left and right to choose.",
+		"xp": 50,
+		"explanation": "Some things are worth locking away. Most things are worth sharing."
+	},
+	{
+		"id": "hazmat_pairs",
+		"type": "memory",
+		"pairs": [
+			[
+				"Skull",
+				"Toxic"
+			],
+			[
+				"Flame",
+				"Flammable"
+			],
+			[
+				"Corrosive",
+				"Eats metal"
+			],
+			[
+				"Battery",
+				"Hazard bin"
+			],
+			[
+				"Mercury",
+				"Old tubes"
+			],
+			[
+				"Gloves",
+				"Before touching"
+			]
+		],
+		"seed": 5,
+		"title": "HAZARD BOARD",
+		"prompt": "Match each warning to what it means.",
+		"xp": 30,
+		"explanation": "Hazard symbols are a language. Reading it is how people stay alive around chemicals.",
+		"lessons": [
+			"battery_leak"
+		]
+	},
+	{
+		"id": "dump_line",
+		"type": "conveyor",
+		"pool": [
+			"scrap_metal",
+			"battery",
+			"cardboard",
+			"food_scraps",
+			"glass_jar",
+			"plastic_bottle",
+			"phone",
+			"tin_can",
+			"greasy_pizza_box"
+		],
+		"count": 12,
+		"need": 10,
+		"speed": 30,
+		"seed": 9,
+		"title": "THE SORTING LINE",
+		"prompt": "Knock each item into its bin (1-4) before the shredder takes it.",
+		"xp": 50,
+		"explanation": "Sorting at the source is fast and cheap. Sorting a mountain later is neither."
+	},
+	{
+		"id": "dump_pairs",
+		"type": "memory",
+		"pairs": [
+			[
+				"Glass jar",
+				"Recycle"
+			],
+			[
+				"Pizza box",
+				"General"
+			],
+			[
+				"Banana peel",
+				"Compost"
+			],
+			[
+				"Old phone",
+				"E-waste"
+			],
+			[
+				"Paint tin",
+				"Hazardous"
+			],
+			[
+				"Pipe",
+				"Reuse"
+			]
+		],
+		"seed": 13,
+		"title": "THE PICKERS' BOARD",
+		"prompt": "Match each find to where the pickers send it.",
+		"xp": 25,
+		"explanation": "Everything has a right place. The pickers learned it by heart."
+	},
+	{
+		"id": "river_pumps",
+		"type": "circuit",
+		"style": "pipe",
+		"size": [
+			5,
+			4
+		],
+		"seed": 7,
+		"title": "THE PUMP VALVES",
+		"prompt": "Turn the pipe joints until water reaches every tap.",
+		"xp": 40,
+		"explanation": "Clean water is a network: one broken joint and nobody downstream drinks."
+	},
+	{
+		"id": "filter_bed",
+		"type": "mix",
+		"title": "THE FILTER BARREL",
+		"prompt": "Layer the barrel so dirty river water drips out clear.",
+		"ingredients": [
+			{
+				"id": "gravel",
+				"name": "Gravel",
+				"max": 5,
+				"color": "#8a8a8a"
+			},
+			{
+				"id": "sand",
+				"name": "Sand",
+				"max": 6,
+				"color": "#d8c080"
+			},
+			{
+				"id": "charcoal",
+				"name": "Charcoal",
+				"max": 4,
+				"color": "#2a2a30"
+			}
+		],
+		"rules": [
+			{
+				"amount": "gravel",
+				"min": 2,
+				"fail": "Without gravel at the bottom the sand washes straight out."
+			},
+			{
+				"amount": "sand",
+				"min": 3,
+				"fail": "Too little sand: grit and mud get through."
+			},
+			{
+				"amount": "charcoal",
+				"min": 2,
+				"max": 3,
+				"fail": "Two or three layers of charcoal: enough to take out tastes and chemicals, not so much it clogs."
+			},
+			{
+				"total": true,
+				"max": 11,
+				"fail": "The barrel overflows."
+			}
+		],
+		"xp": 35,
+		"explanation": "A filter clears dirt and some chemicals. It does not kill germs: boil it, or use the sun, too.",
+		"lessons": [
+			"filter_limits"
+		]
+	},
+	{
+		"id": "compost_mix",
+		"type": "mix",
+		"title": "THE COMPOST HEAP",
+		"prompt": "Mix a heap that will turn to soil, not slime.",
+		"ingredients": [
+			{
+				"id": "browns",
+				"name": "Dry leaves",
+				"max": 6,
+				"color": "#a07040"
+			},
+			{
+				"id": "greens",
+				"name": "Food scraps",
+				"max": 6,
+				"color": "#7a9a3a"
+			},
+			{
+				"id": "water",
+				"name": "Water",
+				"max": 4,
+				"color": "#5a8ac8"
+			},
+			{
+				"id": "soil",
+				"name": "Old soil",
+				"max": 3,
+				"color": "#5a4030"
+			}
+		],
+		"rules": [
+			{
+				"ratio": [
+					"browns",
+					"greens"
+				],
+				"min": 2,
+				"fail": "Too many greens: it will rot and stink. More dry browns."
+			},
+			{
+				"ratio": [
+					"browns",
+					"greens"
+				],
+				"max": 3,
+				"fail": "All browns, nothing to feed the microbes. Add some greens."
+			},
+			{
+				"amount": "water",
+				"min": 1,
+				"max": 2,
+				"fail": "Damp like a wrung-out sponge: not dry, not soaked."
+			},
+			{
+				"amount": "soil",
+				"min": 1,
+				"fail": "A handful of old soil brings the microbes in."
+			}
+		],
+		"xp": 40,
+		"explanation": "Two or three parts dry browns to one part wet greens, damp, with a little living soil: that is how waste becomes soil.",
+		"lessons": [
+			"food_compost"
+		]
+	},
+	{
+		"id": "seed_pairs",
+		"type": "memory",
+		"pairs": [
+			[
+				"Beans",
+				"Fix nitrogen"
+			],
+			[
+				"Corn",
+				"Pole for beans"
+			],
+			[
+				"Squash",
+				"Shades weeds"
+			],
+			[
+				"Worms",
+				"Air the soil"
+			],
+			[
+				"Mulch",
+				"Holds water"
+			],
+			[
+				"Compost",
+				"Feeds soil"
+			]
+		],
+		"seed": 17,
+		"title": "JORY'S SEED CHART",
+		"prompt": "Match each part of the garden to what it does.",
+		"xp": 30,
+		"explanation": "A garden is a team. Nothing in it works alone."
+	},
+	{
+		"id": "barn_lock",
+		"type": "lock",
+		"code": "2208",
+		"clue_flag": "note_unit7_log_read",
+		"clue": "Unit-7's log: new barn code 2-2-0-8.",
+		"no_clue": "Four digits. The sign says to ask the robot. There is a robot in the Forgotten Industry.",
+		"title": "THE STALL PADLOCK",
+		"prompt": "Four dials. Up and down to turn, left and right to choose.",
+		"xp": 40,
+		"explanation": "Unit-7 never forgets. Machines remember what we write down."
+	},
+	{
+		"id": "unit7_diagnostic",
+		"type": "signal",
+		"title": "UNIT-7 DIAGNOSTIC",
+		"prompt": "Unit-7 blinks a test pattern and waits, patiently. Very patiently.",
+		"length": 7,
+		"start": 3,
+		"seed": 31,
+		"xp": 45,
+		"explanation": "Maintenance is boring, constant, and the only reason anything still works."
+	},
+	{
+		"id": "mine_lift",
+		"type": "circuit",
+		"style": "wire",
+		"size": [
+			6,
+			4
+		],
+		"seed": 19,
+		"title": "THE LIFT POWER",
+		"prompt": "Reconnect the lift's control lines, every lamp lit.",
+		"xp": 60,
+		"explanation": "Mining is a last resort. Every metal you recycle is a hole you did not have to dig."
+	},
+	{
+		"id": "ines_vault",
+		"type": "lock",
+		"code": "0612",
+		"clue_flag": "tobi_remembered",
+		"clue": "Tobi, quietly: 'The sixth of December. The day I met her.' 0-6-1-2.",
+		"no_clue": "Four digits. Ines's letter says only Tobi would know.",
+		"title": "INES'S VAULT",
+		"prompt": "Four dials. The day they met.",
+		"xp": 80,
+		"explanation": "She trusted someone to come back. Someone did."
+	},
+	{
+		"id": "water_cycle_pairs",
+		"type": "memory",
+		"pairs": [
+			[
+				"Sun heats sea",
+				"Evaporation"
+			],
+			[
+				"Vapour cools",
+				"Condensation"
+			],
+			[
+				"Rain falls",
+				"Precipitation"
+			],
+			[
+				"Runs downhill",
+				"Runoff"
+			],
+			[
+				"Soaks in",
+				"Groundwater"
+			],
+			[
+				"Roots drink",
+				"Transpiration"
+			]
+		],
+		"seed": 21,
+		"title": "THE WATER CYCLE",
+		"prompt": "Ines's teaching board: match each step to its name.",
+		"xp": 35,
+		"explanation": "The water you drink has been rain, river, cloud and sea. Whatever we put in it comes back round."
 	}
 ]

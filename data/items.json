@@ -188,5 +188,56 @@
 		"name": "Old Photograph",
 		"category": "keepsake",
 		"description": "A photo of a man on a rooftop holding a power cable. Old Tobi might recognise it."
+	},
+	{
+		"id": "copper_ore",
+		"name": "Copper Ore",
+		"category": "material",
+		"description": "Green-streaked rock with copper in it. A workbench can make something of it."
+	},
+	{
+		"id": "iron_ore",
+		"name": "Iron Ore",
+		"category": "material",
+		"description": "Heavy, rust-red rock. Smelted, it is steel again."
+	},
+	{
+		"id": "crystal_shard",
+		"name": "Crystal Shard",
+		"category": "material",
+		"description": "Quartz from deep in the mine. It holds light, and charge."
+	},
+	{
+		"id": "coal",
+		"name": "Coal",
+		"category": "material",
+		"description": "Old fuel. The workbench's forge burns it."
+	},
+	{
+		"id": "pickaxe",
+		"name": "Pickaxe",
+		"category": "keepsake",
+		"description": "A miner's pick. Swing at ore veins (J) to break them."
+	},
+	{
+		"id": "rusty_key",
+		"name": "Rusty Key",
+		"category": "keepsake",
+		"description": "A heavy old key. Some door down here still takes it."
+	},
+	{
+		"id": "metro_key",
+		"name": "Metro Service Key",
+		"category": "keepsake",
+		"description": "Blue tag: 'MAINTENANCE ONLY'. Opens the service doors in the old metro."
+	},
+	{
+		"id": "rune_battery",
+		"name": "Rune Battery",
+		"category": "consumable",
+		"description": "A crystal cell. Restores 50 rune energy.",
+		"use": {
+			"energy": 50
+		}
 	}
 ]

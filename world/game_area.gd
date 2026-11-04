@@ -21,6 +21,12 @@ const ENTITY_SCENES := {
 	"npc": preload("res://world/npc.tscn"),
 	"harvest_plot": preload("res://world/harvest_plot.tscn"),
 	"rail_cart": preload("res://world/rail_cart.tscn"),
+	"building": preload("res://world/building.tscn"),
+	"door": preload("res://world/door.tscn"),
+	"breakable": preload("res://world/breakable.tscn"),
+	"puzzle_station": preload("res://world/puzzle_station.tscn"),
+	"note": preload("res://world/note.tscn"),
+	"workbench": preload("res://world/workbench.tscn"),
 }
 const PENALTY_ZOMBIE := "runner"
 const PENALTY_DISTANCE := 90.0
@@ -77,7 +83,11 @@ func _ready() -> void:
 		GameState.set_counter("spawned_%s" % area_id, _spawned)
 
 	_tint.color = Color(config.get("tint", "#ffffff"))
-	if GameState.has_flag(RegionGenerator.lit_flag(area_id)):
+	if config.get("kind", "") == "interior":  # a lit room: no need for the lantern
+		var indoor_lantern := _player.get_node_or_null("Lantern") as PointLight2D
+		if indoor_lantern != null:
+			indoor_lantern.visible = false
+	elif GameState.has_flag(RegionGenerator.lit_flag(area_id)):
 		_tint.color = _lit_tint
 		var lantern := _player.get_node_or_null("Lantern") as PointLight2D
 		if lantern != null:
@@ -86,7 +96,7 @@ func _ready() -> void:
 	EventBus.region_lit.connect(_on_region_lit)
 	_hud.set_area(area_id)
 	GameState.set_flag("area_%s_reached" % area_id)
-	Music.play_area(area_id)
+	Music.play_area(config.get("music", area_id))
 	EventBus.player_collapsed.connect(_on_player_collapsed)
 	EventBus.penalty_spawn.connect(_on_penalty_spawn)
 	EventBus.celebrate.connect(_spawn_burst)
@@ -205,6 +215,8 @@ func _free_offset(position: Vector2, copy: int) -> Vector2:
 func _arrive(layout: PackedStringArray) -> void:
 	var marker := SceneManager.arrival_marker
 	SceneManager.arrival_marker = ""
+	if marker.is_empty() and MapBuilder.markers(layout, MapBuilder.SPAWN_MARKER).is_empty():
+		marker = "^"  # a room has no spawn: you are always just inside its door
 	if marker.is_empty():
 		return
 	var found := MapBuilder.markers(layout, marker)

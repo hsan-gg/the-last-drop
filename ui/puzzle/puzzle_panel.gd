@@ -41,7 +41,7 @@ func options() -> Array[String]:
 
 func open_puzzle(puzzle_id: String, shuffle_seed: int = 0) -> void:
 	var data := Content.puzzle(puzzle_id)
-	if _phase != Phase.IDLE or data.is_empty():
+	if _phase != Phase.IDLE or data.is_empty() or data.get("type", "order") != "order":
 		return
 	_puzzle_id = puzzle_id
 	_data = data

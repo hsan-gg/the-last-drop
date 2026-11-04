@@ -40,8 +40,13 @@ static func cell_center(cell: Vector2i) -> Vector2:
 	return Vector2(cell * TILE_SIZE) + Vector2(TILE_SIZE, TILE_SIZE) / 2.0
 
 
+## Ground that something solid stands on (a building's footprint): drawn as
+## floor, but nobody walks through it. The building brings its own walls.
+const FOOTPRINT_CHAR := "%"
+
+
 static func is_solid_char(ch: String) -> bool:
-	return TILE_FOR_CHAR.has(ch) and TILE_FOR_CHAR[ch] in SOLID_TILES
+	return ch == FOOTPRINT_CHAR or (TILE_FOR_CHAR.has(ch) and TILE_FOR_CHAR[ch] in SOLID_TILES)
 
 
 ## Atlas column for a layout character, or -1 if the character is unknown.
@@ -73,7 +78,7 @@ static func build_layer(layout: PackedStringArray, marker_chars: String, marker_
 		for x in layout[y].length():
 			var cell := Vector2i(x, y)
 			var ch := layout[y][x]
-			if marker_chars.contains(ch):
+			if marker_chars.contains(ch) or ch == FOOTPRINT_CHAR:
 				ch = marker_floor
 			var tile := tile_for_char(ch, cell)
 			if tile < 0:

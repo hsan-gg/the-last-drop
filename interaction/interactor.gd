@@ -15,6 +15,8 @@ func _ready() -> void:
 
 
 func interact() -> void:
+	if Modal.any_open(get_tree()):  # E belongs to the open panel
+		return
 	var target := _closest()
 	if target != null:
 		target.interact(self)

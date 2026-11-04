@@ -60,6 +60,9 @@ func _ready() -> void:
 	_feed.reward_card = _reward
 	add_child(QuizPanel.new())
 	add_child(PuzzlePanel.new())
+	for game: MiniGame in [CircuitGame.new(), LockGame.new(), MemoryGame.new(), MixGame.new(), ConveyorGame.new(), SignalGame.new()]:
+		add_child(game)
+	add_child(CraftPanel.new())
 	add_child(GameMenu.new())
 	var travel := TravelPanel.new()
 	travel.add_to_group("travel_panel")
@@ -94,7 +97,8 @@ func _ready() -> void:
 
 
 func set_area(new_area_id: String) -> void:
-	area_id = new_area_id
+	# Inside a house or a dungeon, the goals are still the region's.
+	area_id = Content.area(new_area_id).get("region", new_area_id)
 	# A new area is not an objective change: take its current goal silently.
 	_objective_seen = false
 	_last_objective_id = ""

@@ -180,6 +180,30 @@
 				"props": {
 					"region_id": "outpost"
 				}
+			},
+			"0": {
+				"scene": "building",
+				"props": {
+					"look": "outpost_house",
+					"interior": "res://world/tobi_house.tscn",
+					"prompt": "Visit Tobi's house"
+				}
+			},
+			"&": {
+				"scene": "building",
+				"props": {
+					"look": "outpost_shed",
+					"interior": "res://world/tool_shed.tscn",
+					"prompt": "Open the tool shed"
+				}
+			},
+			"*": {
+				"scene": "building",
+				"props": {
+					"look": "metro_stairs",
+					"interior": "res://world/metro.tscn",
+					"prompt": "Go down to the metro"
+				}
 			}
 		},
 		"lit_tint": "#f0d8bc",
@@ -380,6 +404,14 @@
 				"scene": "rail_cart",
 				"props": {
 					"region_id": "factory"
+				}
+			},
+			"0": {
+				"scene": "building",
+				"props": {
+					"look": "factory_office",
+					"interior": "res://world/halden_office.tscn",
+					"prompt": "Enter Halden's office"
 				}
 			}
 		},
@@ -685,6 +717,22 @@
 				"props": {
 					"region_id": "dump"
 				}
+			},
+			"0": {
+				"scene": "building",
+				"props": {
+					"look": "dump_hall",
+					"interior": "res://world/recycling_hall.tscn",
+					"prompt": "Enter the recycling hall"
+				}
+			},
+			"&": {
+				"scene": "building",
+				"props": {
+					"look": "dump_shack",
+					"interior": "res://world/nana_shack.tscn",
+					"prompt": "Knock on Nana Ru's shack"
+				}
 			}
 		},
 		"lit_tint": "#f0dcc4",
@@ -976,6 +1024,14 @@
 				"props": {
 					"region_id": "river"
 				}
+			},
+			"0": {
+				"scene": "building",
+				"props": {
+					"look": "river_boathouse",
+					"interior": "res://world/boathouse.tscn",
+					"prompt": "Enter the boathouse"
+				}
 			}
 		},
 		"lit_tint": "#c8e0e4",
@@ -1172,6 +1228,22 @@
 				"scene": "rail_cart",
 				"props": {
 					"region_id": "fields"
+				}
+			},
+			"0": {
+				"scene": "building",
+				"props": {
+					"look": "fields_farmhouse",
+					"interior": "res://world/farmhouse.tscn",
+					"prompt": "Enter the farmhouse"
+				}
+			},
+			"&": {
+				"scene": "building",
+				"props": {
+					"look": "fields_barn",
+					"interior": "res://world/barn.tscn",
+					"prompt": "Open the barn"
 				}
 			}
 		},
@@ -1380,6 +1452,22 @@
 				"props": {
 					"region_id": "industry"
 				}
+			},
+			"0": {
+				"scene": "building",
+				"props": {
+					"look": "industry_bunker",
+					"interior": "res://world/bunker.tscn",
+					"prompt": "Enter Vex's bunker"
+				}
+			},
+			"&": {
+				"scene": "building",
+				"props": {
+					"look": "mine_mouth",
+					"interior": "res://world/slag_mine.tscn",
+					"prompt": "Go down the mine"
+				}
 			}
 		},
 		"night_wave": [
@@ -1514,6 +1602,1149 @@
 				"scene": "rail_cart",
 				"props": {
 					"region_id": "sanctuary"
+				}
+			},
+			"0": {
+				"scene": "building",
+				"props": {
+					"look": "sanctuary_lab",
+					"interior": "res://world/ines_lab.tscn",
+					"prompt": "Enter Ines's lab"
+				}
+			}
+		}
+	},
+	{
+		"id": "tobi_house",
+		"layout": "res://data/maps/tobi_house.txt",
+		"floor": ".",
+		"tileset": "home",
+		"kind": "interior",
+		"region": "outpost",
+		"title": "Old Tobi's House",
+		"subtitle": "it smells of solder and soup",
+		"tint": "#f0dcc0",
+		"lit_tint": "#f0dcc0",
+		"music": "outpost",
+		"ambience": [
+			"dust"
+		],
+		"entities": {
+			"^": {
+				"scene": "door",
+				"props": {
+					"target_scene": "res://world/outpost.tscn",
+					"arrive_marker": "0",
+					"prompt": "Step outside",
+					"walk_through": true
+				}
+			},
+			"+": {
+				"scene": "workbench"
+			},
+			";": {
+				"scene": "note",
+				"props": {
+					"note_id": "tobi_diary",
+					"title": "Tobi's diary",
+					"lines": [
+						"Tobi's handwriting, shaky: 'Things I must not forget.'",
+						"'1. Water the beans. 2. The radio needs a valve. 3. Her name was Ines.'",
+						"'4. The metro under the yard flooded in the second winter. Something still moves down there.'",
+						"'5. I walled up the pantry. If I forget why, it is because I wanted to.'"
+					]
+				}
+			},
+			"!": {
+				"scene": "puzzle_station",
+				"props": {
+					"puzzle_id": "radio_handshake",
+					"look": "radio",
+					"prompt": "Tune Tobi's old radio",
+					"reward": {
+						"items": {
+							"rune_battery": 1
+						},
+						"xp": 30
+					},
+					"done_lines": [
+						"A voice through the static: '...anyone on this band, the river is still moving...'",
+						"Then nothing. But somebody is out there."
+					],
+					"done_prompt": "Look again"
+				}
+			},
+			"x": {
+				"scene": "breakable",
+				"props": {
+					"sprite_name": "cracked_home_top",
+					"hits": 3,
+					"secret": true,
+					"persist": true,
+					"drops": {},
+					"xp": 20
+				}
+			},
+			"c": {
+				"scene": "chest",
+				"props": {
+					"items": {
+						"energy_bar": 2,
+						"purified_water": 1,
+						"textile_scrap": 2
+					},
+					"gear": []
+				}
+			}
+		}
+	},
+	{
+		"id": "tool_shed",
+		"layout": "res://data/maps/tool_shed.txt",
+		"floor": ".",
+		"tileset": "shack",
+		"kind": "interior",
+		"region": "outpost",
+		"title": "The Tool Shed",
+		"subtitle": "everything here is broken, or about to be",
+		"tint": "#e0d0b8",
+		"lit_tint": "#e0d0b8",
+		"music": "outpost",
+		"ambience": [
+			"dust"
+		],
+		"entities": {
+			"^": {
+				"scene": "door",
+				"props": {
+					"target_scene": "res://world/outpost.tscn",
+					"arrive_marker": "&",
+					"prompt": "Step outside",
+					"walk_through": true
+				}
+			},
+			"!": {
+				"scene": "puzzle_station",
+				"props": {
+					"puzzle_id": "shed_fusebox",
+					"look": "fusebox",
+					"prompt": "Fix the fuse box",
+					"reward": {
+						"items": {
+							"pickaxe": 1
+						},
+						"xp": 30,
+						"flag": "shed_power"
+					},
+					"done_lines": [
+						"The bulb buzzes on. Behind the workbench hangs a pickaxe.",
+						"You take it. Swing it (J) at ore veins to break them."
+					],
+					"done_prompt": "Look again"
+				}
+			},
+			";": {
+				"scene": "note",
+				"props": {
+					"note_id": "metro_notice",
+					"title": "a torn notice",
+					"lines": [
+						"A notice, half torn: 'METRO SERVICE STAFF: the maintenance key is kept in the ticket office safe drawer.'",
+						"Someone has scrawled under it: 'not any more. it's in the office desk down there. good luck.'"
+					]
+				}
+			},
+			"c": {
+				"scene": "chest",
+				"props": {
+					"items": {
+						"bandage": 2,
+						"copper_wire": 2
+					},
+					"gear": []
+				}
+			}
+		}
+	},
+	{
+		"id": "metro",
+		"layout": "res://data/maps/metro.txt",
+		"floor": ".",
+		"tileset": "metro",
+		"kind": "dungeon",
+		"region": "outpost",
+		"title": "The Old Metro",
+		"subtitle": "the last trains left from here",
+		"tint": "#5a6070",
+		"lit_tint": "#5a6070",
+		"music": "outpost",
+		"ambience": [
+			"dust",
+			"mist"
+		],
+		"entities": {
+			"^": {
+				"scene": "door",
+				"props": {
+					"target_scene": "res://world/outpost.tscn",
+					"arrive_marker": "*",
+					"prompt": "Climb the stairs",
+					"walk_through": true
+				}
+			},
+			";": {
+				"scene": "note",
+				"props": {
+					"note_id": "last_train",
+					"title": "a timetable",
+					"lines": [
+						"A timetable. Every train after the 14th is crossed out by hand.",
+						"Under the last one, in pencil: 'They said the water would be fine by spring.'"
+					]
+				}
+			},
+			"!": {
+				"scene": "puzzle_station",
+				"props": {
+					"puzzle_id": "metro_lights",
+					"look": "radio",
+					"prompt": "Wake the signal box",
+					"reward": {
+						"items": {
+							"metro_key": 1
+						},
+						"xp": 40,
+						"flag": "metro_lights_on"
+					},
+					"done_lines": [
+						"Green lamps flicker along the tunnel. A drawer in the signal box springs open:",
+						"a blue-tagged key. 'MAINTENANCE ONLY'."
+					],
+					"done_prompt": "Look again"
+				}
+			},
+			"|": {
+				"scene": "door",
+				"props": {
+					"key_item": "metro_key",
+					"locked_text": "A service gate. A blue tag on the lock reads: MAINTENANCE KEY.",
+					"prompt": "Unlock the gate"
+				}
+			},
+			"c": {
+				"scene": "chest",
+				"props": {
+					"items": {
+						"rune_battery": 2,
+						"coal": 2
+					},
+					"gear": [
+						"tire_vest"
+					]
+				}
+			},
+			"l": {
+				"scene": "chest",
+				"props": {
+					"items": {
+						"bandage": 2,
+						"energy_bar": 1
+					},
+					"gear": [
+						"scrap_blade"
+					]
+				}
+			},
+			"x": {
+				"scene": "breakable",
+				"props": {
+					"sprite_name": "cracked_metro_face",
+					"hits": 3,
+					"secret": true,
+					"persist": true,
+					"drops": {},
+					"xp": 20
+				}
+			},
+			"k": {
+				"scene": "breakable",
+				"props": {
+					"sprite_name": "vein_crystal",
+					"hits": 3,
+					"needs_item": "pickaxe",
+					"persist": false,
+					"drops": {
+						"crystal_shard": 2
+					},
+					"xp": 3
+				}
+			},
+			"o": {
+				"scene": "breakable",
+				"props": {
+					"sprite_name": "vein_copper",
+					"hits": 3,
+					"needs_item": "pickaxe",
+					"persist": false,
+					"drops": {
+						"copper_ore": 2
+					},
+					"xp": 3
+				}
+			},
+			"q": {
+				"scene": "breakable",
+				"props": {
+					"sprite_name": "vein_coal",
+					"hits": 3,
+					"needs_item": "pickaxe",
+					"persist": false,
+					"drops": {
+						"coal": 2
+					},
+					"xp": 3
+				}
+			},
+			"Y": {
+				"scene": "enemy",
+				"props": {
+					"enemy_id": "walker"
+				}
+			},
+			"Q": {
+				"scene": "enemy",
+				"props": {
+					"enemy_id": "runner"
+				}
+			},
+			"R": {
+				"scene": "enemy",
+				"props": {
+					"enemy_id": "brute"
+				}
+			},
+			"L": {
+				"scene": "lamp"
+			}
+		}
+	},
+	{
+		"id": "halden_office",
+		"layout": "res://data/maps/halden_office.txt",
+		"floor": ".",
+		"tileset": "office",
+		"kind": "interior",
+		"region": "factory",
+		"title": "Halden's Office",
+		"subtitle": "within limits",
+		"tint": "#d0d8e0",
+		"lit_tint": "#d0d8e0",
+		"music": "factory",
+		"ambience": [
+			"dust"
+		],
+		"entities": {
+			"^": {
+				"scene": "door",
+				"props": {
+					"target_scene": "res://world/factory.tscn",
+					"arrive_marker": "0",
+					"prompt": "Step outside",
+					"walk_through": true
+				}
+			},
+			"!": {
+				"scene": "puzzle_station",
+				"props": {
+					"puzzle_id": "halden_safe",
+					"look": "safe",
+					"prompt": "Try the wall safe",
+					"reward": {
+						"gear": [
+							"welding_mask"
+						],
+						"items": {
+							"rune_battery": 2
+						},
+						"xp": 50
+					},
+					"done_lines": [
+						"The safe swings open: a welding mask, two crystal cells,",
+						"and a photo of a girl with Halden's eyes. On the back: 'for Asha, 14 July'."
+					],
+					"done_prompt": "Look again"
+				}
+			},
+			"?": {
+				"scene": "puzzle_station",
+				"props": {
+					"puzzle_id": "hazmat_pairs",
+					"look": "board",
+					"prompt": "Study the hazard board",
+					"reward": {
+						"items": {
+							"bandage": 2
+						},
+						"xp": 30
+					},
+					"done_lines": [
+						"You know every symbol on the board now. So would anyone who read it."
+					],
+					"done_prompt": "Look again"
+				}
+			},
+			";": {
+				"scene": "note",
+				"props": {
+					"note_id": "halden_memo",
+					"title": "a memo",
+					"lines": [
+						"MEMO: 'Discharge within limits. Limits revised upward, effective immediately.'",
+						"Signed by Halden. Underneath, in his hand: 'I should not have signed this.'"
+					]
+				}
+			},
+			"c": {
+				"scene": "chest",
+				"props": {
+					"items": {
+						"chemical_can": 1,
+						"copper_wire": 2
+					},
+					"gear": []
+				}
+			}
+		}
+	},
+	{
+		"id": "recycling_hall",
+		"layout": "res://data/maps/recycling_hall.txt",
+		"floor": ".",
+		"tileset": "shack",
+		"kind": "interior",
+		"region": "dump",
+		"title": "The Recycling Hall",
+		"subtitle": "the line still runs, if someone runs it",
+		"tint": "#e0d4c0",
+		"lit_tint": "#e0d4c0",
+		"music": "dump",
+		"ambience": [
+			"dust"
+		],
+		"entities": {
+			"^": {
+				"scene": "door",
+				"props": {
+					"target_scene": "res://world/dump.tscn",
+					"arrive_marker": "0",
+					"prompt": "Step outside",
+					"walk_through": true
+				}
+			},
+			"!": {
+				"scene": "puzzle_station",
+				"props": {
+					"puzzle_id": "dump_line",
+					"look": "conveyor",
+					"prompt": "Run the sorting line",
+					"reward": {
+						"items": {
+							"scrap_metal": 2,
+							"glass_jar": 1
+						},
+						"xp": 50
+					},
+					"done_lines": [
+						"The line rattles to a stop. Neat piles, each in its bin. Nana Ru would approve."
+					],
+					"done_prompt": "Look again"
+				}
+			},
+			"?": {
+				"scene": "puzzle_station",
+				"props": {
+					"puzzle_id": "dump_pairs",
+					"look": "board",
+					"prompt": "Read the pickers' board",
+					"reward": {
+						"items": {
+							"energy_bar": 1
+						},
+						"xp": 25
+					},
+					"done_lines": [
+						"The pickers' board: what goes where. You could teach it now."
+					],
+					"done_prompt": "Look again"
+				}
+			},
+			";": {
+				"scene": "note",
+				"props": {
+					"note_id": "kip_drawing",
+					"title": "a child's drawing",
+					"lines": [
+						"A crayon drawing: a tall woman with white hair, a boy running, and a big sun.",
+						"'NANA RU AND ME AND THE SUN COMING BACK' it says, in letters of every size."
+					]
+				}
+			},
+			"c": {
+				"scene": "chest",
+				"props": {
+					"items": {
+						"tin_can": 2,
+						"plastic_bottle": 2
+					},
+					"gear": []
+				}
+			}
+		}
+	},
+	{
+		"id": "nana_shack",
+		"layout": "res://data/maps/nana_shack.txt",
+		"floor": ".",
+		"tileset": "shack",
+		"kind": "interior",
+		"region": "dump",
+		"title": "Nana Ru's Shack",
+		"subtitle": "everything has a price, and a use",
+		"tint": "#e0c8a8",
+		"lit_tint": "#e0c8a8",
+		"music": "dump",
+		"ambience": [
+			"dust"
+		],
+		"entities": {
+			"^": {
+				"scene": "door",
+				"props": {
+					"target_scene": "res://world/dump.tscn",
+					"arrive_marker": "&",
+					"prompt": "Step outside",
+					"walk_through": true
+				}
+			},
+			";": {
+				"scene": "note",
+				"props": {
+					"note_id": "nana_ledger",
+					"title": "Nana Ru's ledger",
+					"lines": [
+						"Columns of trades in tiny writing: 'Six bottles: one tin of beans. One battery, sealed: two days of water.'",
+						"On the last page: 'Kip's birthday. Find him something that is not rubbish.'"
+					]
+				}
+			},
+			"x": {
+				"scene": "breakable",
+				"props": {
+					"sprite_name": "cracked_shack_face",
+					"hits": 3,
+					"secret": true,
+					"persist": true,
+					"drops": {},
+					"xp": 20
+				}
+			},
+			"c": {
+				"scene": "chest",
+				"props": {
+					"items": {
+						"rune_battery": 1,
+						"crystal_shard": 1
+					},
+					"gear": [
+						"hard_hat"
+					]
+				}
+			}
+		}
+	},
+	{
+		"id": "boathouse",
+		"layout": "res://data/maps/boathouse.txt",
+		"floor": ".",
+		"tileset": "home",
+		"kind": "interior",
+		"region": "river",
+		"title": "Osei's Boathouse",
+		"subtitle": "the river remembers everything",
+		"tint": "#c8d8d0",
+		"lit_tint": "#c8d8d0",
+		"music": "river",
+		"ambience": [
+			"dust"
+		],
+		"entities": {
+			"^": {
+				"scene": "door",
+				"props": {
+					"target_scene": "res://world/river.tscn",
+					"arrive_marker": "0",
+					"prompt": "Step outside",
+					"walk_through": true
+				}
+			},
+			";": {
+				"scene": "note",
+				"props": {
+					"note_id": "osei_ledger",
+					"title": "Osei's ledger",
+					"lines": [
+						"A ferryman's ledger. Fares, weather, who crossed and when.",
+						"A note in the margin: 'Halden came by again. Asked me to keep his safe code, in case he forgets:",
+						"his girl's birthday, the 14th of July. 1-4-7. Poor man.'"
+					]
+				}
+			},
+			"!": {
+				"scene": "puzzle_station",
+				"props": {
+					"puzzle_id": "river_pumps",
+					"look": "valves",
+					"prompt": "Open the pump valves",
+					"reward": {
+						"items": {
+							"purified_water": 3
+						},
+						"xp": 40
+					},
+					"done_lines": [
+						"Water rushes through the filters and out of the tap, clear and cold."
+					],
+					"done_prompt": "Look again"
+				}
+			},
+			"?": {
+				"scene": "puzzle_station",
+				"props": {
+					"puzzle_id": "filter_bed",
+					"look": "mixer",
+					"prompt": "Pack the filter barrel",
+					"reward": {
+						"items": {
+							"charcoal": 2,
+							"sand_sack": 1
+						},
+						"xp": 35
+					},
+					"done_lines": [
+						"Gravel, sand, charcoal, sand. The water that drips out the bottom is clear."
+					],
+					"done_prompt": "Look again"
+				}
+			},
+			"c": {
+				"scene": "chest",
+				"props": {
+					"items": {
+						"glass_jar": 2,
+						"charcoal": 1
+					},
+					"gear": []
+				}
+			}
+		}
+	},
+	{
+		"id": "farmhouse",
+		"layout": "res://data/maps/farmhouse.txt",
+		"floor": ".",
+		"tileset": "home",
+		"kind": "interior",
+		"region": "fields",
+		"title": "Lena's Farmhouse",
+		"subtitle": "the seeds are still in the drawer",
+		"tint": "#f0e0c0",
+		"lit_tint": "#f0e0c0",
+		"music": "fields",
+		"ambience": [
+			"dust"
+		],
+		"entities": {
+			"^": {
+				"scene": "door",
+				"props": {
+					"target_scene": "res://world/fields.tscn",
+					"arrive_marker": "0",
+					"prompt": "Step outside",
+					"walk_through": true
+				}
+			},
+			"!": {
+				"scene": "puzzle_station",
+				"props": {
+					"puzzle_id": "compost_mix",
+					"look": "mixer",
+					"prompt": "Mix the compost",
+					"reward": {
+						"items": {
+							"food_scraps": 2
+						},
+						"xp": 40,
+						"flag": "compost_mixed"
+					},
+					"done_lines": [
+						"The heap warms in your hands. In a week it will be soil. Jory claps, silently, delighted."
+					],
+					"done_prompt": "Look again"
+				}
+			},
+			"?": {
+				"scene": "puzzle_station",
+				"props": {
+					"puzzle_id": "seed_pairs",
+					"look": "board",
+					"prompt": "Jory's seed chart",
+					"reward": {
+						"items": {
+							"energy_bar": 2
+						},
+						"xp": 30
+					},
+					"done_lines": [
+						"Jory's chart, drawn in pictures because he does not speak:",
+						"beans feed the soil, corn climbs the beans, squash shades the weeds."
+					],
+					"done_prompt": "Look again"
+				}
+			},
+			";": {
+				"scene": "note",
+				"props": {
+					"note_id": "jory_drawing",
+					"title": "Jory's drawing",
+					"lines": [
+						"Jory cannot speak, so he draws. This one: the field green, Lena smiling, and you, holding a spade.",
+						"It is dated tomorrow."
+					]
+				}
+			},
+			"c": {
+				"scene": "chest",
+				"props": {
+					"items": {
+						"textile_scrap": 2,
+						"food_scraps": 2
+					},
+					"gear": []
+				}
+			}
+		}
+	},
+	{
+		"id": "barn",
+		"layout": "res://data/maps/barn.txt",
+		"floor": ".",
+		"tileset": "shack",
+		"kind": "interior",
+		"region": "fields",
+		"title": "The Old Barn",
+		"subtitle": "hay, rust and a locked stall",
+		"tint": "#e8d0a8",
+		"lit_tint": "#e8d0a8",
+		"music": "fields",
+		"ambience": [
+			"dust"
+		],
+		"entities": {
+			"^": {
+				"scene": "door",
+				"props": {
+					"target_scene": "res://world/fields.tscn",
+					"arrive_marker": "&",
+					"prompt": "Step outside",
+					"walk_through": true
+				}
+			},
+			"!": {
+				"scene": "puzzle_station",
+				"props": {
+					"puzzle_id": "barn_lock",
+					"look": "safe",
+					"prompt": "Try the stall padlock",
+					"reward": {
+						"items": {
+							"rusty_key": 1
+						},
+						"xp": 40
+					},
+					"done_lines": [
+						"The padlock clicks. Hanging inside the box: a rusty key on a nail."
+					],
+					"done_prompt": "Look again"
+				}
+			},
+			";": {
+				"scene": "note",
+				"props": {
+					"note_id": "barn_sign",
+					"title": "a sign on the stall",
+					"lines": [
+						"'TOOLS. LOCKED. Code from the plant, ask the robot.' Someone had a sense of humour."
+					]
+				}
+			},
+			"|": {
+				"scene": "door",
+				"props": {
+					"key_item": "rusty_key",
+					"locked_text": "The back stall is shut with a heavy lock. It takes an old key.",
+					"prompt": "Unlock the gate"
+				}
+			},
+			"c": {
+				"scene": "chest",
+				"props": {
+					"items": {
+						"crystal_shard": 1,
+						"iron_ore": 2
+					},
+					"gear": [
+						"crash_helmet"
+					]
+				}
+			},
+			"l": {
+				"scene": "chest",
+				"props": {
+					"items": {
+						"energy_bar": 2,
+						"rune_battery": 1
+					},
+					"gear": []
+				}
+			}
+		}
+	},
+	{
+		"id": "bunker",
+		"layout": "res://data/maps/bunker.txt",
+		"floor": ".",
+		"tileset": "office",
+		"kind": "interior",
+		"region": "industry",
+		"title": "Vex's Bunker",
+		"subtitle": "the last working lights in the plant",
+		"tint": "#c8ccd8",
+		"lit_tint": "#c8ccd8",
+		"music": "industry",
+		"ambience": [
+			"dust"
+		],
+		"entities": {
+			"^": {
+				"scene": "door",
+				"props": {
+					"target_scene": "res://world/industry.tscn",
+					"arrive_marker": "0",
+					"prompt": "Step outside",
+					"walk_through": true
+				}
+			},
+			"+": {
+				"scene": "workbench"
+			},
+			"!": {
+				"scene": "puzzle_station",
+				"props": {
+					"puzzle_id": "unit7_diagnostic",
+					"look": "radio",
+					"prompt": "Run Unit-7's diagnostic",
+					"reward": {
+						"items": {
+							"rune_battery": 1,
+							"coal": 3
+						},
+						"xp": 45
+					},
+					"done_lines": [
+						"UNIT-7 SELF-TEST: PASSED. 'Thank you. My left wheel has felt wrong for 2,191 days.'"
+					],
+					"done_prompt": "Look again"
+				}
+			},
+			";": {
+				"scene": "note",
+				"props": {
+					"note_id": "unit7_log",
+					"title": "Unit-7's maintenance log",
+					"lines": [
+						"UNIT-7 LOG, entry 4,410: Swept floor. Floor clean. Floor will be dirty again tomorrow.",
+						"Entry 4,411: Farmer requested barn padlock reset. New code: 2-2-0-8. (Shift change, 22:08.)",
+						"Entry 4,412: No one has come. Swept floor."
+					]
+				}
+			},
+			"c": {
+				"scene": "chest",
+				"props": {
+					"items": {
+						"iron_ore": 2,
+						"coal": 2
+					},
+					"gear": []
+				}
+			}
+		}
+	},
+	{
+		"id": "slag_mine",
+		"layout": "res://data/maps/slag_mine.txt",
+		"floor": ".",
+		"tileset": "cave",
+		"kind": "dungeon",
+		"region": "industry",
+		"title": "The Slag Mine",
+		"subtitle": "dig, and mind the dark",
+		"tint": "#5a4e48",
+		"lit_tint": "#5a4e48",
+		"music": "industry",
+		"ambience": [
+			"dust",
+			"embers"
+		],
+		"entities": {
+			"^": {
+				"scene": "door",
+				"props": {
+					"target_scene": "res://world/industry.tscn",
+					"arrive_marker": "&",
+					"prompt": "Climb out",
+					"walk_through": true
+				}
+			},
+			";": {
+				"scene": "note",
+				"props": {
+					"note_id": "miners_rules",
+					"title": "miners' rules",
+					"lines": [
+						"RULE 1: Mind the dark. RULE 2: Never mine alone. RULE 3: What you dig up, you put to use.",
+						"Scratched underneath: 'rule 4: the wall at the far end of the east cut is hollow. don't tell Vex.'"
+					]
+				}
+			},
+			"!": {
+				"scene": "puzzle_station",
+				"props": {
+					"puzzle_id": "mine_lift",
+					"look": "fusebox",
+					"prompt": "Restore the lift power",
+					"reward": {
+						"items": {
+							"crystal_shard": 2,
+							"iron_ore": 2
+						},
+						"xp": 60,
+						"flag": "mine_lift_on"
+					},
+					"done_lines": [
+						"The old lift groans and the gallery lamps come up. Ore glints in every wall."
+					],
+					"done_prompt": "Look again"
+				}
+			},
+			"c": {
+				"scene": "chest",
+				"props": {
+					"items": {
+						"coal": 3,
+						"copper_ore": 2
+					},
+					"gear": [
+						"scrap_plate"
+					]
+				}
+			},
+			"l": {
+				"scene": "chest",
+				"props": {
+					"items": {
+						"crystal_shard": 3,
+						"rune_battery": 2
+					},
+					"gear": [
+						"recycled_edge"
+					]
+				}
+			},
+			"x": {
+				"scene": "breakable",
+				"props": {
+					"sprite_name": "cracked_cave_face",
+					"hits": 3,
+					"secret": true,
+					"persist": true,
+					"drops": {},
+					"xp": 20
+				}
+			},
+			"o": {
+				"scene": "breakable",
+				"props": {
+					"sprite_name": "vein_copper",
+					"hits": 3,
+					"needs_item": "pickaxe",
+					"persist": false,
+					"drops": {
+						"copper_ore": 2
+					},
+					"xp": 3
+				}
+			},
+			"i": {
+				"scene": "breakable",
+				"props": {
+					"sprite_name": "vein_iron",
+					"hits": 3,
+					"needs_item": "pickaxe",
+					"persist": false,
+					"drops": {
+						"iron_ore": 2
+					},
+					"xp": 3
+				}
+			},
+			"k": {
+				"scene": "breakable",
+				"props": {
+					"sprite_name": "vein_crystal",
+					"hits": 3,
+					"needs_item": "pickaxe",
+					"persist": false,
+					"drops": {
+						"crystal_shard": 1
+					},
+					"xp": 3
+				}
+			},
+			"q": {
+				"scene": "breakable",
+				"props": {
+					"sprite_name": "vein_coal",
+					"hits": 3,
+					"needs_item": "pickaxe",
+					"persist": false,
+					"drops": {
+						"coal": 2
+					},
+					"xp": 3
+				}
+			},
+			"Y": {
+				"scene": "enemy",
+				"props": {
+					"enemy_id": "walker"
+				}
+			},
+			"Q": {
+				"scene": "enemy",
+				"props": {
+					"enemy_id": "runner"
+				}
+			},
+			"R": {
+				"scene": "enemy",
+				"props": {
+					"enemy_id": "rust_brute"
+				}
+			},
+			"L": {
+				"scene": "lamp"
+			}
+		}
+	},
+	{
+		"id": "ines_lab",
+		"layout": "res://data/maps/ines_lab.txt",
+		"floor": ".",
+		"tileset": "lab",
+		"kind": "interior",
+		"region": "sanctuary",
+		"title": "Ines's Lab",
+		"subtitle": "she left the lights on for you",
+		"tint": "#e8f0ec",
+		"lit_tint": "#e8f0ec",
+		"music": "sanctuary",
+		"ambience": [
+			"dust"
+		],
+		"entities": {
+			"^": {
+				"scene": "door",
+				"props": {
+					"target_scene": "res://world/sanctuary.tscn",
+					"arrive_marker": "0",
+					"prompt": "Step outside",
+					"walk_through": true
+				}
+			},
+			"!": {
+				"scene": "puzzle_station",
+				"props": {
+					"puzzle_id": "ines_vault",
+					"look": "safe",
+					"prompt": "Open Ines's vault",
+					"reward": {
+						"gear": [
+							"solar_saber"
+						],
+						"items": {
+							"crystal_shard": 2
+						},
+						"xp": 80
+					},
+					"done_lines": [
+						"Inside the vault: a blade that hums with stored sunlight, and a card in Ines's hand:",
+						"'For whoever closes the loops. Cut only what needs cutting.'"
+					],
+					"done_prompt": "Look again",
+					"required_flag": "tobi_remembered",
+					"locked_lines": [
+						"A vault with a four-digit dial. Ines would have told only one person the code."
+					]
+				}
+			},
+			"?": {
+				"scene": "puzzle_station",
+				"props": {
+					"puzzle_id": "water_cycle_pairs",
+					"look": "board",
+					"prompt": "Ines's teaching board",
+					"reward": {
+						"items": {
+							"purified_water": 2
+						},
+						"xp": 35
+					},
+					"done_lines": [
+						"Evaporation, condensation, rain, runoff, the river, the sea. Round and round."
+					],
+					"done_prompt": "Look again"
+				}
+			},
+			";": {
+				"scene": "note",
+				"props": {
+					"note_id": "ines_letter",
+					"title": "a letter",
+					"lines": [
+						"'Tobi. If you are reading this, you came back. I am not angry. I was never angry.'",
+						"'The vault code is the day we met. You will remember. You always remembered the important things.'"
+					]
+				}
+			},
+			"c": {
+				"scene": "chest",
+				"props": {
+					"items": {
+						"rune_battery": 2,
+						"bandage": 2
+					},
+					"gear": []
 				}
 			}
 		}

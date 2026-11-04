@@ -92,3 +92,5 @@ signal boss_changed(boss_name: String, ratio: float)
 
 ## A timed challenge's label and seconds left; an empty label hides the timer.
 signal challenge_changed(label: String, seconds: float)
+## The workbench was used: the crafting panel opens.
+signal craft_requested

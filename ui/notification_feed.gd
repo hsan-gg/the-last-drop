@@ -64,9 +64,14 @@ func _ready() -> void:
 	EventBus.dialogue_finished.connect(_set_talking.bind(false).unbind(1))
 	EventBus.dialogue_interrupted.connect(_set_talking.bind(false))
 	EventBus.reward_requested.connect(func(kind: String, title: String, line: String) -> void:
-		Notices.run(func() -> void:
-			if reward_card != null:
-				reward_card.present(kind, title, line)))
+		Notices.run(_present_reward.bind(kind, title, line)))
+
+
+## A bound method rather than a lambda, so a feed that is gone (you left the
+## area) is seen to be gone and the reward is not shown on a freed screen.
+func _present_reward(kind: String, title: String, line: String) -> void:
+	if reward_card != null:
+		reward_card.present(kind, title, line)
 
 
 ## Queues a message (after any open conversation).

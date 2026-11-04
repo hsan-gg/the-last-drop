@@ -31,7 +31,8 @@ func _ready() -> void:
 
 
 func show_area(area_id: String) -> void:
-	var entry: Array = TITLES.get(area_id, [area_id.capitalize(), ""])
+	var config := Content.area(area_id)
+	var entry: Array = TITLES.get(area_id, [config.get("title", area_id.capitalize()), config.get("subtitle", "")])
 	_title.text = entry[0]
 	_line.text = "~ %s ~" % entry[1] if not String(entry[1]).is_empty() else ""
 	var tween := create_tween()

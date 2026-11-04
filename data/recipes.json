@@ -1,0 +1,10 @@
+[
+	{"id": "purified_water", "makes": {"item": "purified_water", "count": 2}, "needs": {"charcoal": 1, "sand_sack": 1, "glass_jar": 1}, "note": "Sand, then charcoal, into a clean jar: a filter you can drink from."},
+	{"id": "bandage", "makes": {"item": "bandage", "count": 2}, "needs": {"textile_scrap": 2}, "note": "Old cloth, boiled and cut into strips."},
+	{"id": "rune_battery", "makes": {"item": "rune_battery", "count": 1}, "needs": {"crystal_shard": 1, "copper_wire": 1}, "note": "Quartz holds a charge. Copper carries it."},
+	{"id": "scrap_blade", "makes": {"gear": "scrap_blade"}, "needs": {"iron_ore": 3, "coal": 1}, "note": "Smelt the ore, beat it flat, grind an edge."},
+	{"id": "welding_mask", "makes": {"gear": "welding_mask"}, "needs": {"iron_ore": 2, "crystal_shard": 1}, "note": "A steel shell and a crystal visor."},
+	{"id": "scrap_plate", "makes": {"gear": "scrap_plate"}, "needs": {"iron_ore": 5, "coal": 2}, "note": "Plates of steel riveted onto a jacket."},
+	{"id": "recycled_edge", "makes": {"gear": "recycled_edge"}, "needs": {"iron_ore": 4, "copper_ore": 3, "coal": 2}, "note": "Steel folded with copper, the way the old smiths did."},
+	{"id": "solar_saber", "makes": {"gear": "solar_saber"}, "needs": {"crystal_shard": 4, "copper_ore": 4, "iron_ore": 3}, "note": "Crystal stores sunlight; copper lets it out along the blade."}
+]

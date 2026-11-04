@@ -60,7 +60,7 @@ func test_layouts_use_only_known_characters() -> void:
 		for row in layout.size():
 			for column in layout[row].length():
 				var ch := layout[row][column]
-				var known := ch == MapBuilder.GROUND_CHAR or MapBuilder.TILE_FOR_CHAR.has(ch) or markers.contains(ch)
+				var known := ch == MapBuilder.GROUND_CHAR or ch == MapBuilder.FOOTPRINT_CHAR or MapBuilder.TILE_FOR_CHAR.has(ch) or markers.contains(ch)
 				assert_true(known, "%s: '%s' at (%d,%d)" % [area_id, ch, column, row])
 
 

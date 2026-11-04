@@ -236,6 +236,10 @@ func _strike() -> void:
 		if CombatRules.in_arc(origin, _player.facing, enemy.global_position + BODY_OFFSET, REACH, ARC_HALF_ANGLE):
 			enemy.take_hit(damage, origin, KNOCKBACK)
 			hit_any = true
+	for node in get_tree().get_nodes_in_group("breakables"):  # walls with cracks, ore veins
+		var breakable := node as Breakable
+		if breakable != null and CombatRules.in_arc(origin, _player.facing, breakable.global_position, REACH, ARC_HALF_ANGLE):
+			breakable.take_hit(damage, origin, 0.0)
 	if hit_any:
 		EventBus.sfx_requested.emit("hit")
 		Juicee.hit_stop(self, HIT_STOP_SECONDS)
