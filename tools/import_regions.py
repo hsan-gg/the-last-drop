@@ -240,8 +240,8 @@ def dump():
     ground_sheet = load("Tiles/Background_Bleak-Yellow_TileSet.png")
     base = tinted(crop(ground_sheet, 0, 0), (120, 96, 72), 0.4)
     a = base
-    b = over(base, load("Objects/Chips-pack_Red.png"), dx=3, dy=9) if load("Objects/Chips-pack_Red.png").shape[0] <= 16 else shade(base, -6)
-    c = cracks(shade(base, 4), (80, 60, 44), 7)
+    b = cracks(shade(base, -5), (80, 60, 44), 7)
+    c = over(base, load("Objects/Chips-pack_Red.png"), dx=3, dy=9)  # the rarest variant: a bit of litter
     rubble = tinted(crop(ground_sheet, 3, 1), (130, 100, 76), 0.4)
     wall = tinted(crop(load("Tiles/Brick-Wall_TileSet.png"), 0, 1), (120, 80, 64), 0.4)
     sludge = liquid((76, 70, 52), (130, 120, 80), 31)
