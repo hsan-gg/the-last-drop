@@ -17,6 +17,8 @@ Converted and levelled by `tools/import_sfx.sh` from these OpenGameArt packs
 - "25 CC0 bang / firework SFX" by rubberduck, CC0: https://opengameart.org/content/25-cc0-bang-firework-sfx
 - "RPG Sound Pack" by artisticdude, CC0: https://opengameart.org/content/rpg-sound-pack
 - "51 UI sound effects" by Kenney, CC0: https://opengameart.org/content/51-ui-sound-effects-buttons-switches-and-clicks
+- "Swishes Sound Pack" by artisticdude, CC0 (sword swings): https://opengameart.org/content/swishes-sound-pack
+- "Zombies Sound Pack" by artisticdude, CC0 (groans, snarls, hurt and dying cries): https://opengameart.org/content/zombies-sound-pack
 - Game concept: "THE LAST DROP" concept dossier, Green Hackathon.
 
 ## Juicee (game feel effects)

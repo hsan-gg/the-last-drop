@@ -340,7 +340,11 @@ s = await until((x) => x.scene === "Cutscene", "the finale cutscene", 15000);
 check("the recording starts the finale", s.scene === "Cutscene");
 await sleep(800);
 await shot("11a_finale");
-await press("Escape");
+// Keys are ignored while a scene is still fading in, so press until it skips.
+for (let i = 0; i < 12 && (await state()).scene === "Cutscene"; i++) {
+  await press("Escape");
+  await sleep(500);
+}
 s = await until((x) => x.scene !== "Sanctuary" && x.scene !== "Cutscene", "ending scene", 15000);
 check("the finale leads to the ending", s.scene !== "Sanctuary" && s.scene !== "Cutscene");
 await sleep(800);

@@ -53,3 +53,48 @@ func test_with_the_river_between_it_walks_round() -> void:
 		walker += field.direction(walker, player) * 4.0
 		assert_true(field.is_open(NavField.cell_of(walker)), "never steps into water or wall")
 	assert_lt(walker.distance_to(player), 10.0, "and arrives")
+
+
+func _crate_at(cell: Vector2i) -> StaticBody2D:
+	var crate := StaticBody2D.new()
+	crate.collision_layer = 1
+	var shape := CollisionShape2D.new()
+	var box := RectangleShape2D.new()
+	box.size = Vector2(14, 12)
+	shape.shape = box
+	crate.add_child(shape)
+	crate.position = NavField.centre_of(cell)
+	add_child_autofree(crate)
+	return crate
+
+
+func test_solid_props_on_the_map_block_the_way_and_are_walked_round() -> void:
+	# Regression: only the map's walls counted, so zombies pushed into crates.
+	var hall := NavField.new(PackedStringArray([
+		"#######",
+		"#.....#",
+		"#.....#",
+		"#.....#",
+		"#######",
+	]))
+	var crate := _crate_at(Vector2i(3, 2))
+	await wait_physics_frames(2)
+	hall.scan_bodies(get_tree().root.get_world_2d().direct_space_state)
+	assert_false(hall.is_open(Vector2i(3, 2)), "the crate's cell is blocked")
+	assert_false(hall.has_clear_line(_centre(1, 2), _centre(5, 2)), "no walking straight through it")
+	hall.set_target(_centre(5, 2))
+	var way := hall.direction(_centre(2, 2), _centre(5, 2))
+	assert_ne(way.y, 0.0, "steps up or down to go round")
+	crate.free()
+	await wait_physics_frames(2)
+	hall.scan_bodies(get_tree().root.get_world_2d().direct_space_state)
+	assert_true(hall.is_open(Vector2i(3, 2)), "a prop that is gone frees its cell")
+
+
+func test_a_player_pressed_against_a_crate_is_still_found() -> void:
+	var hall := NavField.new(PackedStringArray(["#####", "#...#", "#...#", "#####"]))
+	_crate_at(Vector2i(3, 1))
+	await wait_physics_frames(2)
+	hall.scan_bodies(get_tree().root.get_world_2d().direct_space_state)
+	hall.set_target(_centre(3, 1))
+	assert_ne(hall.distance_at(Vector2i(1, 2)), NavField.UNREACHABLE)

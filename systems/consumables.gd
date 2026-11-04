@@ -22,7 +22,7 @@ static func use(item_id: String) -> bool:
 	Survival.drink(float(effect.get("water", 0)))
 	if effect.get("energy", 0) > 0:
 		Runes.add_energy(float(effect["energy"]))
-	EventBus.sfx_requested.emit("drink")
+	EventBus.sfx_requested.emit("drink" if effect.get("water", 0) > 0 else "bandage")
 	EventBus.loot_found.emit("Used: %s" % item["name"])
 	return true
 

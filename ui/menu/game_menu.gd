@@ -104,11 +104,15 @@ func open(tab_id: String = "") -> void:
 	if not visible:
 		_show_panel()
 		_tabs[_index].refresh()
+		if not title_mode:
+			EventBus.sfx_requested.emit("menu_open")
 
 
 func close() -> void:
 	if visible:
 		_hide_panel()
+		if not title_mode:
+			EventBus.sfx_requested.emit("menu_close")
 		Settings.save()
 
 

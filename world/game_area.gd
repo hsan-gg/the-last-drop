@@ -46,6 +46,9 @@ var _spawned := 0
 var ambience: Ambience
 ## The way to the player round walls and water, shared by every zombie here.
 var nav: NavField
+## How often the zombies' map is checked again for broken walls and opened gates.
+const NAV_SCAN_SECONDS := 2.0
+var _nav_scan_timer := 0.0
 var _reveal_timer := 0.0
 
 @onready var _entities: Node2D = $Entities
@@ -63,6 +66,7 @@ func _ready() -> void:
 	var layout := MapBuilder.load_layout(config["layout"])
 	_layout = layout
 	nav = NavField.new(layout)
+	_scan_nav_soon()
 	_lit_tint = Color(config.get("lit_tint", "#f0e0c8"))
 	var definitions: Dictionary = config.get("entities", {})
 	var marker_chars := MapBuilder.SPAWN_MARKER + "".join(PackedStringArray(definitions.keys()))
@@ -131,9 +135,18 @@ func _check_hazards(delta: float) -> void:
 		FloatingText.spawn(_entities, "TOXIC!", _player.global_position, Color("#9be04a"))
 
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if nav != null and _player != null:
+		_nav_scan_timer -= delta
+		if _nav_scan_timer <= 0.0:
+			_nav_scan_timer = NAV_SCAN_SECONDS
+			nav.scan_bodies(get_world_2d().direct_space_state)
 		nav.set_target(_player.global_position)
+
+
+## The level's props get their bodies over the next frames; scan once they have.
+func _scan_nav_soon() -> void:
+	_nav_scan_timer = 0.1
 
 
 func _process(delta: float) -> void:

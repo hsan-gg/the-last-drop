@@ -325,3 +325,35 @@ func test_a_blocked_zombie_finishes_its_swing_animation() -> void:
 	_advance(enemy, windup + 0.1)
 	assert_eq(enemy.state(), Enemy.State.RECOVER)
 	assert_true(String(enemy._sprite.animation).begins_with("attack"), "the swing is still playing out")
+
+
+func test_the_guard_comes_up_right_after_a_swing_lands() -> void:
+	# Regression: block pressed during a swing was ignored until it ended.
+	assert_true(_player.combat.attack())
+	_tick(0.1)  # past the wind-up: the blow is out
+	assert_true(_player.combat.raise_guard(), "the recovery gives way to the guard")
+	assert_true(_player.combat.is_blocking())
+	Input.action_release("block")
+	await wait_physics_frames(2)
+
+
+func test_a_guard_pressed_in_the_wind_up_rises_once_the_blow_is_out() -> void:
+	assert_true(_player.combat.attack())
+	Input.action_press("block")
+	assert_false(_player.combat.request_guard(), "too early: the blow is not out yet")
+	_tick(0.1)
+	assert_true(_player.combat.is_blocking(), "buffered, not lost")
+	Input.action_release("block")
+	await wait_physics_frames(2)
+
+
+func test_dropping_a_quick_guard_to_swing_leaves_it_ready_again_at_once() -> void:
+	# Regression: every lowering of the guard cost the full 1.2 s cooldown.
+	await wait_physics_frames(2)  # forget presses made by earlier tests this frame
+	assert_true(_player.combat.raise_guard())
+	_tick(0.1)
+	assert_true(_player.combat.attack(), "attack cancels the guard")
+	_tick(0.1)
+	assert_lte(_player.combat.block_cooldown_left(), PlayerCombat.QUICK_GUARD_COOLDOWN_SECONDS)
+	_tick(PlayerCombat.QUICK_GUARD_COOLDOWN_SECONDS)
+	assert_true(_player.combat.raise_guard(), "guard again right after the swing")

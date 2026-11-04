@@ -32,6 +32,9 @@ const STICK_TOP_MARGIN := 34.0
 const SIZES: Array[float] = [0.85, 1.0, 1.2]
 const MOUSE_FREE_ACTIONS: Array[String] = ["attack", "block"]
 const TAP_BUZZ_MS := 12
+## Buttons whose action already makes a sound (a swing, a guard, a rune, a
+## bandage); every other button clicks like the menu buttons do.
+const SOUNDS_OF_THEIR_OWN: Array[String] = ["attack", "block", "interact", "rune_1", "rune_2", "rune_3", "quick_heal", "quick_drink", "menu", "map"]
 const HIT_BUZZ_MS := 60
 ## What a hint calls each action when it is a button rather than a key.
 const LABELS := {
@@ -194,6 +197,8 @@ func _on_real_key() -> void:
 
 func _press(button: Dictionary) -> void:
 	_buzz(TAP_BUZZ_MS)
+	if not SOUNDS_OF_THEIR_OWN.has(button["id"]):
+		EventBus.sfx_requested.emit("click")
 	if button["kind"] == "action":
 		_send_action(button["target"], true)
 	else:

@@ -8,8 +8,17 @@ extends RefCounted
 ##
 ## When a zombie can see the player across open ground it walks straight at
 ## them instead, so the grid never makes chasing look robotic.
+##
+## The map's walls and water come from the layout; the solid things standing on
+## it (crates, cars, machines, furniture, gates, cracked walls) come from a scan
+## of the physics world, repeated now and then so a wall broken through or a
+## gate opened becomes a way through.
 
 const UNREACHABLE := -1
+## The square probed at each cell's centre when scanning for solid things.
+const PROBE_SIZE := 10.0
+## How wide a zombie is, either side of the line it walks.
+const BODY_HALF_WIDTH := 5.0
 ## Eight directions; a diagonal step is allowed only if both sides are open, so
 ## nobody squeezes through the corner where two walls touch.
 const STEPS: Array[Vector2i] = [
@@ -20,6 +29,7 @@ const STEPS: Array[Vector2i] = [
 var _width := 0
 var _height := 0
 var _open := PackedByteArray()
+var _map_open := PackedByteArray()
 var _distance := PackedInt32Array()
 var _target := Vector2i(-9999, -9999)
 
@@ -35,7 +45,31 @@ func _init(layout: PackedStringArray) -> void:
 		for x in _width:
 			var ch := layout[y][x] if x < layout[y].length() else "#"
 			_open[y * _width + x] = 0 if MapBuilder.is_solid_char(ch) else 1
+	_map_open = _open.duplicate()
 
+
+## Closes every open cell that a solid body (collision layer 1) stands on, and
+## reopens cells whose body is gone. Call after the level's bodies exist.
+func scan_bodies(space: PhysicsDirectSpaceState2D) -> void:
+	var probe := PhysicsShapeQueryParameters2D.new()
+	var box := RectangleShape2D.new()
+	box.size = Vector2(PROBE_SIZE, PROBE_SIZE)
+	probe.shape = box
+	probe.collision_mask = 1
+	probe.collide_with_areas = false
+	probe.collide_with_bodies = true
+	var scanned := _map_open.duplicate()
+	for y in _height:
+		for x in _width:
+			var index := y * _width + x
+			if scanned[index] == 0:
+				continue
+			probe.transform = Transform2D(0.0, centre_of(Vector2i(x, y)))
+			if not space.intersect_shape(probe, 1).is_empty():
+				scanned[index] = 0
+	if scanned != _open:
+		_open = scanned
+		_target = Vector2i(-9999, -9999)  # the next set_target searches again
 
 static func cell_of(point: Vector2) -> Vector2i:
 	return Vector2i((point / MapBuilder.TILE_SIZE).floor())
@@ -63,7 +97,10 @@ func set_target(point: Vector2) -> void:
 	_target = cell
 	_distance.fill(UNREACHABLE)
 	if not is_open(cell):
-		return
+		# Standing against a crate: search from the open cell beside the player.
+		cell = _open_neighbour(cell)
+		if not is_open(cell):
+			return
 	var queue: Array[Vector2i] = [cell]
 	_distance[cell.y * _width + cell.x] = 0
 	var head := 0
@@ -82,8 +119,8 @@ func set_target(point: Vector2) -> void:
 ## Which way to walk from `from` to reach the target: straight at `goal` when
 ## the way is clear, otherwise towards the neighbouring cell nearest the target.
 ## Zero when there is no way at all.
-func direction(from: Vector2, goal: Vector2) -> Vector2:
-	if has_clear_line(from, goal):
+func direction(from: Vector2, goal: Vector2, allow_straight: bool = true) -> Vector2:
+	if allow_straight and has_clear_line(from, goal):
 		return (goal - from).normalized()
 	var cell := cell_of(from)
 	var best := distance_at(cell)
@@ -101,6 +138,12 @@ func direction(from: Vector2, goal: Vector2) -> Vector2:
 	return (centre_of(best_cell) - from).normalized()
 
 
+## Which way the path goes from `from`, never cutting straight across: for a
+## zombie that got stuck trying the direct line.
+func path_direction(from: Vector2) -> Vector2:
+	return direction(from, from, false)
+
+
 ## Whether a straight walk from `from` to `to` crosses only open cells. Samples
 ## along the line, with a little width either side for the zombie's body.
 func has_clear_line(from: Vector2, to: Vector2) -> bool:
@@ -108,7 +151,7 @@ func has_clear_line(from: Vector2, to: Vector2) -> bool:
 	if length < 1.0:
 		return true
 	var along := (to - from) / length
-	var side := along.orthogonal() * 4.0
+	var side := along.orthogonal() * BODY_HALF_WIDTH
 	var steps := int(ceil(length / 6.0))
 	for index in steps + 1:
 		var point := from + along * minf(index * 6.0, length)
@@ -123,3 +166,10 @@ func _can_step(from: Vector2i, step: Vector2i) -> bool:
 	if step.x != 0 and step.y != 0:
 		return is_open(from + Vector2i(step.x, 0)) and is_open(from + Vector2i(0, step.y))
 	return true
+
+
+func _open_neighbour(cell: Vector2i) -> Vector2i:
+	for step in STEPS:
+		if is_open(cell + step):
+			return cell + step
+	return cell

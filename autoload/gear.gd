@@ -49,6 +49,7 @@ func equip(gear_id: String) -> bool:
 		return false
 	_equipped[item["slot"]] = gear_id
 	EventBus.gear_changed.emit()
+	EventBus.sfx_requested.emit("equip")
 	return true
 
 

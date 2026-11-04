@@ -55,7 +55,7 @@ func _board_tap(point: Vector2) -> void:
 
 func turn(cell: Vector2i) -> void:
 	board.rotate(cell)
-	EventBus.sfx_requested.emit("click")
+	EventBus.sfx_requested.emit("dial")
 	if board.is_solved():
 		_win()
 

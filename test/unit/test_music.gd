@@ -54,3 +54,16 @@ func test_music_streams_through_the_mixer_so_fades_and_volume_work_on_the_web() 
 	for player: AudioStreamPlayer in Music.find_children("*", "AudioStreamPlayer", false, false):
 		assert_eq(player.playback_type, AudioServer.PLAYBACK_TYPE_STREAM)
 		assert_eq(player.bus, Settings.MUSIC_BUS)
+
+
+func test_a_fight_shorter_than_the_crossfade_does_not_silence_the_area_music() -> void:
+	# Regression: the first crossfade's "stop the old player" fired after the
+	# area track had come back on that same player, and the music went quiet.
+	Music.play_area("outpost")
+	await wait_seconds(0.2)
+	Music.play(Music.COMBAT_TRACK)
+	await wait_seconds(0.5)
+	Music.play("outpost", true, Music.COMBAT_EXIT_FADE)
+	await wait_seconds(Music.FADE_SECONDS + 0.5)
+	assert_eq(Music.current(), "outpost")
+	assert_true(Music.is_audible(), "the area music plays on after the fight")

@@ -21,6 +21,10 @@ var _current := ""
 var _area_track := ""
 var _calm_for := 0.0
 var _poll := 0.0
+var _fade: Tween
+## Where each track was when it faded out, so the area music picks up where it
+## left off after a fight instead of starting over.
+var _resume_at: Dictionary = {}
 
 
 func _ready() -> void:
@@ -57,16 +61,41 @@ func play(track: String, loop: bool = true, fade_seconds: float = FADE_SECONDS) 
 	if stream is AudioStreamOggVorbis:
 		stream.loop = loop
 	var outgoing := _players[_front]
+	if outgoing.playing and not _current.is_empty():
+		_resume_at[_current] = outgoing.get_playback_position()
 	_front = 1 - _front
 	var incoming := _players[_front]
-	incoming.stream = stream
-	incoming.volume_db = SILENT_DB
-	incoming.play()
+	# A crossfade still running (a fight shorter than the fade) must not go on
+	# to stop the player that is now coming back in: that silenced the music.
+	if _fade != null and _fade.is_valid():
+		_fade.kill()
+	if not (incoming.playing and incoming.stream == stream):
+		# (Still fading out the same track: let it carry on and simply fade back up.)
+		incoming.stream = stream
+		incoming.volume_db = SILENT_DB
+		incoming.play(_resume_position(track, stream))
 	_current = track
-	var fade := create_tween().set_parallel()
-	fade.tween_property(incoming, "volume_db", PLAYING_DB, FADE_SECONDS)
-	fade.tween_property(outgoing, "volume_db", SILENT_DB, fade_seconds)
-	fade.chain().tween_callback(outgoing.stop)
+	_fade = create_tween().set_parallel()
+	_fade.tween_property(incoming, "volume_db", PLAYING_DB, FADE_SECONDS)
+	_fade.tween_property(outgoing, "volume_db", SILENT_DB, fade_seconds)
+	_fade.chain().tween_callback(_stop_unless_current.bind(outgoing))
+
+
+## Whether a track is audible now (for tests and the e2e driver).
+func is_audible() -> bool:
+	var front := _players[_front]
+	return front.playing and front.volume_db > SILENT_DB + 20.0
+
+
+func _resume_position(track: String, stream: AudioStream) -> float:
+	var at := float(_resume_at.get(track, 0.0))
+	var length := stream.get_length()
+	return at if length <= 0.0 or at < length - 1.0 else 0.0
+
+
+func _stop_unless_current(player: AudioStreamPlayer) -> void:
+	if player != _players[_front]:
+		player.stop()
 
 
 ## The calm track for an area; combat music can still take over from it.

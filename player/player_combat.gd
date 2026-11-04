@@ -31,6 +31,10 @@ const BLOCK_DRAIN_PER_SECOND := 10.0
 ## The guard can only be held this long before the arm tires.
 const BLOCK_MAX_HOLD_SECONDS := 1.6
 const BLOCK_COOLDOWN_SECONDS := 1.2
+## A guard let go after a moment (or dropped to swing) is ready again almost at
+## once; only a guard held until the arm tires waits the full cooldown.
+const QUICK_GUARD_COOLDOWN_SECONDS := 0.15
+const GUARD_COOLDOWN_PER_HELD_SECOND := 0.6
 const GUARD_BREAK_COOLDOWN_SECONDS := 2.2
 const BLOCKED_HIT_STAMINA_FACTOR := 0.9
 const PARRY_STAMINA_REFUND := 18.0
@@ -43,6 +47,8 @@ var stamina := BASE_STAMINA
 var _clock := 0.0
 var _state_started := 0.0
 var _swung := false
+## Block pressed during a swing's wind-up: the guard rises as soon as it can.
+var _guard_buffered := false
 var _block_started := -10.0
 var _invulnerable_until := 0.0
 var _block_cooldown_until := 0.0
@@ -116,7 +122,7 @@ func can_attack() -> bool:
 
 func attack() -> bool:
 	if state == State.BLOCK and stamina >= ATTACK_COST:
-		lower_guard()  # an attack cancels the guard: swing straight out of it
+		lower_guard(QUICK_GUARD_COOLDOWN_SECONDS)  # an attack cancels the guard: swing straight out of it
 	if state != State.IDLE:
 		return false
 	if stamina < ATTACK_COST:
@@ -135,6 +141,8 @@ func attack() -> bool:
 
 
 func raise_guard() -> bool:
+	if state == State.ATTACK and _swung:
+		state = State.IDLE  # the blow has landed: the recovery gives way to the guard
 	if state != State.IDLE:
 		return false
 	if not block_ready():
@@ -143,17 +151,30 @@ func raise_guard() -> bool:
 	_spend(BLOCK_RAISE_COST)
 	state = State.BLOCK
 	_block_started = _clock
+	EventBus.sfx_requested.emit("guard_up")
 	if _swing != null:
 		_swing.guard(true, _player.facing)
 	return true
 
 
-func lower_guard() -> void:
+## The block button: guard now, or as soon as the swing's blow is out.
+func request_guard() -> bool:
+	if raise_guard():
+		return true
+	if state == State.ATTACK:
+		_guard_buffered = true
+	return false
+
+
+## Drops the guard. Without a cooldown given, it is longer the longer it was held.
+func lower_guard(cooldown: float = -1.0) -> void:
 	if state != State.BLOCK:
 		return
+	if cooldown < 0.0:
+		cooldown = clampf(seconds_since_block_started() * GUARD_COOLDOWN_PER_HELD_SECOND, QUICK_GUARD_COOLDOWN_SECONDS, BLOCK_COOLDOWN_SECONDS)
 	state = State.IDLE
-	_block_cooldown_until = _clock + BLOCK_COOLDOWN_SECONDS
-	_block_cooldown_total = BLOCK_COOLDOWN_SECONDS
+	_block_cooldown_until = _clock + cooldown
+	_block_cooldown_total = cooldown
 	_regen_after = _clock + REGEN_DELAY_SECONDS
 	if _swing != null:
 		_swing.guard(false, _player.facing)
@@ -166,7 +187,11 @@ func _physics_process(delta: float) -> void:
 	if hands_free and Input.is_action_just_pressed("attack"):
 		attack()
 	if hands_free and Input.is_action_just_pressed("block"):
-		raise_guard()
+		request_guard()
+	if _guard_buffered and state != State.ATTACK:
+		_guard_buffered = false
+		if hands_free and Input.is_action_pressed("block"):
+			raise_guard()
 	if state == State.BLOCK:
 		_hold_guard(delta, Input.is_action_pressed("block"))
 	elif state == State.ATTACK:
@@ -182,7 +207,7 @@ func _hold_guard(delta: float, button_down: bool) -> void:
 	if not button_down:
 		lower_guard()
 	elif seconds_since_block_started() >= BLOCK_MAX_HOLD_SECONDS:
-		lower_guard()  # the arm tires: the guard drops and goes on cooldown
+		lower_guard(BLOCK_COOLDOWN_SECONDS)  # the arm tires: the guard drops and goes on the full cooldown
 	elif stamina <= 0.0:
 		_break_guard()
 
@@ -221,6 +246,9 @@ func _run_attack() -> void:
 	if not _swung and elapsed >= WINDUP_SECONDS:
 		_swung = true
 		_strike()
+		if _guard_buffered and Input.is_action_pressed("block"):
+			_guard_buffered = false
+			raise_guard()  # the blow is out: guard at once
 	if elapsed >= WINDUP_SECONDS + ACTIVE_SECONDS + RECOVER_SECONDS:
 		state = State.IDLE
 

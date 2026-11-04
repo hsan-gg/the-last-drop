@@ -15,6 +15,8 @@ const DAMAGE_FLASH_SECONDS := 0.3
 ## Which area's objectives to show; set by the area scene.
 @export var area_id: String = "outpost"
 
+const LOW_HEALTH_RATIO := 0.25
+var _heartbeat_in := 0.0
 var _water_meter: Meter
 var _health_meter: Meter
 var _stamina_meter: Meter
@@ -75,7 +77,9 @@ func _ready() -> void:
 	EventBus.xp_changed.connect(_on_xp_changed)
 	EventBus.tip_requested.connect(_show_tip)
 	EventBus.stamina_changed.connect(_on_stamina_changed)
-	EventBus.stamina_denied.connect(func() -> void: _stamina_flash = 0.4)
+	EventBus.stamina_denied.connect(func() -> void:
+		_stamina_flash = 0.4
+		EventBus.sfx_requested.emit("denied"))
 	EventBus.level_up.connect(_on_level_up)
 	EventBus.gear_changed.connect(_refresh_stats)
 	EventBus.loot_found.connect(func(text: String) -> void: _feed.notify("loot", "", text))
@@ -146,6 +150,7 @@ func _on_stamina_changed(value: float, maximum: float) -> void:
 
 func _process(delta: float) -> void:
 	_stamina_flash = maxf(_stamina_flash - delta, 0.0)
+	_beat_heart(delta)
 	if _player_combat == null:
 		var player := get_tree().get_first_node_in_group("player") as Player
 		_player_combat = player.combat if player != null else null
@@ -219,6 +224,18 @@ func _on_quest_completed(quest_id: String) -> void:
 			var reward: Dictionary = quest.get("reward", {})
 			_feed.notify("quest", "Quest complete", quest["title"])
 	_tracker.refresh()
+
+
+## Below a quarter health, a heartbeat: faster the closer you are to collapse.
+func _beat_heart(delta: float) -> void:
+	var ratio := Survival.health() / Survival.max_health()
+	if ratio >= LOW_HEALTH_RATIO or ratio <= 0.0 or get_tree().paused:
+		_heartbeat_in = 0.0
+		return
+	_heartbeat_in -= delta
+	if _heartbeat_in <= 0.0:
+		_heartbeat_in = lerpf(0.55, 1.1, ratio / LOW_HEALTH_RATIO)
+		EventBus.sfx_requested.emit("heartbeat")
 
 
 func _on_settings_changed() -> void:

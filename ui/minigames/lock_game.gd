@@ -38,7 +38,7 @@ func _board_input(event: InputEvent) -> void:
 		EventBus.sfx_requested.emit("ui_move")
 	elif step.y != 0:
 		digits[selected] = wrapi(digits[selected] - step.y, 0, 10)
-		EventBus.sfx_requested.emit("click")
+		EventBus.sfx_requested.emit("dial")
 	elif is_confirm(event):
 		try_code()
 
@@ -60,7 +60,7 @@ func _board_tap(point: Vector2) -> void:
 		return
 	selected = hit["dial"]
 	digits[selected] = wrapi(digits[selected] + (-1 if hit["up"] else 1), 0, 10)
-	EventBus.sfx_requested.emit("click")
+	EventBus.sfx_requested.emit("dial")
 
 
 func entered() -> String:
@@ -69,7 +69,7 @@ func entered() -> String:
 
 func try_code() -> void:
 	if entered() == _code:
-		EventBus.sfx_requested.emit("door_open")
+		EventBus.sfx_requested.emit("unlock")
 		_win()
 	else:
 		_mistake("The handle will not turn. The lock sparks.", 4.0)

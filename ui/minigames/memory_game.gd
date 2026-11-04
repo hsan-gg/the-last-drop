@@ -75,7 +75,7 @@ func turn(index: int) -> void:
 		board.hide_misses()
 	match board.flip(index):
 		MemoryBoard.Flip.FIRST:
-			EventBus.sfx_requested.emit("click")
+			EventBus.sfx_requested.emit("card_flip")
 		MemoryBoard.Flip.MATCH:
 			EventBus.sfx_requested.emit("sort_ok")
 			_say("[color=#7bc043]A pair![/color]")

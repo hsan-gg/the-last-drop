@@ -98,5 +98,5 @@ func go() -> bool:
 		return false
 	EventBus.sfx_requested.emit("door_open")
 	SceneManager.arrival_marker = arrive_marker
-	SceneManager.change_scene(target_scene)
+	SceneManager.go_through_door(target_scene)
 	return true

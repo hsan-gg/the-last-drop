@@ -15,6 +15,10 @@ const POISE_BREAK_DAMAGE := 20.0
 ## How much a hit still pushes a zombie that is mid-swing (it holds its ground).
 const COMMITTED_KNOCKBACK := 0.25
 const SEPARATION_RADIUS := 12.0
+const STUCK_SECONDS := 0.35
+const GROAN_MIN_SECONDS := 4.0
+const GROAN_MAX_SECONDS := 9.0
+const DETOUR_SECONDS := 1.2
 const PHYSICS_LAYER := 4
 ## A zombie stops this far short of its reach instead of pressing into the player.
 const STANDOFF := 0.65
@@ -35,6 +39,10 @@ var _hp := 0.0
 var _state := State.IDLE
 var _timer := 0.0
 var _knockback := Vector2.ZERO
+var _stuck_time := 0.0
+var _groan_in := randf_range(2.0, 8.0)
+var _detour_time := 0.0
+var _detour_side := 1.0
 var _facing := "down"
 var _player: Node2D
 var _sprite: AnimatedSprite2D
@@ -125,8 +133,8 @@ func take_hit(damage: float, from_position: Vector2, knockback: float) -> void:
 	if _hp <= 0.0:
 		_die()
 		return
-	if randf() < 0.5:
-		EventBus.sfx_requested.emit("enemy_hurt")
+	if randf() < 0.7:
+		AudioManager.play_at("enemy_hurt", global_position, _voice_pitch())
 	# Once a zombie has begun its swing it is committed: hitting it does not
 	# cancel the attack, so trading blows is a choice with a cost.
 	if _state == State.WINDUP or _state == State.STRIKE:
@@ -300,6 +308,7 @@ func _physics_process(delta: float) -> void:
 	if _state == State.DEAD:
 		return
 	_tick_special(delta)
+	_maybe_groan(delta)
 	_timer -= delta
 	match _state:
 		State.IDLE:
@@ -318,6 +327,22 @@ func _do_idle() -> void:
 	if _player != null and _distance() <= float(_def["aggro"]):
 		_state = State.CHASE
 		EventBus.enemy_alerted.emit()
+		AudioManager.play_at("zombie_alert", global_position, _voice_pitch())
+
+
+## Bigger zombies have deeper voices.
+func _voice_pitch() -> float:
+	return clampf(1.0 / float(_def.get("scale", 1.0)), 0.7, 1.2)
+
+
+## Now and then a zombie near the player groans, so you hear them before you see them.
+func _maybe_groan(delta: float) -> void:
+	_groan_in -= delta
+	if _groan_in > 0.0:
+		return
+	_groan_in = randf_range(GROAN_MIN_SECONDS, GROAN_MAX_SECONDS)
+	if _player != null and _distance() < AudioManager.FAR:
+		AudioManager.play_at("zombie_groan", global_position, _voice_pitch())
 
 
 func _do_chase() -> void:
@@ -329,6 +354,7 @@ func _do_chase() -> void:
 		_enter(State.WINDUP, float(_def["windup"]))
 		_set_alert(true)
 		EventBus.enemy_windup.emit()
+		AudioManager.play_at("zombie_attack", global_position, _voice_pitch())  # the cue to raise your guard
 		_play("attack", false, 7.0 / (float(_def["windup"]) + 0.25))
 		return
 	_play("walk")
@@ -376,15 +402,42 @@ func _move() -> void:
 		desired = (global_position - _player.global_position).normalized() * float(_def["speed"]) * 0.5
 	velocity = desired + _knockback
 	move_and_slide()
+	_watch_for_stuck(desired)
 
 
-## Towards the player, round rivers and walls when they are in the way.
+## Towards the player, round rivers, walls and anything else in the way. After
+## getting stuck it follows the path cell by cell for a while (no straight
+## dashes), and if even that is blocked it sidesteps to slide off the corner.
 func _chase_direction() -> Vector2:
+	var straight := (_player.global_position - global_position).normalized()
 	var area := get_tree().current_scene as GameArea
 	if area == null or area.nav == null:
-		return (_player.global_position - global_position).normalized()
-	var way := area.nav.direction(global_position, _player.global_position)
-	return way if way != Vector2.ZERO else (_player.global_position - global_position).normalized()
+		return straight
+	var way: Vector2
+	if _detour_time > 0.0:
+		way = area.nav.path_direction(global_position)
+		if way == Vector2.ZERO or _stuck_time > STUCK_SECONDS:
+			way = (way if way != Vector2.ZERO else straight).rotated(PI / 2.0 * _detour_side)
+	else:
+		way = area.nav.direction(global_position, _player.global_position)
+	return way if way != Vector2.ZERO else straight
+
+
+## Notices when a chase makes no headway (pushing into a crate's corner).
+func _watch_for_stuck(desired: Vector2) -> void:
+	var delta := get_physics_process_delta_time()
+	_detour_time = maxf(_detour_time - delta, 0.0)
+	if desired.length() < 1.0:
+		_stuck_time = 0.0
+		return
+	var moved := get_real_velocity().length()
+	if moved < desired.length() * 0.3:
+		_stuck_time += delta
+		if _stuck_time > STUCK_SECONDS and _detour_time <= 0.0:
+			_detour_time = DETOUR_SECONDS
+			_detour_side = 1.0 if randf() < 0.5 else -1.0
+	else:
+		_stuck_time = 0.0
 
 
 ## A gentle push away from other enemies so a pack spreads out instead of stacking.
