@@ -171,7 +171,11 @@ func _apply(key: String) -> void:
 		"sfx":
 			_set_bus_volume(SFX_BUS, float(value("sfx")))
 		"fullscreen":
-			if DisplayServer.get_name() != "headless":
+			# The phone app is always fullscreen (status and navigation bars hidden);
+			# the option is for desktop and browser windows.
+			if OS.has_feature("mobile"):
+				DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+			elif DisplayServer.get_name() != "headless":
 				DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if value("fullscreen") else DisplayServer.WINDOW_MODE_WINDOWED)
 		"screen_shake":
 			Juicee.accessibility.no_screenshake = not bool(value("screen_shake"))
