@@ -288,3 +288,10 @@ func test_tapping_the_map_switches_between_the_area_and_the_world() -> void:
 	click.pressed = true
 	map._gui_input(click)
 	assert_ne(map.page, before)
+
+
+func test_the_android_back_button_is_the_games_back_not_quit() -> void:
+	assert_false(bool(ProjectSettings.get_setting("application/config/quit_on_go_back", true)), "back must not kill the app")
+	var back := TouchControls.key_event(KEY_ESCAPE, true)
+	assert_true(back.is_action_pressed("menu"), "it opens or closes the menu")
+	assert_true(back.is_action_pressed("ui_cancel"), "it leaves a panel")

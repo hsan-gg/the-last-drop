@@ -279,6 +279,15 @@ func _process(_delta: float) -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT or what == NOTIFICATION_WM_WINDOW_FOCUS_OUT:
 		release_all()
+	elif what == NOTIFICATION_WM_GO_BACK_REQUEST:
+		press_back()
+
+
+## Android's back button (or gesture) is the game's BACK: it closes the open
+## panel or opens the pause menu, instead of quitting the app on the spot.
+func press_back() -> void:
+	Input.parse_input_event(key_event(KEY_ESCAPE, true))
+	Input.parse_input_event(key_event(KEY_ESCAPE, false))
 
 
 func _current_mode() -> Mode:
