@@ -342,7 +342,9 @@ func _do_windup() -> void:
 
 func _do_wait() -> void:
 	_sprite.modulate = Color.WHITE
-	_play("idle")
+	# Let the swing play out to its last frame (blocked or not) before idling.
+	if not (String(_sprite.animation).begins_with("attack") and _sprite.is_playing() and _state == State.RECOVER):
+		_play("idle")
 	if _timer <= 0.0:
 		_state = State.CHASE
 

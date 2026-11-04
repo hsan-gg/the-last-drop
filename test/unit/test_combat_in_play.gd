@@ -314,3 +314,14 @@ func test_the_guard_bar_shows_while_blocking_and_cooling_down() -> void:
 	_player.combat.lower_guard()
 	assert_true(meter.is_showing(), "shows the cooldown refilling")
 	assert_lt(_player.combat.block_cooldown_ratio(), 0.1)
+
+
+func test_a_blocked_zombie_finishes_its_swing_animation() -> void:
+	var enemy := _enemy("walker", Vector2(14, 0))
+	_advance(enemy, 0.1)
+	_player.combat.raise_guard()
+	_player.combat._block_started = -10.0  # held a while: a block, not a parry
+	var windup := float(enemy.definition()["windup"])
+	_advance(enemy, windup + 0.1)
+	assert_eq(enemy.state(), Enemy.State.RECOVER)
+	assert_true(String(enemy._sprite.animation).begins_with("attack"), "the swing is still playing out")

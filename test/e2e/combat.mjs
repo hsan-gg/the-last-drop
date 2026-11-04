@@ -88,8 +88,17 @@ await sleep(150);
 let guarded = false;
 for (let round = 0; round < 40 && !guarded; round++) {
   s = await state();
-  const target = nearestEnemy(s);
+  let target = nearestEnemy(s);
   if (!target) break;
+  // A collapse (zombie swings cannot be interrupted any more) sends you back to
+  // the start: walk back up to a zombie before raising the guard again.
+  if (Math.hypot(target.x - s.player.x, target.y - s.player.y) > 60) {
+    await drive("goto", "Enemy:0");
+    await sleep(300);
+    s = await state();
+    target = nearestEnemy(s);
+    if (!target) break;
+  }
   await faceToward(s, target);
   await page.keyboard.down("k");
   await sleep(900);
